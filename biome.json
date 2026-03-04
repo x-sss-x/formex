@@ -38,7 +38,8 @@
   "css": {
     "formatter": {
       "enabled": true,
-      "indentStyle": "tab"
+      "indentStyle": "tab",
+      "quoteStyle": "double"
     },
     "assist": {
       "enabled": true
