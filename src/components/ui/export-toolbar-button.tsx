@@ -23,6 +23,7 @@ import { BaseEditorKit } from "@/components/editor/editor-base-kit";
 
 import { EditorStatic } from "./editor-static";
 import { ToolbarButton } from "./toolbar";
+import { PageSizes } from "pdf-lib";
 // import { DocxExportKit } from "@/components/editor/plugins/docx-export-kit";
 
 const siteUrl = "https://platejs.org";
@@ -80,15 +81,28 @@ export function ExportToolbarButton(props: DropdownMenuProps) {
 
     const PDFLib = await import("pdf-lib");
     const pdfDoc = await PDFLib.PDFDocument.create();
-    const page = pdfDoc.addPage([canvas.width, canvas.height]);
-    const imageEmbed = await pdfDoc.embedPng(canvas.toDataURL("PNG"));
-    const { height, width } = imageEmbed.scale(1);
-    page.drawImage(imageEmbed, {
-      height,
-      width,
+
+    const page = pdfDoc.addPage(PageSizes.A4);
+    const { width: pageWidth, height: pageHeight } = page.getSize();
+
+    const pngImage = await pdfDoc.embedPng(canvas.toDataURL("image/png"));
+
+    const imgWidth = pngImage.width;
+    const imgHeight = pngImage.height;
+
+    // scale to match page width
+    const scale = pageWidth / imgWidth;
+
+    const width = pageWidth;
+    const height = imgHeight * scale;
+
+    page.drawImage(pngImage, {
       x: 0,
-      y: 0,
+      y: pageHeight - height, // place image at top of page
+      width,
+      height,
     });
+
     const pdfBase64 = await pdfDoc.saveAsBase64({ dataUri: true });
 
     await downloadFile(pdfBase64, "plate.pdf");
@@ -175,17 +189,11 @@ export function ExportToolbarButton(props: DropdownMenuProps) {
 
       <DropdownMenuContent align="start">
         <DropdownMenuGroup>
-          <DropdownMenuItem onSelect={exportToHtml}>
-            Export as HTML
-          </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToPdf}>
             Export as PDF
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToImage}>
             Export as Image
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToMarkdown}>
-            Export as Markdown
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToWord}>
             Export as Word
