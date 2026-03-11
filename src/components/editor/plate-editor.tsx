@@ -1,23 +1,29 @@
 "use client";
 
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import { normalizeNodeId } from "platejs";
 import { Plate, usePlateEditor } from "platejs/react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { EditorKit } from "@/components/editor/editor-kit";
 import { Editor, EditorContainer } from "@/components/ui/editor";
+import { useTRPC } from "@/trpc/client";
 import { Button } from "../ui/button";
 import { FixedToolbar } from "../ui/fixed-toolbar";
 import { FixedToolbarButtons } from "../ui/fixed-toolbar-buttons";
 import { ToolbarGroup } from "../ui/toolbar";
-import { useParams } from "next/navigation";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export function PlateEditor() {
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const { data } = useSuspenseQuery(
     trpc.template.getById.queryOptions({ templateId: id }),
   );
@@ -28,6 +34,10 @@ export function PlateEditor() {
     trpc.template.update.mutationOptions({
       onError(error) {
         toast.error(error.message);
+      },
+      async onSuccess() {
+        toast.success("Changes saved successful");
+        await queryClient.invalidateQueries(trpc.template.pathFilter());
       },
     }),
   );
@@ -48,9 +58,16 @@ export function PlateEditor() {
     >
       <FixedToolbar className="z-50">
         <ToolbarGroup>
-          <Button size={"icon-sm"} variant={"ghost"}>
+          <Button
+            onClick={() => router.back()}
+            size={"icon-sm"}
+            variant={"ghost"}
+          >
             <ArrowLeft className="size-4" />
           </Button>
+          <div className="text-sm px-3 font-semibold truncate">
+            {data?.title}
+          </div>
         </ToolbarGroup>
         <FixedToolbarButtons />
         <ToolbarGroup>

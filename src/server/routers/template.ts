@@ -14,7 +14,7 @@ export const templateRouter = createRouter({
 
   list: publicProcedure.query(({ ctx }) =>
     ctx.db.query.template.findMany({
-      orderBy: [asc(template.updatedAt), desc(template.createdAt)],
+      orderBy: [desc(template.updatedAt)],
     }),
   ),
 
