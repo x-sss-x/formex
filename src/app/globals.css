@@ -120,16 +120,38 @@
 }
 
 @media print {
-  body {
-    background: white;
-  }
 
-  .a4-page {
-    box-shadow: none;
-    margin: 0;
-    width: 100%;
-    height: auto;
-  }
+@page {
+size: A4;
+margin: 10mm;
+}
+
+body * {
+visibility: hidden;
+}
+
+#print-area,
+#print-area * {
+visibility: visible;
+}
+
+#print-area {
+position: absolute;
+left: 0;
+top: 0;
+width: 100%;
+}
+
+.print-container table {
+border-collapse: collapse;
+}
+
+.print-container th,
+.print-container td {
+border: 1px solid black;
+padding: 4px;
+}
+
 }
 
 @layer base{

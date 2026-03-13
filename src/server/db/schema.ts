@@ -4,7 +4,6 @@ import { pgTable, uuid, text, integer, date, pgEnum, uniqueIndex } from "drizzle
 /* ENUMS */
 
 export const sessionEnum = pgEnum("session", ["morning", "afternoon"]);
-
 export const calendarTypeEnum = pgEnum("calendar_type", [
   "institution",
   "program",
@@ -15,11 +14,9 @@ export const calendarTypeEnum = pgEnum("calendar_type", [
 export const institutions = pgTable("institutions", {
   id: uuid("id").defaultRandom().primaryKey(),
 });
-
 export const branches = pgTable("branches", {
   id: uuid("id").defaultRandom().primaryKey(),
 });
-
 export const departments = pgTable("departments", {
   id: uuid("id").defaultRandom().primaryKey(),
 });
