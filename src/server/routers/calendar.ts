@@ -1,14 +1,18 @@
 import { z } from "zod"
 import { createRouter, publicProcedure } from "../trpc"
-import { academicCalendars, calendarEvents, institutions, branches, departments } from "../db/schema"
-import { db } from "../db"
+import {
+  academicCalendars,
+  calendarEvents,
+  institutions,
+  branches,
+  departments,
+} from "../db/schema"
 import { eq } from "drizzle-orm"
 
 export const calendarRouter = createRouter({
 
-  // ── List all calendars with joined institution/branch/department names ──
-  getAll: publicProcedure.query(async () => {
-    const rows = await db
+  getAll: publicProcedure.query(({ ctx }) =>
+    ctx.db
       .select({
         id: academicCalendars.id,
         academicYear: academicCalendars.academicYear,
@@ -29,15 +33,12 @@ export const calendarRouter = createRouter({
       .leftJoin(branches, eq(academicCalendars.branchId, branches.id))
       .leftJoin(departments, eq(academicCalendars.departmentId, departments.id))
       .orderBy(academicCalendars.createdAt)
+  ),
 
-    return rows
-  }),
-
-  // ── Get single calendar with full details + events ──
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
-      const calRows = await db
+    .query(async ({ ctx, input }) => {
+      const rows = await ctx.db
         .select({
           id: academicCalendars.id,
           academicYear: academicCalendars.academicYear,
@@ -63,10 +64,10 @@ export const calendarRouter = createRouter({
         .leftJoin(departments, eq(academicCalendars.departmentId, departments.id))
         .where(eq(academicCalendars.id, input.id))
 
-      const cal = calRows[0]
+      const cal = rows[0]
       if (!cal) return null
 
-      const events = await db
+      const events = await ctx.db
         .select()
         .from(calendarEvents)
         .where(eq(calendarEvents.calendarId, input.id))
@@ -75,7 +76,6 @@ export const calendarRouter = createRouter({
       return { ...cal, events }
     }),
 
-  // ── Create calendar (Step 1 save) ──
   create: publicProcedure
     .input(
       z.object({
@@ -84,14 +84,14 @@ export const calendarRouter = createRouter({
         departmentId: z.string().nullable().optional(),
         academicYear: z.string().min(1),
         calendarType: z.enum(["institution", "program"]),
-        formNo: z.string().optional().nullable(),
-        revision: z.string().optional().nullable(),
-        headerDate: z.string().optional().nullable(),
+        formNo: z.string().nullable().optional(),
+        revision: z.string().nullable().optional(),
+        headerDate: z.string().nullable().optional(),
         totalWeeks: z.number().min(1).max(52),
       })
     )
-    .mutation(async ({ input }) => {
-      const result = await db
+    .mutation(({ ctx, input }) =>
+      ctx.db
         .insert(academicCalendars)
         .values({
           institutionId: input.institutionId,
@@ -105,37 +105,35 @@ export const calendarRouter = createRouter({
           totalWeeks: input.totalWeeks,
         })
         .returning()
+        .then((rows) => rows[0])
+    ),
 
-      return result[0]
-    }),
-
-  // ── Update calendar meta ──
   update: publicProcedure
     .input(
       z.object({
         id: z.string(),
         academicYear: z.string().optional(),
-        formNo: z.string().optional().nullable(),
-        revision: z.string().optional().nullable(),
-        headerDate: z.string().optional().nullable(),
+        formNo: z.string().nullable().optional(),
+        revision: z.string().nullable().optional(),
+        headerDate: z.string().nullable().optional(),
         totalWeeks: z.number().min(1).max(52).optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(({ ctx, input }) => {
       const { id, ...data } = input
-      return db
+      return ctx.db
         .update(academicCalendars)
         .set({ ...data, updatedAt: new Date().toISOString() })
         .where(eq(academicCalendars.id, id))
         .returning()
+        .then((rows) => rows[0])
     }),
 
-  // ── Delete calendar (cascades to events) ──
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input }) => {
-      return db
+    .mutation(({ ctx, input }) =>
+      ctx.db
         .delete(academicCalendars)
         .where(eq(academicCalendars.id, input.id))
-    }),
+    ),
 })

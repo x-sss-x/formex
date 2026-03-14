@@ -1,24 +1,23 @@
 import { z } from "zod"
 import { createRouter, publicProcedure } from "../trpc"
 import { institutions } from "../db/schema"
-import { db } from "../db"
 import { eq } from "drizzle-orm"
 
 export const institutionRouter = createRouter({
 
-  getAll: publicProcedure.query(async () => {
-    return db.select().from(institutions).orderBy(institutions.name)
-  }),
+  getAll: publicProcedure.query(({ ctx }) =>
+    ctx.db.select().from(institutions).orderBy(institutions.name)
+  ),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
-      const result = await db
+    .query(({ ctx, input }) =>
+      ctx.db
         .select()
         .from(institutions)
         .where(eq(institutions.id, input.id))
-      return result[0] ?? null
-    }),
+        .then((rows) => rows[0] ?? null)
+    ),
 
   create: publicProcedure
     .input(
@@ -30,13 +29,13 @@ export const institutionRouter = createRouter({
         logoUrl: z.string().optional().nullable(),
       })
     )
-    .mutation(async ({ input }) => {
-      const result = await db
+    .mutation(({ ctx, input }) =>
+      ctx.db
         .insert(institutions)
         .values(input)
         .returning()
-      return result[0]
-    }),
+        .then((rows) => rows[0])
+    ),
 
   update: publicProcedure
     .input(
@@ -49,20 +48,19 @@ export const institutionRouter = createRouter({
         logoUrl: z.string().optional().nullable(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(({ ctx, input }) => {
       const { id, ...data } = input
-      return db
+      return ctx.db
         .update(institutions)
         .set(data)
         .where(eq(institutions.id, id))
         .returning()
+        .then((rows) => rows[0])
     }),
 
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input }) => {
-      return db
-        .delete(institutions)
-        .where(eq(institutions.id, input.id))
-    }),
+    .mutation(({ ctx, input }) =>
+      ctx.db.delete(institutions).where(eq(institutions.id, input.id))
+    ),
 })

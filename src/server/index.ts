@@ -5,18 +5,20 @@ import { eventRouter } from "./routers/event";
 import { institutionRouter } from "./routers/institution";
 import { branchRouter } from "./routers/branch";
 import { departmentRouter } from "./routers/department";
+import { equipmentRouter } from "./routers/equipment";
+import { equipmentItemRouter } from "./routers/equipmentItem";
 import { createRouter } from "./trpc";
 
 export const appRouter = createRouter({
   template: templateRouter,
   student: studentRouter,
   calendar: calendarRouter,
-  event: eventRouter,         // was "events" — renamed to "event" to match trpc.event.xxx usage
+  event: eventRouter,
   institution: institutionRouter,
   branch: branchRouter,
   department: departmentRouter,
+  equipment: equipmentRouter,
+  equipmentItem: equipmentItemRouter,
 });
 
-// Export type router type signature,
-// NOT the router itself.
 export type AppRouter = typeof appRouter;

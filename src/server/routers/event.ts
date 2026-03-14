@@ -1,73 +1,20 @@
 import { z } from "zod"
 import { createRouter, publicProcedure } from "../trpc"
 import { calendarEvents } from "../db/schema"
-import { db } from "../db"
 import { eq, and } from "drizzle-orm"
 
 export const eventRouter = createRouter({
 
-  // ── Get all events for a calendar ──
   getByCalendar: publicProcedure
     .input(z.object({ calendarId: z.string() }))
-    .query(async ({ input }) => {
-      return db
+    .query(({ ctx, input }) =>
+      ctx.db
         .select()
         .from(calendarEvents)
         .where(eq(calendarEvents.calendarId, input.calendarId))
         .orderBy(calendarEvents.weekNumber)
-    }),
+    ),
 
-  // ── Upsert a single day row ──
-  upsertDay: publicProcedure
-    .input(
-      z.object({
-        calendarId: z.string(),
-        weekNumber: z.number(),
-        dayName: z.string(),
-        date: z.string().optional().nullable(),
-        morningActivity: z.string().optional().nullable(),
-        afternoonActivity: z.string().optional().nullable(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      // Check if row exists
-      const existing = await db
-        .select()
-        .from(calendarEvents)
-        .where(
-          and(
-            eq(calendarEvents.calendarId, input.calendarId),
-            eq(calendarEvents.weekNumber, input.weekNumber),
-            eq(calendarEvents.dayName, input.dayName)
-          )
-        )
-
-      if (existing.length > 0) {
-        return db
-          .update(calendarEvents)
-          .set({
-            date: input.date ?? null,
-            morningActivity: input.morningActivity ?? null,
-            afternoonActivity: input.afternoonActivity ?? null,
-          })
-          .where(eq(calendarEvents.id, existing[0]!.id))
-          .returning()
-      }
-
-      return db
-        .insert(calendarEvents)
-        .values({
-          calendarId: input.calendarId,
-          weekNumber: input.weekNumber,
-          dayName: input.dayName,
-          date: input.date ?? null,
-          morningActivity: input.morningActivity ?? null,
-          afternoonActivity: input.afternoonActivity ?? null,
-        })
-        .returning()
-    }),
-
-  // ── Bulk upsert — save all events at once ──
   bulkUpsert: publicProcedure
     .input(
       z.object({
@@ -76,22 +23,21 @@ export const eventRouter = createRouter({
           z.object({
             weekNumber: z.number(),
             dayName: z.string(),
-            date: z.string().optional().nullable(),
-            morningActivity: z.string().optional().nullable(),
-            afternoonActivity: z.string().optional().nullable(),
+            date: z.string().nullable().optional(),
+            morningActivity: z.string().nullable().optional(),
+            afternoonActivity: z.string().nullable().optional(),
           })
         ),
       })
     )
-    .mutation(async ({ input }) => {
-      // Delete existing events and re-insert (cleanest bulk upsert for SQLite/Postgres)
-      await db
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
         .delete(calendarEvents)
         .where(eq(calendarEvents.calendarId, input.calendarId))
 
       if (input.events.length === 0) return []
 
-      return db
+      return ctx.db
         .insert(calendarEvents)
         .values(
           input.events.map((e) => ({
@@ -106,12 +52,59 @@ export const eventRouter = createRouter({
         .returning()
     }),
 
-  // ── Delete single event row ──
+  upsertDay: publicProcedure
+    .input(
+      z.object({
+        calendarId: z.string(),
+        weekNumber: z.number(),
+        dayName: z.string(),
+        date: z.string().nullable().optional(),
+        morningActivity: z.string().nullable().optional(),
+        afternoonActivity: z.string().nullable().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.db
+        .select()
+        .from(calendarEvents)
+        .where(
+          and(
+            eq(calendarEvents.calendarId, input.calendarId),
+            eq(calendarEvents.weekNumber, input.weekNumber),
+            eq(calendarEvents.dayName, input.dayName)
+          )
+        )
+
+      if (existing.length > 0) {
+        return ctx.db
+          .update(calendarEvents)
+          .set({
+            date: input.date ?? null,
+            morningActivity: input.morningActivity ?? null,
+            afternoonActivity: input.afternoonActivity ?? null,
+          })
+          .where(eq(calendarEvents.id, existing[0]!.id))
+          .returning()
+      }
+
+      return ctx.db
+        .insert(calendarEvents)
+        .values({
+          calendarId: input.calendarId,
+          weekNumber: input.weekNumber,
+          dayName: input.dayName,
+          date: input.date ?? null,
+          morningActivity: input.morningActivity ?? null,
+          afternoonActivity: input.afternoonActivity ?? null,
+        })
+        .returning()
+    }),
+
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input }) => {
-      return db
+    .mutation(({ ctx, input }) =>
+      ctx.db
         .delete(calendarEvents)
         .where(eq(calendarEvents.id, input.id))
-    }),
+    ),
 })

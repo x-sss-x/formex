@@ -137,6 +137,84 @@ export const calendarEvents = pgTable(
 );
 
 /* ─────────────────────────────────────────
+   EQUIPMENT FORMAT ENUM
+   INS-FORMAT-H33 (Aided/Private) vs INS-FORMAT-33 (Govt)
+───────────────────────────────────────── */
+
+export const equipmentFormatEnum = pgEnum("equipment_format", [
+  "H33", // INS-FORMAT-H33
+  "33",  // INS-FORMAT-33
+])
+
+export const workingStatusEnum = pgEnum("working_status", [
+  "working",
+  "not_working",
+])
+
+/* ─────────────────────────────────────────
+   EQUIPMENT STATEMENTS
+   One statement = one INS-FORMAT-H33 / INS-FORMAT-33 document
+───────────────────────────────────────── */
+
+export const equipmentStatements = pgTable("equipment_statements", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  // FK — institution / branch / department
+  institutionId: uuid("institution_id")
+    .notNull()
+    .references(() => institutions.id),
+  branchId: uuid("branch_id").references(() => branches.id),
+  departmentId: uuid("department_id").references(() => departments.id),
+
+  // Meta fields shown on print
+  program: text("program").notNull(),        // auto-filled from branch name
+  semester: text("semester").notNull(),
+  academicYear: text("academic_year").notNull(),
+  labWorkshop: text("lab_workshop").notNull(),
+
+  // Format type
+  formatType: equipmentFormatEnum("format_type").notNull().default("H33"),
+
+  // Print header fields
+  formNo: text("form_no"),
+  revision: text("revision"),
+  headerDate: text("header_date"),
+
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+})
+
+/* ─────────────────────────────────────────
+   EQUIPMENT ITEMS
+   Each row in the equipment table
+───────────────────────────────────────── */
+
+export const equipmentItems = pgTable("equipment_items", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  statementId: uuid("statement_id")
+    .notNull()
+    .references(() => equipmentStatements.id, { onDelete: "cascade" }),
+
+  slNo: integer("sl_no").notNull(),                          // Sl. No.
+  name: text("name").notNull(),                              // Name of instrument/Equipment/Machine
+  qtyAsSyllabus: text("qty_as_syllabus"),                   // Quantity as per syllabus
+  qtyAvailable: text("qty_available"),                      // Quantity actually available
+  dateOfPurchase: date("date_of_purchase"),                  // Date of purchase
+  workingStatus: workingStatusEnum("working_status"),        // Working / Not Working
+  reasonsNotWorking: text("reasons_not_working"),            // Reasons for not working
+  remarks: text("remarks"),                                  // Remarks
+
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+})
+
+/* ─────────────────────────────────────────
    TEMPLATE  (unchanged — kept as-is)
 ───────────────────────────────────────── */
 
