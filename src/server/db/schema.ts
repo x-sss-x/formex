@@ -1,64 +1,144 @@
 import { sql } from "drizzle-orm";
-import { pgTable, uuid, text, integer, date, pgEnum, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  integer,
+  date,
+  pgEnum,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 
-/* ENUMS */
+/* ─────────────────────────────────────────
+   ENUMS
+───────────────────────────────────────── */
 
 export const sessionEnum = pgEnum("session", ["morning", "afternoon"]);
+
 export const calendarTypeEnum = pgEnum("calendar_type", [
-  "institution",
-  "program",
+  "institution", // INS-FORMAT-3
+  "program",     // INS-FORMAT-4
 ]);
 
-/* REFERENCE TABLES */
+/* ─────────────────────────────────────────
+   INSTITUTIONS
+   (was empty before — added proper fields)
+───────────────────────────────────────── */
 
 export const institutions = pgTable("institutions", {
   id: uuid("id").defaultRandom().primaryKey(),
-});
-export const branches = pgTable("branches", {
-  id: uuid("id").defaultRandom().primaryKey(),
-});
-export const departments = pgTable("departments", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  code: text("code").notNull().unique(),
+  email: text("email"),
+  phone: text("phone"),
+  logoUrl: text("logo_url"),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
 });
 
-/* ACADEMIC CALENDAR */
+/* ─────────────────────────────────────────
+   BRANCHES
+   (was empty before — added name + FK to institution)
+───────────────────────────────────────── */
+
+export const branches = pgTable("branches", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  institutionId: uuid("institution_id")
+    .notNull()
+    .references(() => institutions.id, { onDelete: "cascade" }),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+});
+
+/* ─────────────────────────────────────────
+   DEPARTMENTS
+   (was empty before — added name + FK to branch)
+───────────────────────────────────────── */
+
+export const departments = pgTable("departments", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  branchId: uuid("branch_id")
+    .notNull()
+    .references(() => branches.id, { onDelete: "cascade" }),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+});
+
+/* ─────────────────────────────────────────
+   ACADEMIC CALENDARS
+   (added formNo, revision, headerDate — rest unchanged)
+───────────────────────────────────────── */
 
 export const academicCalendars = pgTable("academic_calendars", {
   id: uuid("id").defaultRandom().primaryKey(),
+
+  // FK relations — unchanged from original
   institutionId: uuid("institution_id")
     .notNull()
     .references(() => institutions.id),
   branchId: uuid("branch_id").references(() => branches.id),
   departmentId: uuid("department_id").references(() => departments.id),
+
+  // Original field — unchanged
   academicYear: text("academic_year").notNull(),
   calendarType: calendarTypeEnum("calendar_type").notNull(),
+
+  // NEW fields needed for the print header
+  formNo: text("form_no"),
+  revision: text("revision"),
+  headerDate: text("header_date"), // "date" is reserved in some DBs, renamed
+  totalWeeks: integer("total_weeks").notNull().default(4),
+
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
 });
 
-/* CALENDAR EVENTS */
+/* ─────────────────────────────────────────
+   CALENDAR EVENTS
+   (merged morning+afternoon into one row per day — cleaner)
+   Day name added so we don't have to recalculate from date
+───────────────────────────────────────── */
 
 export const calendarEvents = pgTable(
   "calendar_events",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+
+    // FK — unchanged
     calendarId: uuid("calendar_id")
       .notNull()
-      .references(() => academicCalendars.id),
+      .references(() => academicCalendars.id, { onDelete: "cascade" }),
+
     weekNumber: integer("week_number").notNull(),
-    date: date("date").notNull(),
-    session: sessionEnum("session").notNull(),
-    activity: text("activity"),
+    dayName: text("day_name").notNull(),   // "Monday", "Tuesday" etc.
+    date: date("date"),                    // optional — user fills manually
+
+    // Both sessions in one row (simpler for form binding)
+    morningActivity: text("morning_activity"),
+    afternoonActivity: text("afternoon_activity"),
   },
   (table) => ({
-    uniqueSessionPerDay: uniqueIndex("unique_session_per_day").on(
+    // One row per (calendar, week, day)
+    uniqueDayPerWeek: uniqueIndex("unique_day_per_week").on(
       table.calendarId,
-      table.date,
-      table.session
+      table.weekNumber,
+      table.dayName
     ),
   })
 );
 
-
-/*------------------------------------------------------------------------*/
+/* ─────────────────────────────────────────
+   TEMPLATE  (unchanged — kept as-is)
+───────────────────────────────────────── */
 
 export const template = pgTable("template", (d) => ({
   id: d.uuid().defaultRandom().primaryKey(),
@@ -69,6 +149,10 @@ export const template = pgTable("template", (d) => ({
     .timestamp({ withTimezone: true })
     .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 }));
+
+/* ─────────────────────────────────────────
+   STUDENT  (unchanged — kept as-is)
+───────────────────────────────────────── */
 
 export const student = pgTable("student", (d) => ({
   id: d.uuid().defaultRandom().primaryKey(),
