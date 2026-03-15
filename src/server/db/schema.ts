@@ -116,6 +116,17 @@ export const courseReport = pgTable("course_report", (d) => ({
     .timestamp({ withTimezone: true })
     .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 }));
+
+// ── Programs (Sidebar branches) ──────────────────────────────────────────────
+export const program = pgTable("program", (d) => ({
+  id: d.uuid().defaultRandom().primaryKey(),
+  name: d.text().notNull(),
+  createdAt: d.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  updatedAt: d
+    .timestamp({ withTimezone: true })
+    .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+}));
+
 export const posts = pgTable(
   "post",
   (d) => ({
