@@ -1,14 +1,19 @@
 import { initTRPC } from "@trpc/server";
 import z, { ZodError } from "zod";
-import type { db as DbType } from "./db";
 
-// db is passed in at request time via createTRPCContext in the route handler
-// Do NOT import db here — it causes a Turbopack circular initialization error
-export type Context = {
-  db: typeof DbType;
+// Lazy import — db is resolved at call-time, not at module evaluation time.
+// This breaks the Turbopack circular initialization chain:
+// routers → db/schema → db/index → trpc → (already evaluating) → ❌
+// With lazy import, trpc.ts has zero top-level side-effects from db.
+const getDb = () => import("./db").then((m) => m.db);
+
+export const createTRPCContext = async () => {
+  return { db: await getDb() };
 };
 
-export const t = initTRPC.context<Context>().create({
+export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
+
+const t = initTRPC.context<Context>().create({
   errorFormatter(opts) {
     const { shape, error } = opts;
     return {
