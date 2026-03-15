@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "auth:generate": "bun x auth@latest generate --output=./src/server/db/auth-schema.ts"
   },
   "dependencies": {
     "@ai-sdk/react": "2.0.28",
@@ -59,6 +61,7 @@
     "@udecode/cn": "^52.0.11",
     "@uploadthing/react": "7.3.3",
     "ai": "5.0.28",
+    "better-auth": "^1.5.5",
     "class-variance-authority": "^0.7.1",
     "client-only": "^0.0.1",
     "cmdk": "^1.1.1",
@@ -72,6 +75,7 @@
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
     "pdf-lib": "^1.17.1",
+    "pg": "^8.20.0",
     "platejs": "^52.3.2",
     "puppeteer": "^24.39.1",
     "radix-ui": "^1.4.3",
@@ -102,6 +106,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/lodash": "^4.17.24",
     "@types/node": "^20",
+    "@types/pg": "^8.18.0",
     "@types/puppeteer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
