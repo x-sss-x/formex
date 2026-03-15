@@ -1,6 +1,5 @@
-import { asc, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import z from "zod";
-import { renderFormat01 } from "@/templates/rendeFormat01";
 import { template } from "../db/schema";
 import { createRouter, publicProcedure } from "../trpc";
 
@@ -40,21 +39,4 @@ export const templateRouter = createRouter({
         .set({ stateJSON: input.stateJSON })
         .where(eq(template.id, input.templateId)),
     ),
-
-  generatePDF: publicProcedure
-    .input(
-      z.object({
-        code: z.string(),
-        institutionName: z.string(),
-        vision: z.string(),
-        mission: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx }) => {
-      const html = renderFormat01(data);
-
-      const pdf = await generatePDF(html);
-
-      return pdf;
-    }),
 });
