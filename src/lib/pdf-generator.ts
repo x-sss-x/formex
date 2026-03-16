@@ -1,24 +1,3 @@
-import puppeteer from "puppeteer";
-
-export async function generatePDF(html: string) {
-  const browser = await puppeteer.launch();
-
-  const page = await browser.newPage();
-
-  await page.setContent(html);
-
-  const pdf = await page.pdf({
-    format: "A4",
-    printBackground: true,
-  });
-
-  await browser.close();
-
-  return pdf;
-}
-
-//---------------------------------------------------------------
-
 /* PRINT FUNCTION 👇*/
 
 /**
@@ -29,52 +8,56 @@ export async function generatePDF(html: string) {
  * Usage:
  *   printFormat("print-area")
  */
-export function printFormat(elementId: string): void {
+export function printFormat(
+  elementId: string,
+  orientation: "portrait" | "landscape" = "portrait",
+): void {
   const element = document.getElementById(elementId);
   if (!element) {
     console.error(`Element with id "${elementId}" not found.`);
     return;
   }
-
-  const printWindow = window.open("", "_blank", "width=900,height=650");
+ 
+  const printWindow = window.open("", "_blank", "width=1200,height=900");
   if (!printWindow) {
-    console.error("Could not open print window. Check popup blocker settings.");
+    console.error("Could not open print window.");
     return;
   }
-
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Print</title>
-        <style>
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-          }
-          body {
-            background: white;
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
-          }
-          @page {
-            margin: 0;
-          }
-        </style>
-      </head>
-      <body>
-        ${element.innerHTML}
-      </body>
-    </html>
-  `);
-
+ 
+  printWindow.document.write(`<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Print</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        background: white;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      @page {
+        size: A4 ${orientation};
+        margin: 10mm 12mm 10mm 12mm;
+      }
+      body > div {
+        width: 100% !important;
+        min-height: unset !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+      }
+      img { max-width: 100%; height: auto; }
+      table { page-break-inside: avoid; }
+    </style>
+  </head>
+  <body>${element.innerHTML}</body>
+</html>`);
+ 
   printWindow.document.close();
   printWindow.focus();
-
-  // Small delay to ensure content is fully loaded before printing
   setTimeout(() => {
     printWindow.print();
     printWindow.close();
-  }, 300);
+  }, 600);
 }
