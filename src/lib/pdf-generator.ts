@@ -37,7 +37,7 @@ export function printFormat(
         -webkit-print-color-adjust: exact;
       }
       @page {
-        size: A4 ${orientation};
+      
         margin: 10mm 12mm 10mm 12mm;
       }
       body > div {

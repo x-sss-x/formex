@@ -1,7 +1,6 @@
 "use client";
 
 import Format01 from "@/templates/format01";
-
 export default function Format01Page() {
   return (
     <div>

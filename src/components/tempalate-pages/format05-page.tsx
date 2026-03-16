@@ -13,7 +13,7 @@ export default function Format05Page() {
           size="sm"
           variant="outline"
           className="gap-2"
-          onClick={() => printFormat("format-05", "landscape")}
+          onClick={() => printFormat("format-05")}
         >
           <Printer className="h-4 w-4" />
           Print / Save PDF
