@@ -7,7 +7,7 @@ export const auth = betterAuth({
   baseURL:
     process.env.NODE_ENV === "development"
       ? process.env.BETTER_AUTH_URL
-      : process.env.VERCEL_URL,
+      : `https://${process.env.VERCEL_URL}`,
   database: drizzleAdapter(db, { provider: "pg", schema }),
   emailAndPassword: { enabled: true },
 });
