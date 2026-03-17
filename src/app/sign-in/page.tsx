@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { signIn } from "@/lib/auth-client";
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(6),
 });
 
@@ -31,7 +31,7 @@ export default function SignInPage() {
 
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const parse = schema.safeParse(formState);
     if (!parse.success) {
