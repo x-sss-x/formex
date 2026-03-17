@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { signOut, useSession } from "@/lib/auth-client";
 import { useTRPC } from "../../trpc/client";
+import { getTemplatePagesByType } from "../tempalate-pages";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -40,7 +41,6 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { ProgramActions } from "./program-actions";
-import { getTemplatePagesByType } from "../tempalate-pages";
 
 const institutionFormats = getTemplatePagesByType("institution");
 
