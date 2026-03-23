@@ -1,19 +1,17 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Manrope, Roboto_Slab } from "next/font/google";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/client";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const robotoSlabHeading = Roboto_Slab({
   subsets: ["latin"],
+  variable: "--font-heading",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,9 +24,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={cn("font-sans", manrope.variable, robotoSlabHeading.variable)}
+    >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} border-border bg-background antialiased`}
+        className={`${manrope.variable} ${robotoSlabHeading.variable} border-border bg-background antialiased`}
       >
         <TRPCReactProvider>
           <TooltipProvider>

@@ -71,4 +71,10 @@ export const templateRouter = createTRPCRouter({
         };
       }),
     ),
+
+  list: protectedProcedure.query(({ ctx }) =>
+    ctx.db.query.template.findMany({
+      orderBy: ({ createdAt }, { desc }) => desc(createdAt),
+    }),
+  ),
 });

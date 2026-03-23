@@ -96,7 +96,9 @@ export function AppSidebar() {
     <>
       <Sidebar>
         <SidebarHeader>
-          <span className="text-lg px-1.5 font-semibold font-mono">Formex</span>
+          <span className="text-lg px-1.5 font-semibold font-heading">
+            Formex
+          </span>
         </SidebarHeader>
 
         <SidebarContent>
