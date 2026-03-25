@@ -1,17 +1,21 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  BracesIcon,
-  ChevronDownIcon,
-  HomeIcon,
-  Loader2,
-  PlusIcon,
-} from "lucide-react";
+  CubeIcon,
+  GridIcon,
+  Home01Icon,
+  PlusSignIcon,
+  UserSquareIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ChevronDownIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { signOut, useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import { useTRPC } from "../../trpc/client";
 import { getTemplatePagesByType } from "../tempalate-pages";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -47,9 +51,13 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { ProgramActions } from "./program-actions";
-import { cn } from "@/lib/utils";
 
 const institutionFormats = getTemplatePagesByType("institution");
+
+const items = [
+  { id: 1, label: "Home", icon: Home01Icon, href: "/" },
+  { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
+];
 
 export function AppSidebar({
   children,
@@ -109,20 +117,25 @@ export function AppSidebar({
 
         <SidebarContent>
           <SidebarGroup>
-            <SidebarMenuItem>
-              <Link href={"/"}>
-                <SidebarMenuButton>
-                  <HomeIcon /> Home
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton asChild isActive={item.href === pathname}>
+                    <Link href={item.href}>
+                      <HugeiconsIcon icon={item.icon} /> {item.label}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
           </SidebarGroup>
 
           <SidebarGroup>
             <SidebarGroupLabel>
               Programs
               <SidebarGroupAction onClick={openDialog}>
-                <PlusIcon /> <span className="sr-only">Add Program</span>
+                <HugeiconsIcon icon={PlusSignIcon} />{" "}
+                <span className="sr-only">Add Program</span>
               </SidebarGroupAction>
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -137,9 +150,10 @@ export function AppSidebar({
                       <SidebarMenuButton
                         asChild
                         className="flex w-full items-center"
-                        isActive={pathname === `/p/${programId}`}
+                        isActive={pathname === `/p/${item.id}`}
                       >
                         <Link href={`/p/${item.id}`}>
+                          <HugeiconsIcon icon={CubeIcon} />{" "}
                           <span className="flex-1 truncate">{item.name}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -162,7 +176,7 @@ export function AppSidebar({
                       isActive={pathname === `/f/${item.slug}`}
                     >
                       <Link href={`/f/${item.slug}`}>
-                        <BracesIcon /> {item.name}
+                        <HugeiconsIcon icon={GridIcon} /> {item.name}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

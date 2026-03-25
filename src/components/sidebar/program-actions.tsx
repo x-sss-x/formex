@@ -1,7 +1,14 @@
 "use client";
 
+import {
+  Delete01Icon,
+  LoaderCircle,
+  More01Icon,
+  MoreHorizontal,
+  Pen01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, MoreHorizontalIcon, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTRPC } from "../../trpc/client";
 import {
@@ -88,20 +95,20 @@ export function ProgramActions({ id, name }: ProgramActionsProps) {
       <DropdownMenu>
         <SidebarMenuAction asChild>
           <DropdownMenuTrigger>
-            <MoreHorizontalIcon className="h-3.5 w-3.5" />
+            <HugeiconsIcon icon={MoreHorizontal} className="h-3.5 w-3.5" />
             <span className="sr-only">Program options</span>
           </DropdownMenuTrigger>
         </SidebarMenuAction>
         <DropdownMenuContent side="right" align="start">
           <DropdownMenuItem onClick={openRename}>
-            <Pencil className="mr-2 h-3.5 w-3.5" />
+            <HugeiconsIcon icon={Pen01Icon} className="mr-2 h-3.5 w-3.5" />
             Rename
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setDeleteOpen(true)}
             className="text-destructive focus:text-destructive"
           >
-            <Trash2 className="mr-2 h-3.5 w-3.5" />
+            <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-3.5 w-3.5" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -144,7 +151,10 @@ export function ProgramActions({ id, name }: ProgramActionsProps) {
             <Button onClick={handleRename} disabled={update.isPending}>
               {update.isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <HugeiconsIcon
+                    icon={LoaderCircle}
+                    className="mr-2 h-4 w-4 animate-spin"
+                  />
                   Saving…
                 </>
               ) : (
@@ -176,7 +186,10 @@ export function ProgramActions({ id, name }: ProgramActionsProps) {
             >
               {remove.isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <HugeiconsIcon
+                    icon={LoaderCircle}
+                    className="mr-2 h-4 w-4 animate-spin"
+                  />
                   Deleting…
                 </>
               ) : (
