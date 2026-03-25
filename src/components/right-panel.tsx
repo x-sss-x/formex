@@ -67,13 +67,6 @@ export function RightPanel() {
                 <h2 className="font-semibold">Edit panel</h2>
 
                 <div className="space-x-2">
-                  <Button
-                    // onClick={() => exportToPDF()}
-                    size={"xs"}
-                    variant={"outline"}
-                  >
-                    Export as PDF
-                  </Button>
                   <Button size={"xs"}>Save</Button>
                 </div>
               </SidebarMenuItem>

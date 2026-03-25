@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useDocumentStore } from "@/stores/document";
 
 export type Format01Data = {
   institutionName: string;
@@ -9,11 +12,10 @@ export type Format01Data = {
   revision?: string;
   date?: string;
   logoUrl?: string;
-  vision: string;
-  mission: string;
 };
 
 export default function Format01({ data }: { data: Format01Data }) {
+  const { vision, mission } = useDocumentStore();
   return (
     <div
       style={{
@@ -185,7 +187,7 @@ export default function Format01({ data }: { data: Format01Data }) {
             wordBreak: "break-word",
           }}
         >
-          {data.vision}
+          {vision}
         </div>
       </div>
 
@@ -206,7 +208,7 @@ export default function Format01({ data }: { data: Format01Data }) {
             wordBreak: "break-word",
           }}
         >
-          {data.mission}
+          {mission}
         </div>
       </div>
 

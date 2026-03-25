@@ -1,6 +1,7 @@
 "use client";
 
 import Format01 from "@/templates/format01";
+import { RightPanel } from "../right-panel";
 
 export default function Format01Page() {
   return (
@@ -14,12 +15,9 @@ export default function Format01Page() {
           formNo: "001",
           revision: "01",
           date: "01-06-2024",
-          vision:
-            "To be a centre of excellence in technical education, producing competent diploma engineers with strong ethical values, ready to contribute to the technological and economic development of the nation.",
-          mission:
-            "To impart quality technical education through well-qualified faculty, state-of-the-art infrastructure, and industry-aligned curriculum. To nurture innovation, critical thinking, and professional ethics among students.",
         }}
       />
+      <RightPanel />
     </div>
   );
 }
