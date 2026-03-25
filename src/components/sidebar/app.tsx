@@ -131,7 +131,7 @@ export function AppSidebar({
 
           <SidebarGroup>
             <SidebarGroupLabel>
-              Programs
+              PROGRAMS
               <SidebarGroupAction onClick={openDialog}>
                 <HugeiconsIcon icon={PlusSignIcon} />{" "}
                 <span className="sr-only">Add Program</span>
@@ -165,7 +165,7 @@ export function AppSidebar({
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel>Institution Formats</SidebarGroupLabel>
+            <SidebarGroupLabel>INSTITUTION FORMATS</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {institutionFormats.map((item) => (
