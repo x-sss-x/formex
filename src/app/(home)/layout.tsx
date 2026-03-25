@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/sidebar/app";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 
 export default async function Layout({
@@ -16,11 +16,9 @@ export default async function Layout({
   }
 
   return (
-    <div className="flex w-vw ">
-      <SidebarProvider className="w-fit">
-        <AppSidebar />
-      </SidebarProvider>
-      <SidebarProvider className="flex-1 w-full">{children}</SidebarProvider>
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
   );
 }

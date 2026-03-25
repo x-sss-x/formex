@@ -3,8 +3,8 @@ import {
   integer,
   pgEnum,
   pgTable,
-  uniqueIndex,
   text,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 import { initCols } from "./column.helpers";

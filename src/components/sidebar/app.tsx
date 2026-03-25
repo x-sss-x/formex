@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { signOut, useSession } from "@/lib/auth-client";
 import { useTRPC } from "../../trpc/client";
 import { getTemplatePagesByType } from "../tempalate-pages";
@@ -47,10 +47,14 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { ProgramActions } from "./program-actions";
+import { cn } from "@/lib/utils";
 
 const institutionFormats = getTemplatePagesByType("institution");
 
-export function AppSidebar() {
+export function AppSidebar({
+  children,
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const trpc = useTRPC();
   const router = useRouter();
@@ -92,8 +96,11 @@ export function AppSidebar() {
   }
 
   return (
-    <>
-      <Sidebar>
+    <Sidebar
+      {...props}
+      className="overflow-hidden *:data-[sidebar=sidebar]:flex-row"
+    >
+      <Sidebar collapsible="none" className={cn("flex-1", props.className)}>
         <SidebarHeader>
           <span className="text-lg px-1.5 font-semibold font-heading">
             Formex
@@ -109,25 +116,6 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
-          </SidebarGroup>
-          <SidebarGroup>
-            <SidebarGroupLabel>Institution Formats</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {institutionFormats.map((item) => (
-                  <SidebarMenuItem key={item.id}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === `/f/${item.slug}`}
-                    >
-                      <Link href={`/f/${item.slug}`}>
-                        <BracesIcon /> {item.name}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
           </SidebarGroup>
 
           <SidebarGroup>
@@ -159,6 +147,26 @@ export function AppSidebar() {
                     </SidebarMenuItem>
                   ))
                 )}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          <SidebarGroup>
+            <SidebarGroupLabel>Institution Formats</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {institutionFormats.map((item) => (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === `/f/${item.slug}`}
+                    >
+                      <Link href={`/f/${item.slug}`}>
+                        <BracesIcon /> {item.name}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -232,6 +240,8 @@ export function AppSidebar() {
         </SidebarFooter>
       </Sidebar>
 
+      {children}
+
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -277,6 +287,6 @@ export function AppSidebar() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </Sidebar>
   );
 }
