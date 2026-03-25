@@ -16,9 +16,11 @@ export default async function Layout({
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main className="min-h-svh flex flex-col w-full">{children}</main>
-    </SidebarProvider>
+    <div className="flex w-vw ">
+      <SidebarProvider className="w-fit">
+        <AppSidebar />
+      </SidebarProvider>
+      <SidebarProvider className="flex-1 w-full">{children}</SidebarProvider>
+    </div>
   );
 }
