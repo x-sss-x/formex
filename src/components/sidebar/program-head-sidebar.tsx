@@ -2,14 +2,15 @@
 
 import {
   Books02Icon,
-  DashboardCircleIcon,
+  Calendar01Icon,
   GridIcon,
+  Home01Icon,
   Mortarboard01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { getTemplatePagesByType } from "../tempalate-pages";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
   Sidebar,
@@ -22,11 +23,24 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 
-const items = [
-  { id: 1, label: "Dashboard", icon: DashboardCircleIcon, href: "" },
-  { id: 2, label: "Students", icon: Mortarboard01Icon, href: "/students" },
-  { id: 3, label: "Subjects", icon: Books02Icon, href: "/subjects" },
-];
+const items = {
+  program: [
+    { id: 1, label: "Home", icon: Home01Icon, href: "/" },
+    { id: 2, label: "Calendar", icon: Calendar01Icon, href: "/calendar" },
+  ],
+  semester: [
+    { id: 1, label: "Students", icon: Mortarboard01Icon, href: "/students" },
+    { id: 2, label: "Subjects", icon: Books02Icon, href: "/subjects" },
+  ],
+  semesterFormats: [
+    { id: 1, label: "INS Format 02", icon: GridIcon, href: "#" },
+    { id: 2, label: "INS Format 04", icon: GridIcon, href: "#" },
+  ],
+  programFormats: [
+    { id: 1, label: "INS Format 04", icon: GridIcon, href: "#" },
+    { id: 2, label: "INS Format 05", icon: GridIcon, href: "#" },
+  ],
+};
 
 const semesters = [
   {
@@ -47,9 +61,7 @@ const semesters = [
   },
 ];
 
-const branchFormats = getTemplatePagesByType("branch");
-
-export function ProgramSidebar() {
+export function ProgramHeadSidebar() {
   const { programId } = useParams<{ programId: string }>();
   const pathname = usePathname();
   const activeSemesterId = 1;
@@ -57,22 +69,29 @@ export function ProgramSidebar() {
   return (
     <Sidebar collapsible="none" className="peer flex-1 flex">
       <SidebarHeader className="border-b">
-        <span className="text-lg px-1.5 font-semibold font-heading">
-          Computer Science & Engg.
-        </span>
-
-        <SidebarGroup>
-          <SidebarMenu className="grid gap-1.5 grid-cols-4">
+        <div className="flex-row flex items-center">
+          <span className="text-lg text-primary px-1.5 font-bold font-brand">
+            FORMEX
+          </span>
+          <Badge variant={"secondary"} className="font-mono text-xs">
+            HOD
+          </Badge>
+        </div>
+        <SidebarGroup className="px-0">
+          <SidebarGroupLabel>COMPUTER SCIENCE</SidebarGroupLabel>
+          <SidebarMenu className="grid grid-cols-4 px-2 gap-0.5">
             {semesters.map((item) => (
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton
                   isActive={activeSemesterId === item.id}
+                  className="text-xs"
                   size={"sm"}
                   asChild
                 >
                   <Button
+                    size={"xs"}
                     variant={activeSemesterId === item.id ? "outline" : "ghost"}
-                    className="font-mono bg-transparent"
+                    className="font-mono text-xs bg-transparent"
                   >
                     {item.label}
                   </Button>
@@ -85,9 +104,26 @@ export function ProgramSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>PROGRAM</SidebarGroupLabel>
+          <SidebarMenu>
+            {items.program.map((item) => (
+              <SidebarMenuItem key={item.id}>
+                <Link href={`/p/${programId}${item.href}`}>
+                  <SidebarMenuButton
+                    isActive={pathname === `/p/${programId}${item.href}`}
+                  >
+                    <HugeiconsIcon icon={item.icon} /> {item.label}
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
           <SidebarGroupLabel>SEMESTER</SidebarGroupLabel>
           <SidebarMenu>
-            {items.map((item) => (
+            {items.semester.map((item) => (
               <SidebarMenuItem key={item.id}>
                 <Link href={`/p/${programId}${item.href}`}>
                   <SidebarMenuButton
@@ -104,10 +140,10 @@ export function ProgramSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>SEMESTER FORMATS</SidebarGroupLabel>
           <SidebarMenu>
-            {branchFormats.map((item) => (
+            {items.semesterFormats.map((item) => (
               <SidebarMenuItem key={item.id}>
-                <SidebarMenuButton isActive={pathname === `/f/${item.slug}`}>
-                  <HugeiconsIcon icon={GridIcon} /> {item.name}
+                <SidebarMenuButton>
+                  <HugeiconsIcon icon={GridIcon} /> {item.label}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -117,10 +153,10 @@ export function ProgramSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>PROGRAM FORMATS</SidebarGroupLabel>
           <SidebarMenu>
-            {branchFormats.map((item) => (
+            {items.programFormats.map((item) => (
               <SidebarMenuItem key={item.id}>
-                <SidebarMenuButton isActive={pathname === `/f/${item.slug}`}>
-                  <HugeiconsIcon icon={GridIcon} /> {item.name}
+                <SidebarMenuButton>
+                  <HugeiconsIcon icon={GridIcon} /> {item.label}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

@@ -26,6 +26,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { AppSidebarFooter } from "./app-sidebar-footer";
+import { Badge } from "../ui/badge";
 
 const institutionFormats = getTemplatePagesByType("institution");
 
@@ -52,10 +53,13 @@ export function PrincipalSidebar({
 
   return (
     <Sidebar collapsible="none" className={cn("flex-1", className)} {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="flex-row items-center">
         <span className="text-lg text-primary px-1.5 font-bold font-brand">
           FORMEX
         </span>
+        <Badge variant={"default"} className="font-mono text-xs">
+          PRINCIPAL
+        </Badge>
       </SidebarHeader>
 
       <SidebarContent>
