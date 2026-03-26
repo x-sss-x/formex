@@ -4,7 +4,7 @@ import { admin } from "better-auth/plugins";
 import { db } from "@/server/db";
 import * as schema from "@/server/db/auth-schema";
 import { getBaseURL } from "@/utils/getBaseUrl";
-import { ac, principal, programHead, staff } from "./permissions";
+import { ac, principal, program_head, staff } from "./permissions";
 
 export const auth = betterAuth({
   baseURL: {
@@ -18,9 +18,11 @@ export const auth = betterAuth({
       ac,
       roles: {
         principal,
-        programHead,
+        program_head,
         staff,
       },
+      adminRoles: ["principal"],
+      defaultRole: "staff",
     }),
   ],
 });

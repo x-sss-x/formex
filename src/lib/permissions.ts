@@ -15,7 +15,7 @@ export const principal = ac.newRole({
   ...adminAc.statements,
 });
 
-export const programHead = ac.newRole({
+export const program_head = ac.newRole({
   project: ["create", "delete", "share", "update"],
 });
 

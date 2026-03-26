@@ -19,6 +19,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { Badge } from "../ui/badge";
+import { AppSidebarFooter } from "./app-sidebar-footer";
 
 const items = {
   program: [
@@ -98,6 +99,7 @@ export function StaffSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <AppSidebarFooter />
     </Sidebar>
   );
 }

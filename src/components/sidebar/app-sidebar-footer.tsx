@@ -1,3 +1,4 @@
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
@@ -16,7 +17,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { ArrowDown01 } from "@hugeicons/core-free-icons";
 
 export function AppSidebarFooter() {
   const { data: session } = authClient.useSession();
@@ -49,7 +49,7 @@ export function AppSidebarFooter() {
                   </div>
 
                   <HugeiconsIcon
-                    icon={ArrowDown01}
+                    icon={ArrowDown01Icon}
                     className="ml-auto group-data-[state=open]/dropdown-menu:-rotate-180 transition-all duration-200"
                   />
                 </SidebarMenuButton>

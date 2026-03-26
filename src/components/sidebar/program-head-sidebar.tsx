@@ -22,6 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
+import { AppSidebarFooter } from "./app-sidebar-footer";
 
 const items = {
   program: [
@@ -104,7 +105,6 @@ export function ProgramHeadSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>PROGRAM</SidebarGroupLabel>
           <SidebarMenu>
             {items.program.map((item) => (
               <SidebarMenuItem key={item.id}>
@@ -163,6 +163,7 @@ export function ProgramHeadSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <AppSidebarFooter />
     </Sidebar>
   );
 }
