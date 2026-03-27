@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Calendar01Icon,
   CubeIcon,
   GridIcon,
   Home01Icon,
@@ -33,6 +34,7 @@ const institutionFormats = getTemplatePagesByType("institution");
 const items = [
   { id: 1, label: "Home", icon: Home01Icon, href: "/" },
   { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
+  { id: 2, label: "Calendar", icon: Calendar01Icon, href: "/calendar" },
 ];
 
 const branches = [
@@ -111,11 +113,8 @@ export function PrincipalSidebar({
             <SidebarMenu>
               {institutionFormats.map((item) => (
                 <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === `/f/${item.slug}`}
-                  >
-                    <Link href={`/f/${item.slug}`}>
+                  <SidebarMenuButton asChild>
+                    <Link href={`#`}>
                       <HugeiconsIcon icon={GridIcon} /> {item.name}
                     </Link>
                   </SidebarMenuButton>

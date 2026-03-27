@@ -1,11 +1,13 @@
 "use client";
 
 import {
+  Book01Icon,
   Books02Icon,
   Calendar01Icon,
   GridIcon,
   Home01Icon,
   Mortarboard01Icon,
+  PlusSignIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
@@ -16,6 +18,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -31,7 +34,11 @@ const items = {
   ],
   semester: [
     { id: 1, label: "Students", icon: Mortarboard01Icon, href: "/students" },
-    { id: 2, label: "Subjects", icon: Books02Icon, href: "/subjects" },
+  ],
+  subjects: [
+    { id: 1, label: "Applied Science", icon: Book01Icon },
+    { id: 2, label: "Mathemetics", icon: Book01Icon },
+    { id: 3, label: "Network Security", icon: Book01Icon },
   ],
   semesterFormats: [
     { id: 1, label: "INS Format 02", icon: GridIcon, href: "#" },
@@ -129,6 +136,26 @@ export function ProgramHeadSidebar() {
                   <SidebarMenuButton
                     isActive={pathname === `/p/${programId}${item.href}`}
                   >
+                    <HugeiconsIcon icon={item.icon} /> {item.label}
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            SUBJECTS
+            <SidebarGroupAction>
+              <HugeiconsIcon icon={PlusSignIcon} />
+            </SidebarGroupAction>
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            {items.subjects.map((item) => (
+              <SidebarMenuItem key={item.id}>
+                <Link href={`/s/${item.id}`}>
+                  <SidebarMenuButton isActive={pathname === `/s/${item.id}`}>
                     <HugeiconsIcon icon={item.icon} /> {item.label}
                   </SidebarMenuButton>
                 </Link>
