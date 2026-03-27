@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Book01Icon,
   Calendar01Icon,
   GridIcon,
   Home01Icon,
@@ -8,6 +9,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { Badge } from "../ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -18,17 +20,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { Badge } from "../ui/badge";
 import { AppSidebarFooter } from "./app-sidebar-footer";
 
 const items = {
-  program: [
+  app: [
     { id: 1, label: "Home", icon: Home01Icon, href: "/" },
     { id: 2, label: "Calendar", icon: Calendar01Icon, href: "/calendar" },
-  ],
-  semester: [
-    { id: 1, label: "Students", icon: Home01Icon, href: "/students" },
-    { id: 2, label: "Subjects", icon: Calendar01Icon, href: "/subjects" },
   ],
   semesterFormats: [
     { id: 1, label: "INS Format 02", icon: GridIcon, href: "#" },
@@ -37,6 +34,11 @@ const items = {
   programFormats: [
     { id: 1, label: "INS Format 04", icon: GridIcon, href: "#" },
     { id: 2, label: "INS Format 05", icon: GridIcon, href: "#" },
+  ],
+  subjects: [
+    { id: 1, label: "Applied Science", icon: Book01Icon },
+    { id: 2, label: "Mathemetics", icon: Book01Icon },
+    { id: 3, label: "Network Security", icon: Book01Icon },
   ],
 };
 
@@ -57,14 +59,26 @@ export function StaffSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>SEMESTER</SidebarGroupLabel>
           <SidebarMenu>
-            {items.semester.map((item) => (
+            {items.app.map((item) => (
               <SidebarMenuItem key={item.id}>
-                <Link href={`/p/${programId}${item.href}`}>
-                  <SidebarMenuButton
-                    isActive={pathname === `/p/${programId}${item.href}`}
-                  >
+                <Link href={item.href}>
+                  <SidebarMenuButton isActive={pathname === item.href}>
+                    <HugeiconsIcon icon={item.icon} /> {item.label}
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>SUBJECTS</SidebarGroupLabel>
+          <SidebarMenu>
+            {items.subjects.map((item) => (
+              <SidebarMenuItem key={item.id}>
+                <Link href={`/s/${item.id}`}>
+                  <SidebarMenuButton isActive={pathname === `/s/${item.id}`}>
                     <HugeiconsIcon icon={item.icon} /> {item.label}
                   </SidebarMenuButton>
                 </Link>
