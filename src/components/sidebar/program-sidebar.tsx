@@ -10,6 +10,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { useState } from "react";
 import { getTemplatePagesByType } from "../tempalate-pages";
 import { Button } from "../ui/button";
 import {
@@ -24,6 +25,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { NewSubjectDialog } from "../dialogs/new-subject.dialog";
+import { SubjectActions } from "./subject-actions";
 
 const items = {
   semester: [
@@ -31,9 +33,9 @@ const items = {
     { id: 2, label: "Students", icon: Mortarboard01Icon, href: "/students" },
   ],
   subjects: [
-    { id: 1, label: "Applied Science", icon: Book01Icon },
-    { id: 2, label: "Mathemetics", icon: Book01Icon },
-    { id: 3, label: "Network Security", icon: Book01Icon },
+    { id: "1", label: "Applied Science", icon: Book01Icon },
+    { id: "2", label: "Mathemetics", icon: Book01Icon },
+    { id: "3", label: "Network Security", icon: Book01Icon },
   ],
 };
 
@@ -62,6 +64,7 @@ export function ProgramSidebar() {
   const { programId } = useParams<{ programId: string }>();
   const pathname = usePathname();
   const activeSemesterId = 1;
+  const [subjects, setSubjects] = useState(items.subjects);
 
   if (!programId) return null;
 
@@ -120,18 +123,41 @@ export function ProgramSidebar() {
                   <HugeiconsIcon icon={PlusSignIcon} />
                 </SidebarGroupAction>
               }
+              onCreated={({ name }) => {
+                setSubjects((prev) => [
+                  { id: crypto.randomUUID(), label: name, icon: Book01Icon },
+                  ...prev,
+                ]);
+              }}
             />
           </SidebarGroupLabel>
           <SidebarMenu>
-            {items.subjects.map((item) => (
+            {subjects.map((item) => (
               <SidebarMenuItem key={item.id}>
-                <Link href={`/p/${programId}/s/${item.id}`}>
-                  <SidebarMenuButton
-                    isActive={pathname === `/p/${programId}/s/${item.id}`}
-                  >
-                    <HugeiconsIcon icon={item.icon} /> {item.label}
-                  </SidebarMenuButton>
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link className="flex-1" href={`/p/${programId}/s/${item.id}`}>
+                    <SidebarMenuButton
+                      isActive={pathname === `/p/${programId}/s/${item.id}`}
+                      className="w-full justify-start"
+                    >
+                      <HugeiconsIcon icon={item.icon} /> {item.label}
+                    </SidebarMenuButton>
+                  </Link>
+                  <SubjectActions
+                    id={item.id}
+                    name={item.label}
+                    onRename={(nextName) =>
+                      setSubjects((prev) =>
+                        prev.map((s) =>
+                          s.id === item.id ? { ...s, label: nextName } : s,
+                        ),
+                      )
+                    }
+                    onDelete={() =>
+                      setSubjects((prev) => prev.filter((s) => s.id !== item.id))
+                    }
+                  />
+                </div>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>

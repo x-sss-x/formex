@@ -1,7 +1,10 @@
-export default function Page() {
-  return (
-    <div className="h-svh text-2xl w-full flex items-center justify-center">
-      Subject Details
-    </div>
-  );
+import { SubjectPage } from "@/components/subject/subject.page";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ subjectId: string }>;
+}) {
+  const { subjectId } = await params;
+  return <SubjectPage subjectId={subjectId} />;
 }
