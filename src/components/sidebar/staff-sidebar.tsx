@@ -8,7 +8,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
 import {
   Sidebar,
@@ -43,11 +43,10 @@ const items = {
 };
 
 export function StaffSidebar() {
-  const { programId } = useParams<{ programId: string }>();
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="none" className="peer flex-1 flex">
+    <Sidebar collapsible="none" className="flex-1 w-full">
       <SidebarHeader className="flex-row items-center">
         <span className="text-lg text-primary px-1.5 font-bold font-brand">
           FORMEX

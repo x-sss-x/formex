@@ -10,7 +10,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import type React from "react";
 import { cn } from "@/lib/utils";
 import { getTemplatePagesByType } from "../tempalate-pages";
@@ -34,7 +34,7 @@ const institutionFormats = getTemplatePagesByType("institution");
 const items = [
   { id: 1, label: "Home", icon: Home01Icon, href: "/" },
   { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
-  { id: 2, label: "Calendar", icon: Calendar01Icon, href: "/calendar" },
+  { id: 3, label: "Calendar", icon: Calendar01Icon, href: "/calendar" },
 ];
 
 const branches = [
@@ -52,9 +52,14 @@ export function PrincipalSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { programId } = useParams<{ programId: string }>();
 
   return (
-    <Sidebar collapsible="none" className={cn("flex-1", className)} {...props}>
+    <Sidebar
+      collapsible="none"
+      className={cn("flex-1", className, programId && "border-r")}
+      {...props}
+    >
       <SidebarHeader className="flex-row items-center">
         <span className="text-lg text-primary px-1.5 font-bold font-brand">
           FORMEX
