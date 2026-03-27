@@ -2,7 +2,6 @@
 
 import {
   Book01Icon,
-  Books02Icon,
   Calendar01Icon,
   GridIcon,
   Home01Icon,
@@ -11,7 +10,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
@@ -70,7 +69,6 @@ const semesters = [
 ];
 
 export function ProgramHeadSidebar() {
-  const { programId } = useParams<{ programId: string }>();
   const pathname = usePathname();
   const activeSemesterId = 1;
 

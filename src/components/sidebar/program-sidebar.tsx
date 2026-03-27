@@ -23,6 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
+import { NewSubjectDialog } from "../dialogs/new-subject.dialog";
 
 const items = {
   semester: [
@@ -113,9 +114,13 @@ export function ProgramSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>
             SUBJECTS
-            <SidebarGroupAction>
-              <HugeiconsIcon icon={PlusSignIcon} />
-            </SidebarGroupAction>
+            <NewSubjectDialog
+              trigger={
+                <SidebarGroupAction>
+                  <HugeiconsIcon icon={PlusSignIcon} />
+                </SidebarGroupAction>
+              }
+            />
           </SidebarGroupLabel>
           <SidebarMenu>
             {items.subjects.map((item) => (

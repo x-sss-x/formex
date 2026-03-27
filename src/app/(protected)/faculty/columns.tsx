@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 // Replace with HugeIcons if installed
-import { Eye, MoreVertical, Pencil, Trash } from "lucide-react";
+import { MoreVertical, Pencil, Trash } from "lucide-react";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,72 +18,81 @@ export const facultySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   role: z.enum(["staff", "hod"]),
+  branch: z.string().optional(),
   createdAt: z.string(),
 });
 
 export type Faculty = z.infer<typeof facultySchema>;
 
-export const columns: ColumnDef<Faculty>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => {
-      const role = row.getValue("role") as string;
+type FacultyColumnActions = {
+  onEdit: (faculty: Faculty) => void;
+  onDelete: (faculty: Faculty) => void;
+};
 
-      return (
-        <Badge variant={role === "hod" ? "secondary" : "outline"}>
-          {role.toUpperCase()}
-        </Badge>
-      );
+export function getFacultyColumns({
+  onEdit,
+  onDelete,
+}: FacultyColumnActions): ColumnDef<Faculty>[] {
+  return [
+    {
+      accessorKey: "name",
+      header: "Name",
     },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created",
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("createdAt"));
-      return date.toLocaleDateString();
+    {
+      accessorKey: "email",
+      header: "Email",
     },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const faculty = row.original;
+    {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => {
+        const role = row.getValue("role") as string;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Eye className="mr-2 h-4 w-4" />
-              View
-            </DropdownMenuItem>
-
-            <DropdownMenuItem>
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit
-            </DropdownMenuItem>
-
-            <DropdownMenuItem variant="destructive">
-              <Trash className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+        return (
+          <Badge variant={role === "hod" ? "secondary" : "outline"}>
+            {role.toUpperCase()}
+          </Badge>
+        );
+      },
     },
-  },
-];
+    {
+      accessorKey: "createdAt",
+      header: "Created",
+      cell: ({ row }) => {
+        const date = new Date(row.getValue("createdAt"));
+        return date.toLocaleDateString();
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const faculty = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onEdit(faculty)}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() => onDelete(faculty)}
+              >
+                <Trash className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+}
