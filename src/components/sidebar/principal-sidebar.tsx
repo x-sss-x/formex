@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 import type React from "react";
 import { cn } from "@/lib/utils";
 import { getTemplatePagesByType } from "../tempalate-pages";
+import { Badge } from "../ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -27,7 +28,6 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { AppSidebarFooter } from "./app-sidebar-footer";
-import { Badge } from "../ui/badge";
 
 const institutionFormats = getTemplatePagesByType("institution");
 

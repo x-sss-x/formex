@@ -115,10 +115,8 @@ export function ProgramHeadSidebar() {
           <SidebarMenu>
             {items.program.map((item) => (
               <SidebarMenuItem key={item.id}>
-                <Link href={`/p/${programId}${item.href}`}>
-                  <SidebarMenuButton
-                    isActive={pathname === `/p/${programId}${item.href}`}
-                  >
+                <Link href={item.href}>
+                  <SidebarMenuButton isActive={pathname === item.href}>
                     <HugeiconsIcon icon={item.icon} /> {item.label}
                   </SidebarMenuButton>
                 </Link>
@@ -132,10 +130,8 @@ export function ProgramHeadSidebar() {
           <SidebarMenu>
             {items.semester.map((item) => (
               <SidebarMenuItem key={item.id}>
-                <Link href={`/p/${programId}${item.href}`}>
-                  <SidebarMenuButton
-                    isActive={pathname === `/p/${programId}${item.href}`}
-                  >
+                <Link href={item.href}>
+                  <SidebarMenuButton isActive={pathname === item.href}>
                     <HugeiconsIcon icon={item.icon} /> {item.label}
                   </SidebarMenuButton>
                 </Link>
