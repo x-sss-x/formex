@@ -1,3 +1,4 @@
+import { HugeiconsIcon } from "@hugeicons/react";
 import Container from "../container";
 import { DataTable } from "../data-table";
 import Header from "../header";
@@ -7,7 +8,14 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from "../ui/breadcrumb";
+import { Button } from "../ui/button";
 import { columns, type Student } from "./columns";
+import { PlusSignIcon, Search01Icon } from "@hugeicons/core-free-icons";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
 
 export const students: Student[] = [
   {
@@ -52,7 +60,18 @@ export function StudentsPage() {
           </BreadcrumbList>
         </Breadcrumb>
       </Header>
-      <Container>
+      <Container className="space-y-4">
+        <div className="flex justify-between">
+          <InputGroup className="max-w-sm">
+            <InputGroupAddon>
+              <HugeiconsIcon icon={Search01Icon} />
+            </InputGroupAddon>
+            <InputGroupInput placeholder="Search..." />
+          </InputGroup>
+          <Button>
+            Add <HugeiconsIcon icon={PlusSignIcon} />
+          </Button>
+        </div>
         <DataTable columns={columns} data={students} />
       </Container>
     </>
