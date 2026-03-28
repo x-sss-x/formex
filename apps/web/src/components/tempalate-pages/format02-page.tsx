@@ -1,6 +1,6 @@
 "use client";
 
-import Format02 from "@/templates/format02";
+import Format02 from "../../templates/format02";
 
 export default function Format02Page() {
   return (

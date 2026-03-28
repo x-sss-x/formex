@@ -2,8 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Manrope, Oswald, Roboto_Slab } from "next/font/google";
 import { Toaster } from "sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { TooltipProvider } from "../components/ui/tooltip";
+import { cn } from "../lib/utils";
 
 const robotoSlabHeading = Roboto_Slab({
   subsets: ["latin"],

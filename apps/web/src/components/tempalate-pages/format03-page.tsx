@@ -1,6 +1,6 @@
 "use client";
 
-import Format03 from "@/templates/format03";
+import Format03 from "../../templates/format03";
 
 export default function Format03Page() {
   return (

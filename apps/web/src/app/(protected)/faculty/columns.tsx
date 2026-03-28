@@ -4,14 +4,14 @@ import type { ColumnDef } from "@tanstack/react-table";
 // Replace with HugeIcons if installed
 import { MoreVertical, Pencil, Trash } from "lucide-react";
 import { z } from "zod";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../../../components/ui/dropdown-menu";
 
 export const facultySchema = z.object({
   id: z.string(),

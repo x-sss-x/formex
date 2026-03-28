@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 import type React from "react";
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
-import { PrincipalSidebar } from "@/components/sidebar/principal-sidebar";
-import { ProgramCoordinatorSidebar } from "@/components/sidebar/program-coordinator-sidebar";
-import { ProgramSidebar } from "@/components/sidebar/program-sidebar";
-import { StaffSidebar } from "@/components/sidebar/staff-sidebar";
-import { SidebarInset } from "@/components/ui/sidebar";
-import { getSession } from "@/auth/auth";
+import { AppSidebar } from "../../components/sidebar/app-sidebar";
+import { AppSidebarProvider } from "../../components/sidebar/app-sidebar-provider";
+import { PrincipalSidebar } from "../../components/sidebar/principal-sidebar";
+import { ProgramCoordinatorSidebar } from "../../components/sidebar/program-coordinator-sidebar";
+import { ProgramSidebar } from "../../components/sidebar/program-sidebar";
+import { StaffSidebar } from "../../components/sidebar/staff-sidebar";
+import { SidebarInset } from "../../components/ui/sidebar";
+import { getSession } from "../../auth/auth";
 
 export default async function Layout({
   children,

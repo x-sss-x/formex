@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useDocumentStore } from "@/stores/document";
+import { useDocumentStore } from "../stores/document";
 
 export type Format01Data = {
   institutionName: string;

@@ -10,8 +10,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { useDocumentStore } from "@/stores/document";
+} from "./ui/form";
+import { useDocumentStore } from "../stores/document";
 import { Button } from "./ui/button";
 import {
   Sidebar,

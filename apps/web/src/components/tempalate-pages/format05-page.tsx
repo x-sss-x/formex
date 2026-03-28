@@ -1,6 +1,6 @@
 "use client";
 
-import Format05 from "@/templates/format05";
+import Format05 from "../../templates/format05";
 
 export default function Format05Page() {
   return (

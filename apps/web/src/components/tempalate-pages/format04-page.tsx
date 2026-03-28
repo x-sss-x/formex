@@ -1,6 +1,6 @@
 "use client";
 
-import Format04 from "@/templates/format04";
+import Format04 from "../../templates/format04";
 
 export default function Format04Page() {
   return (

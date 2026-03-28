@@ -1,6 +1,6 @@
 "use client";
 
-import Format01 from "@/templates/format01";
+import Format01 from "../../templates/format01";
 import { RightPanel } from "../right-panel";
 
 export default function Format01Page() {
