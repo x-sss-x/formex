@@ -4,7 +4,6 @@ import { Manrope, Oswald, Roboto_Slab } from "next/font/google";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { TRPCReactProvider } from "@/trpc/client";
 
 const robotoSlabHeading = Roboto_Slab({
   subsets: ["latin"],
@@ -37,12 +36,10 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${robotoSlabHeading.variable} ${oswald} border-border bg-background antialiased`}
       >
-        <TRPCReactProvider>
-          <TooltipProvider>
-            {children}
-            <Toaster />
-          </TooltipProvider>
-        </TRPCReactProvider>
+        <TooltipProvider>
+          {children}
+          <Toaster />
+        </TooltipProvider>
       </body>
     </html>
   );

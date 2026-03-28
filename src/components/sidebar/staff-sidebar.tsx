@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Book01Icon,
+  Books01Icon,
   Calendar01Icon,
   GridIcon,
   Home01Icon,
@@ -26,6 +26,7 @@ const items = {
   app: [
     { id: 1, label: "Home", icon: Home01Icon, href: "/" },
     { id: 2, label: "Calendar", icon: Calendar01Icon, href: "/calendar" },
+    { id: 3, label: "Subjects", icon: Books01Icon, href: "/subjects" },
   ],
   semesterFormats: [
     { id: 1, label: "INS Format 02", icon: GridIcon, href: "#" },
@@ -34,11 +35,6 @@ const items = {
   programFormats: [
     { id: 1, label: "INS Format 04", icon: GridIcon, href: "#" },
     { id: 2, label: "INS Format 05", icon: GridIcon, href: "#" },
-  ],
-  subjects: [
-    { id: 1, label: "Applied Science", icon: Book01Icon },
-    { id: 2, label: "Mathemetics", icon: Book01Icon },
-    { id: 3, label: "Network Security", icon: Book01Icon },
   ],
 };
 
@@ -63,21 +59,6 @@ export function StaffSidebar() {
               <SidebarMenuItem key={item.id}>
                 <Link href={item.href}>
                   <SidebarMenuButton isActive={pathname === item.href}>
-                    <HugeiconsIcon icon={item.icon} /> {item.label}
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>SUBJECTS</SidebarGroupLabel>
-          <SidebarMenu>
-            {items.subjects.map((item) => (
-              <SidebarMenuItem key={item.id}>
-                <Link href={`/s/${item.id}`}>
-                  <SidebarMenuButton isActive={pathname === `/s/${item.id}`}>
                     <HugeiconsIcon icon={item.icon} /> {item.label}
                   </SidebarMenuButton>
                 </Link>

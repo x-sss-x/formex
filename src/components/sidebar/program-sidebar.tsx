@@ -1,41 +1,32 @@
 "use client";
 
 import {
-  Book01Icon,
+  Books01Icon,
   DashboardCircleIcon,
   GridIcon,
   Mortarboard01Icon,
-  PlusSignIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { useState } from "react";
 import { getTemplatePagesByType } from "../tempalate-pages";
 import { Button } from "../ui/button";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { NewSubjectDialog } from "../dialogs/new-subject.dialog";
-import { SubjectActions } from "./subject-actions";
 
 const items = {
   semester: [
     { id: 1, label: "Dashboard", icon: DashboardCircleIcon, href: "" },
     { id: 2, label: "Students", icon: Mortarboard01Icon, href: "/students" },
-  ],
-  subjects: [
-    { id: "1", label: "Applied Science", icon: Book01Icon },
-    { id: "2", label: "Mathemetics", icon: Book01Icon },
-    { id: "3", label: "Network Security", icon: Book01Icon },
+    { id: 3, label: "Subjects", icon: Books01Icon, href: "/subjects" },
   ],
 };
 
@@ -64,7 +55,6 @@ export function ProgramSidebar() {
   const { programId } = useParams<{ programId: string }>();
   const pathname = usePathname();
   const activeSemesterId = 1;
-  const [subjects, setSubjects] = useState(items.subjects);
 
   if (!programId) return null;
 
@@ -109,55 +99,6 @@ export function ProgramSidebar() {
                     <HugeiconsIcon icon={item.icon} /> {item.label}
                   </SidebarMenuButton>
                 </Link>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>
-            SUBJECTS
-            <NewSubjectDialog
-              trigger={
-                <SidebarGroupAction>
-                  <HugeiconsIcon icon={PlusSignIcon} />
-                </SidebarGroupAction>
-              }
-              onCreated={({ name }) => {
-                setSubjects((prev) => [
-                  { id: crypto.randomUUID(), label: name, icon: Book01Icon },
-                  ...prev,
-                ]);
-              }}
-            />
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {subjects.map((item) => (
-              <SidebarMenuItem key={item.id}>
-                <div className="flex items-center gap-2">
-                  <Link className="flex-1" href={`/p/${programId}/s/${item.id}`}>
-                    <SidebarMenuButton
-                      isActive={pathname === `/p/${programId}/s/${item.id}`}
-                      className="w-full justify-start"
-                    >
-                      <HugeiconsIcon icon={item.icon} /> {item.label}
-                    </SidebarMenuButton>
-                  </Link>
-                  <SubjectActions
-                    id={item.id}
-                    name={item.label}
-                    onRename={(nextName) =>
-                      setSubjects((prev) =>
-                        prev.map((s) =>
-                          s.id === item.id ? { ...s, label: nextName } : s,
-                        ),
-                      )
-                    }
-                    onDelete={() =>
-                      setSubjects((prev) => prev.filter((s) => s.id !== item.id))
-                    }
-                  />
-                </div>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>

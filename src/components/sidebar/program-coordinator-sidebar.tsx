@@ -2,6 +2,7 @@
 
 import {
   Book01Icon,
+  Books01Icon,
   Calendar01Icon,
   GridIcon,
   Home01Icon,
@@ -17,7 +18,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -33,11 +33,7 @@ const items = {
   ],
   semester: [
     { id: 1, label: "Students", icon: Mortarboard01Icon, href: "/students" },
-  ],
-  subjects: [
-    { id: 1, label: "Applied Science", icon: Book01Icon },
-    { id: 2, label: "Mathemetics", icon: Book01Icon },
-    { id: 3, label: "Network Security", icon: Book01Icon },
+    { id: 2, label: "Subjects", icon: Books01Icon, href: "/subjects" },
   ],
   semesterFormats: [
     { id: 1, label: "INS Format 02", icon: GridIcon, href: "#" },
@@ -68,7 +64,7 @@ const semesters = [
   },
 ];
 
-export function ProgramHeadSidebar() {
+export function ProgramCoordinatorSidebar() {
   const pathname = usePathname();
   const activeSemesterId = 1;
 
@@ -130,26 +126,6 @@ export function ProgramHeadSidebar() {
               <SidebarMenuItem key={item.id}>
                 <Link href={item.href}>
                   <SidebarMenuButton isActive={pathname === item.href}>
-                    <HugeiconsIcon icon={item.icon} /> {item.label}
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>
-            SUBJECTS
-            <SidebarGroupAction>
-              <HugeiconsIcon icon={PlusSignIcon} />
-            </SidebarGroupAction>
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {items.subjects.map((item) => (
-              <SidebarMenuItem key={item.id}>
-                <Link href={`/s/${item.id}`}>
-                  <SidebarMenuButton isActive={pathname === `/s/${item.id}`}>
                     <HugeiconsIcon icon={item.icon} /> {item.label}
                   </SidebarMenuButton>
                 </Link>
