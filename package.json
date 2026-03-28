@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "bun --bun next dev",
-    "build": "bun db:push && bun --bun next build",
+    "build": "bun --bun db:migrate && bun --bun next build",
     "start": "bun --bun next start",
     "lint": "biome check",
     "lint:unsafe": "biome check --write --unsafe",
     "format": "biome format --write",
     "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:drop": "drizzle-kit drop",
+    "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "auth:generate": "bun x auth@latest generate --output=./src/db/auth-schema.ts"
   },
