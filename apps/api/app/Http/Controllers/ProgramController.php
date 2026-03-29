@@ -62,7 +62,8 @@ class ProgramController
         $program->delete();
 
         return response()->json([
-            'message' => 'Program deleted successfully'
+            'message' => 'Program deleted successfully',
+            "data" => $program
         ]);
     }
 }

@@ -13,7 +13,7 @@ class InstitutionController
     public function index()
     {
         $institutions = Institution::all();
-        return response()->json($institutions);
+        return response()->json(["data" => $institutions]);
     }
 
     /**
@@ -30,7 +30,7 @@ class InstitutionController
 
         $institution = Institution::create($validated);
 
-        return response()->json($institution, 201);
+        return response()->json(['message' => 'Institution created successfully', "data" => $institution], 201);
     }
 
     /**
@@ -39,7 +39,7 @@ class InstitutionController
     public function show(string $id)
     {
         $institution = Institution::find($id);
-        return response()->json($institution);
+        return response()->json(["data" => $institution]);
     }
 
     /**
@@ -55,7 +55,7 @@ class InstitutionController
         ]);
         $institution = Institution::find($id);
         $institution->update($validated);
-        return response()->json($institution);
+        return response()->json(['message' => 'Institution updated successfully', "data" => $institution]);
     }
 
     /**
@@ -65,7 +65,7 @@ class InstitutionController
     {
         $institution = Institution::find($id);
         $institution->deleteOrFail();
-        return response()->json($institution);
+        return response()->json(['message' => 'Institution deleted successfully', "data" => $institution]);
     }
 }
 
