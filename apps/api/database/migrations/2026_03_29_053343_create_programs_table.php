@@ -11,12 +11,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('programs', function (Blueprint $table) {
-            $table->ulid('id');
+            $table->ulid('id')->primary();
             $table->string('name');
             $table->string('short_name');
             $table->bigInteger('intake');
             $table->foreignUlid('institution_id');
             $table->timestamps();
+
+            $table->index(['institution_id']);
         });
     }
 
