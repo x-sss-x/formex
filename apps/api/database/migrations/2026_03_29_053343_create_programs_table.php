@@ -10,12 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('institutions', function (Blueprint $table) {
+        Schema::create('programs', function (Blueprint $table) {
             $table->ulid('id');
             $table->string('name');
-            $table->string('code');
-            $table->text('address');
-            $table->enum('type', ['government', 'aided', 'private']);
+            $table->string('short_name');
+            $table->bigInteger('intake');
+            $table->foreignUlid('institution_id');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('institutions');
+        Schema::dropIfExists('programs');
     }
 };
