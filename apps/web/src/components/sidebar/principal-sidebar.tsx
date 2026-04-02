@@ -12,8 +12,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import type React from "react";
-import { cn } from "@/lib/utils";
 import { getTemplatePagesByType } from "@/components/tempalate-pages";
+import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import {
   Sidebar,
@@ -57,7 +57,7 @@ export function PrincipalSidebar({
   return (
     <Sidebar
       collapsible="none"
-      className={cn("flex-1", className, programId && "border-r")}
+      className={cn("shrink-0", className, programId && "border-r")}
       {...props}
     >
       <SidebarHeader className="flex-row items-center">
@@ -118,9 +118,12 @@ export function PrincipalSidebar({
             <SidebarMenu>
               {institutionFormats.map((item) => (
                 <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton asChild>
-                    <Link href={`#`}>
-                      <HugeiconsIcon icon={GridIcon} /> {item.name}
+                  <SidebarMenuButton
+                    isActive={pathname == `/formats/${item.slug}`}
+                    asChild
+                  >
+                    <Link href={`/formats/${item.slug}`}>
+                      <HugeiconsIcon icon={GridIcon} /> <span>{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

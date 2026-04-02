@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
 import type React from "react";
 import { getServerSessionUser } from "../../auth/session";
-import { PrincipalSidebar } from "../../components/sidebar/principal-sidebar";
 import { SidebarInset } from "../../components/ui/sidebar";
-import { ProgramSidebar } from "@/components/sidebar/program-sidebar";
+import { AppSidebarRail } from "@/components/sidebar/app-sidebar-rail";
 import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
@@ -21,8 +20,7 @@ export default async function Layout({
   return (
     <AppSidebarProvider>
       <AppSidebar>
-        <PrincipalSidebar />
-        <ProgramSidebar />
+        <AppSidebarRail />
       </AppSidebar>
       <SidebarInset>{children}</SidebarInset>
     </AppSidebarProvider>

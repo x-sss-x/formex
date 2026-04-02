@@ -45,15 +45,21 @@ const TEMPLATE_PAGES: TemplatePageEntry[] = [
   },
 ];
 
-export type TemplatePageListItem = Pick<TemplatePageEntry, "id" | "name">;
+export type TemplatePageListItem = Pick<
+  TemplatePageEntry,
+  "id" | "name" | "slug"
+>;
 
 export function getTemplatePagesByType(
   type: TemplatePageKind,
 ): TemplatePageListItem[] {
-  return TEMPLATE_PAGES.filter((p) => p.kind === type).map(({ id, name }) => ({
-    id,
-    name,
-  }));
+  return TEMPLATE_PAGES.filter((p) => p.kind === type).map(
+    ({ id, name, slug }) => ({
+      id,
+      name,
+      slug,
+    }),
+  );
 }
 
 export function getAllTemplatePages(): readonly TemplatePageEntry[] {

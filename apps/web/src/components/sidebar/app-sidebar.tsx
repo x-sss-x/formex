@@ -1,5 +1,10 @@
 import type { ReactNode } from "react";
+import { Sidebar } from "../ui/sidebar";
 
 export function AppSidebar({ children }: { children: ReactNode }) {
-  return <div className="flex w-full min-w-0 flex-1">{children}</div>;
+  return (
+    <Sidebar collapsible="none" className="flex flex-row w-fit h-svh shrink-0">
+      {children}
+    </Sidebar>
+  );
 }

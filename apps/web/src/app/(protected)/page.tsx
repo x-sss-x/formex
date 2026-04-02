@@ -1,11 +1,11 @@
 import Link from "next/link";
-import Container from "../../components/container";
+import Container from "@/components/container";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../components/ui/card";
+} from "@/components/ui/card";
 
 export default function HomePage() {
   return (
