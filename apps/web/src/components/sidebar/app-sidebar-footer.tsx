@@ -70,7 +70,7 @@ export function AppSidebarFooter() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  void signOutSession();
+                  void signOutSession().then(() => window.location.reload());
                 }}
                 variant="destructive"
               >
