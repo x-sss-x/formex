@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -30,7 +31,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    public function roomreports(): HasMany
+    {
+        return $this->hasMany(Roomreport::class);
+    }
     public function institutions(): BelongsToMany
     {
         return $this->belongsToMany(Institution::class)->withPivot('role');
