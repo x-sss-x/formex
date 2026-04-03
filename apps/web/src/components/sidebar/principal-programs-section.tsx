@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CubeIcon,
   Delete01Icon,
-  LoaderCircle,
   MoreHorizontal,
   Pen01Icon,
   PlusSignIcon,
@@ -13,44 +12,24 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+  CreateProgramDialog,
+  DeleteProgramDialog,
+  EditProgramDialog,
+} from "./dialogs/programs-dialogs";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  programFormSchema,
+  type ProgramFormValues,
+} from "./dialogs/programs-dialog-schema";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   SidebarGroup,
   SidebarGroupAction,
@@ -63,6 +42,8 @@ import {
 } from "@/components/ui/sidebar";
 import type { Program } from "@/lib/api/generated/models/program";
 import type { ValidationExceptionResponse } from "@/lib/api/generated/models/validationExceptionResponse";
+import type { ValidationExceptionResponseErrors } from "@/lib/api/generated/models/validationExceptionResponseErrors";
+import { useAuthUserSuspense } from "@/lib/api/generated/auth/auth";
 import {
   getProgramsIndexQueryKey,
   programsDestroy,
@@ -70,17 +51,8 @@ import {
   programsUpdate,
   useProgramsIndexSuspense,
 } from "@/lib/api/generated/context-program/context-program";
-import { useAuthUserSuspense } from "@/lib/api/generated/auth/auth";
 
-const programFormSchema = z.object({
-  name: z.string().min(1, "Required").max(255),
-  short_name: z.string().min(1, "Required").max(50),
-  intake: z.number().int().min(1, "At least 1"),
-});
-
-type ProgramFormValues = z.infer<typeof programFormSchema>;
-
-function invalidateProgramsQueries(
+function invalidateProgramsList(
   queryClient: ReturnType<typeof useQueryClient>,
 ) {
   void queryClient.invalidateQueries({ queryKey: getProgramsIndexQueryKey() });
@@ -98,7 +70,65 @@ function isValidationError(data: unknown): data is ValidationExceptionResponse {
   );
 }
 
-function PrincipalProgramsListBody({
+function applyApiFieldErrors(
+  form: UseFormReturn<ProgramFormValues>,
+  errors: ValidationExceptionResponseErrors,
+) {
+  for (const [key, messages] of Object.entries(errors)) {
+    if (!Array.isArray(messages) || !messages[0]) continue;
+    form.setError(key as keyof ProgramFormValues, { message: messages[0] });
+  }
+}
+
+function ProgramListItem({
+  program,
+  pathname,
+  onEdit,
+  onDelete,
+}: {
+  program: Program;
+  pathname: string;
+  onEdit: (p: Program) => void;
+  onDelete: (p: Program) => void;
+}) {
+  return (
+    <SidebarMenuItem className="group/menu-item relative">
+      <SidebarMenuButton
+        asChild
+        isActive={pathname.startsWith(`/p/${program.id}`)}
+        className="pr-8"
+      >
+        <Link href={`/p/${program.id}`}>
+          <HugeiconsIcon icon={CubeIcon} />
+          <span className="flex-1 truncate">{program.name}</span>
+        </Link>
+      </SidebarMenuButton>
+      <DropdownMenu>
+        <SidebarMenuAction asChild showOnHover>
+          <DropdownMenuTrigger>
+            <HugeiconsIcon icon={MoreHorizontal} className="h-3.5 w-3.5" />
+            <span className="sr-only">Program options</span>
+          </DropdownMenuTrigger>
+        </SidebarMenuAction>
+        <DropdownMenuContent side="right" align="start">
+          <DropdownMenuItem onClick={() => onEdit(program)}>
+            <HugeiconsIcon icon={Pen01Icon} className="mr-2 h-3.5 w-3.5" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => onDelete(program)}
+            className="text-destructive focus:text-destructive"
+          >
+            <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-3.5 w-3.5" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </SidebarMenuItem>
+  );
+}
+
+function ProgramsListBody({
   institutionId,
   pathname,
   onEdit,
@@ -109,12 +139,19 @@ function PrincipalProgramsListBody({
   onEdit: (program: Program) => void;
   onDelete: (program: Program) => void;
 }) {
-  const { data: programsData } = useProgramsIndexSuspense({
+  const { data: programsResponse } = useProgramsIndexSuspense({
     query: { queryKey: [...getProgramsIndexQueryKey(), institutionId] },
   });
-  const programs: Program[] =
-    programsData.status === 200 ? programsData.data.data : [];
 
+  if (programsResponse.status !== 200) {
+    return (
+      <p className="px-2 py-1 text-xs text-muted-foreground">
+        Could not load programs.
+      </p>
+    );
+  }
+
+  const programs = programsResponse.data.data;
   if (programs.length === 0) {
     return (
       <p className="px-2 py-1 text-xs text-muted-foreground">
@@ -123,55 +160,23 @@ function PrincipalProgramsListBody({
     );
   }
 
-  return (
-    <>
-      {programs.map((program) => (
-        <SidebarMenuItem key={program.id} className="group/menu-item relative">
-          <SidebarMenuButton
-            asChild
-            isActive={pathname.startsWith(`/p/${program.id}`)}
-            className="pr-8"
-          >
-            <Link href={`/p/${program.id}`}>
-              <HugeiconsIcon icon={CubeIcon} />
-              <span className="flex-1 truncate">{program.name}</span>
-            </Link>
-          </SidebarMenuButton>
-          <DropdownMenu>
-            <SidebarMenuAction asChild showOnHover>
-              <DropdownMenuTrigger>
-                <HugeiconsIcon icon={MoreHorizontal} className="h-3.5 w-3.5" />
-                <span className="sr-only">Program options</span>
-              </DropdownMenuTrigger>
-            </SidebarMenuAction>
-            <DropdownMenuContent side="right" align="start">
-              <DropdownMenuItem onClick={() => onEdit(program)}>
-                <HugeiconsIcon icon={Pen01Icon} className="mr-2 h-3.5 w-3.5" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => onDelete(program)}
-                className="text-destructive focus:text-destructive"
-              >
-                <HugeiconsIcon
-                  icon={Delete01Icon}
-                  className="mr-2 h-3.5 w-3.5"
-                />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </SidebarMenuItem>
-      ))}
-    </>
-  );
+  return programs.map((program) => (
+    <ProgramListItem
+      key={program.id}
+      program={program}
+      pathname={pathname}
+      onEdit={onEdit}
+      onDelete={onDelete}
+    />
+  ));
 }
 
 export function PrincipalProgramsSection() {
   const pathname = usePathname();
   const queryClient = useQueryClient();
+
   const { data: authData } = useAuthUserSuspense();
-  const session = authData.status === 200 ? authData.data : null;
+  const session = authData?.status === 200 ? authData.data : null;
   const institutionId = session?.current_institution_id ?? null;
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -187,13 +192,12 @@ export function PrincipalProgramsSection() {
   });
 
   useEffect(() => {
-    if (editProgram) {
-      editForm.reset({
-        name: editProgram.name,
-        short_name: editProgram.short_name,
-        intake: editProgram.intake,
-      });
-    }
+    if (!editProgram) return;
+    editForm.reset({
+      name: editProgram.name,
+      short_name: editProgram.short_name,
+      intake: editProgram.intake,
+    });
   }, [editProgram, editForm]);
 
   const [deleteProgram, setDeleteProgram] = useState<Program | null>(null);
@@ -202,44 +206,32 @@ export function PrincipalProgramsSection() {
   async function onCreate(values: ProgramFormValues) {
     const res = await programsStore(values);
     if (res.status === 201) {
+      invalidateProgramsList(queryClient);
       toast.success("Program created");
       setCreateOpen(false);
       createForm.reset({ name: "", short_name: "", intake: 60 });
-      invalidateProgramsQueries(queryClient);
       return;
     }
     if (res.status === 422 && res.data && isValidationError(res.data)) {
-      const { message, errors } = res.data;
-      for (const [key, messages] of Object.entries(errors)) {
-        if (!Array.isArray(messages) || !messages[0]) continue;
-        createForm.setError(key as keyof ProgramFormValues, {
-          message: messages[0],
-        });
-      }
-      toast.error(message);
+      applyApiFieldErrors(createForm, res.data.errors);
+      toast.error(res.data.message);
       return;
     }
     toast.error("Could not create program.");
   }
 
-  async function onEdit(values: ProgramFormValues) {
+  async function onEditSubmit(values: ProgramFormValues) {
     if (!editProgram) return;
     const res = await programsUpdate(editProgram.id, values);
     if (res.status === 200) {
+      invalidateProgramsList(queryClient);
       toast.success("Program updated");
       setEditProgram(null);
-      invalidateProgramsQueries(queryClient);
       return;
     }
     if (res.status === 422 && res.data && isValidationError(res.data)) {
-      const { message, errors } = res.data;
-      for (const [key, messages] of Object.entries(errors)) {
-        if (!Array.isArray(messages) || !messages[0]) continue;
-        editForm.setError(key as keyof ProgramFormValues, {
-          message: messages[0],
-        });
-      }
-      toast.error(message);
+      applyApiFieldErrors(editForm, res.data.errors);
+      toast.error(res.data.message);
       return;
     }
     toast.error("Could not update program.");
@@ -251,10 +243,11 @@ export function PrincipalProgramsSection() {
     try {
       const res = await programsDestroy(deleteProgram.id);
       if (res.status === 200) {
-        toast.success("Program deleted");
+        invalidateProgramsList(queryClient);
+        const id = deleteProgram.id;
         setDeleteProgram(null);
-        invalidateProgramsQueries(queryClient);
-        if (pathname.startsWith(`/p/${deleteProgram.id}`)) {
+        toast.success("Program deleted");
+        if (pathname.startsWith(`/p/${id}`)) {
           window.location.href = "/";
         }
       } else {
@@ -284,235 +277,43 @@ export function PrincipalProgramsSection() {
                 Select an institution to load programs.
               </p>
             ) : (
-              <Suspense
-                fallback={
-                  <p className="px-2 py-1 text-xs text-muted-foreground">
-                    Loading…
-                  </p>
-                }
-              >
-                <PrincipalProgramsListBody
-                  institutionId={institutionId}
-                  pathname={pathname}
-                  onEdit={setEditProgram}
-                  onDelete={setDeleteProgram}
-                />
-              </Suspense>
+              <ProgramsListBody
+                institutionId={institutionId}
+                pathname={pathname}
+                onEdit={setEditProgram}
+                onDelete={setDeleteProgram}
+              />
             )}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>New program</DialogTitle>
-            <DialogDescription>
-              Adds a program to{" "}
-              {session?.current_institution?.name ?? "your institution"}.
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...createForm}>
-            <form
-              className="space-y-3"
-              onSubmit={createForm.handleSubmit(onCreate)}
-            >
-              <FormField
-                control={createForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={createForm.control}
-                name="short_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Short name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={createForm.control}
-                name="intake"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Intake</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.valueAsNumber || e.target.value,
-                          )
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter className="pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setCreateOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={createForm.formState.isSubmitting}
-                >
-                  {createForm.formState.isSubmitting ? (
-                    <>
-                      <HugeiconsIcon
-                        icon={LoaderCircle}
-                        className="mr-2 h-4 w-4 animate-spin"
-                      />
-                      Saving…
-                    </>
-                  ) : (
-                    "Create"
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
+      <CreateProgramDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        form={createForm}
+        institutionName={session?.current_institution?.name ?? "your institution"}
+        onSubmit={onCreate}
+      />
 
-      <Dialog
+      <EditProgramDialog
         open={editProgram !== null}
-        onOpenChange={(open) => !open && setEditProgram(null)}
-      >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit program</DialogTitle>
-          </DialogHeader>
-          <Form {...editForm}>
-            <form
-              className="space-y-3"
-              onSubmit={editForm.handleSubmit(onEdit)}
-            >
-              <FormField
-                control={editForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="short_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Short name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="intake"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Intake</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.valueAsNumber || e.target.value,
-                          )
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter className="pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditProgram(null)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={editForm.formState.isSubmitting}
-                >
-                  {editForm.formState.isSubmitting ? (
-                    <>
-                      <HugeiconsIcon
-                        icon={LoaderCircle}
-                        className="mr-2 h-4 w-4 animate-spin"
-                      />
-                      Saving…
-                    </>
-                  ) : (
-                    "Save"
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
+        onOpenChange={(open) => {
+          if (!open) setEditProgram(null);
+        }}
+        form={editForm}
+        onSubmit={onEditSubmit}
+      />
 
-      <AlertDialog
+      <DeleteProgramDialog
         open={deleteProgram !== null}
-        onOpenChange={(open) => !open && setDeleteProgram(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete program?</AlertDialogTitle>
-            <AlertDialogDescription>
-              <strong>{deleteProgram?.name}</strong> and related data may be
-              affected. This cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteBusy}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              disabled={deleteBusy}
-              onClick={(e) => {
-                e.preventDefault();
-                void confirmDelete();
-              }}
-            >
-              {deleteBusy ? "Deleting…" : "Delete"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        onOpenChange={(open) => {
+          if (!open) setDeleteProgram(null);
+        }}
+        program={deleteProgram}
+        busy={deleteBusy}
+        onConfirmDelete={confirmDelete}
+      />
     </>
   );
 }

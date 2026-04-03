@@ -77,7 +77,7 @@ export function PrincipalSidebar({
         <Suspense
           fallback={
             <>
-              {Array.from({ length: 10 }).map((_, i) => (
+              {Array.from({ length: 8 }).map((_, i) => (
                 <SidebarMenuSkeleton key={i} />
               ))}
             </>
