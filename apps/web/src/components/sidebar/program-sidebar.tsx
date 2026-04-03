@@ -77,10 +77,7 @@ export function ProgramSidebar({
       {...props}
     >
       <SidebarHeader className="gap-1 border-b px-2 py-3">
-        <Badge variant="secondary" className="font-mono text-xs w-fit">
-          PROGRAM
-        </Badge>
-        <span className="truncate px-1.5 text-sm font-medium leading-tight">
+        <span className="truncate  px-1.5 text-sm font-semibold font-heading leading-tight">
           {program?.name}
         </span>
       </SidebarHeader>
