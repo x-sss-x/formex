@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Calendar01Icon,
   GridIcon,
   Home01Icon,
   UserSquareIcon,
@@ -33,7 +32,6 @@ const institutionFormats = getTemplatePagesByType("institution");
 const items = [
   { id: 1, label: "Home", icon: Home01Icon, href: "/" },
   { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
-  { id: 3, label: "Calendar", icon: Calendar01Icon, href: "/calendar" },
 ];
 
 export function PrincipalSidebar({
@@ -48,7 +46,7 @@ export function PrincipalSidebar({
       className={cn("shrink-0 border-r", className)}
       {...props}
     >
-      <SidebarHeader className="flex-row items-center">
+      <SidebarHeader className="flex-row h-12 border-b items-center">
         <span className="text-lg text-primary px-1.5 font-bold font-heading">
           FORMEX
         </span>
@@ -62,6 +60,7 @@ export function PrincipalSidebar({
 
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>INSTITUTION</SidebarGroupLabel>
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.id}>

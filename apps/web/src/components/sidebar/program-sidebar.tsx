@@ -20,6 +20,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "../ui/sidebar";
 import { cn } from "@/lib/utils";
 import {
@@ -96,11 +97,13 @@ export function ProgramSidebar({
       className={cn("shrink-0 border-r bg-sidebar", className)}
       {...props}
     >
-      <SidebarHeader className="gap-2 border-b px-2 py-3">
-        <span className="truncate px-1.5 text-lg font-bold font-heading tracking-widest leading-tight">
+      <SidebarHeader className="gap-2 border-b px-2 h-12 justify-center">
+        <span className="truncate px-1.5 font-semibold font-heading leading-tight">
           {program?.name}
         </span>
+      </SidebarHeader>
 
+      <SidebarHeader className="border-b">
         <Select
           value={String(selectedSemester)}
           onValueChange={onSemesterChange}
