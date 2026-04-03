@@ -62,7 +62,7 @@ export default function SignUpPage() {
 
       if (result.ok) {
         router.push(callbackUrl);
-        router.refresh();
+        window.location.reload();
       } else {
         toast.error(result.message);
       }

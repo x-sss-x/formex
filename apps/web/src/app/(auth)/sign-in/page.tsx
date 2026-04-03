@@ -49,7 +49,7 @@ export default function SignInPage() {
 
       if (result.ok) {
         router.push(callbackUrl);
-        router.refresh();
+        window.location.reload();
       } else {
         toast.error(result.message);
       }
