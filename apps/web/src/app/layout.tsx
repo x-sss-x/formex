@@ -1,17 +1,14 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Manrope, Oswald, Roboto_Slab } from "next/font/google";
+import { Manrope, Oswald, Roboto_Slab, Roboto, Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
 import { QueryProvider } from "../components/providers/query-provider";
 import { TooltipProvider } from "../components/ui/tooltip";
 import { cn } from "../lib/utils";
 
-const robotoSlabHeading = Roboto_Slab({
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
+const spaceGroteskHeading = Space_Grotesk({subsets:['latin'],variable:'--font-heading'});
 
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
+const roboto = Roboto({subsets:['latin'],variable:'--font-sans'});
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -32,10 +29,10 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("font-sans", manrope.variable, robotoSlabHeading.variable)}
+      className={cn("font-sans", roboto.variable, spaceGroteskHeading.variable)}
     >
       <body
-        className={`${manrope.variable} ${robotoSlabHeading.variable} ${oswald.variable} border-border bg-background antialiased`}
+        className={`${roboto.variable} ${spaceGroteskHeading.variable} ${oswald.variable} border-border bg-background antialiased`}
       >
         <QueryProvider>
           <TooltipProvider>

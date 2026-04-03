@@ -8,7 +8,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import type React from "react";
 import { Suspense } from "react";
 import { getTemplatePagesByType } from "@/components/tempalate-pages";
@@ -24,7 +24,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
 } from "../ui/sidebar";
 import { AppSidebarFooter } from "./app-sidebar-footer";
 import { PrincipalProgramsSection } from "./principal-programs-section";
@@ -42,19 +41,21 @@ export function PrincipalSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  const { programId } = useParams<{ programId: string }>();
 
   return (
     <Sidebar
       collapsible="none"
-      className={cn("shrink-0", className, programId && "border-r")}
+      className={cn("shrink-0 border-r", className)}
       {...props}
     >
       <SidebarHeader className="flex-row items-center">
-        <span className="text-lg text-primary px-1.5 font-bold font-brand">
+        <span className="text-lg text-primary px-1.5 font-bold font-heading">
           FORMEX
         </span>
-        <Badge variant={"default"} className="font-mono text-xs">
+        <Badge
+          variant={"default"}
+          className="bg-primary/20 text-primary font-bold text-[10px]"
+        >
           PRINCIPAL
         </Badge>
       </SidebarHeader>

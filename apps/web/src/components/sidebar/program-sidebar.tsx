@@ -97,7 +97,7 @@ export function ProgramSidebar({
       {...props}
     >
       <SidebarHeader className="gap-2 border-b px-2 py-3">
-        <span className="truncate px-1.5 text-lg font-semibold font-heading leading-tight">
+        <span className="truncate px-1.5 text-lg font-bold font-heading tracking-widest leading-tight">
           {program?.name}
         </span>
 
