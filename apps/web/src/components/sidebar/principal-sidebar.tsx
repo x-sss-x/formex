@@ -24,6 +24,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
 } from "../ui/sidebar";
 import { AppSidebarFooter } from "./app-sidebar-footer";
 import { PrincipalProgramsSection } from "./principal-programs-section";
@@ -75,9 +76,11 @@ export function PrincipalSidebar({
 
         <Suspense
           fallback={
-            <div className="text-xs text-muted-foreground px-2 py-2">
-              Loading programs…
-            </div>
+            <>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <SidebarMenuSkeleton key={i} />
+              ))}
+            </>
           }
         >
           <PrincipalProgramsSection />

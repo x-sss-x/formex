@@ -5,6 +5,11 @@ import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
 import { AppSidebarRail } from "@/components/sidebar/app-sidebar-rail";
 import { getServerSessionUser } from "../../auth/session";
 import { SidebarInset } from "../../components/ui/sidebar";
+import { prefetch } from "@/lib/prefetch";
+import { getAuthUserQueryOptions } from "@/lib/api/generated/auth/auth";
+import { QueryHydrationBoundary } from "@/components/providers/query-hydration-boundary";
+import { headers } from "next/headers";
+import { getProgramsIndexQueryOptions } from "@/lib/api/generated/context-program/context-program";
 
 export default async function Layout({
   children,
@@ -21,12 +26,19 @@ export default async function Layout({
     redirect("/institutions/new");
   }
 
+  const dehydratedState = await prefetch(
+    getAuthUserQueryOptions({ request: { headers: await headers() } }),
+    getProgramsIndexQueryOptions({ request: { headers: await headers() } }),
+  );
+
   return (
-    <AppSidebarProvider>
-      <AppSidebar>
-        <AppSidebarRail />
-      </AppSidebar>
-      <SidebarInset>{children}</SidebarInset>
-    </AppSidebarProvider>
+    <QueryHydrationBoundary state={dehydratedState}>
+      <AppSidebarProvider>
+        <AppSidebar>
+          <AppSidebarRail />
+        </AppSidebar>
+        <SidebarInset>{children}</SidebarInset>
+      </AppSidebarProvider>
+    </QueryHydrationBoundary>
   );
 }
