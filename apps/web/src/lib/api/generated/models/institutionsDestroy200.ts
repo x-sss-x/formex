@@ -4,8 +4,9 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Institution } from "./institution";
 
 export type InstitutionsDestroy200 = {
   message: "Institution deleted successfully";
-  data: string;
+  data: Institution;
 };

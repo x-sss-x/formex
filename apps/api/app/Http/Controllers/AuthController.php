@@ -45,10 +45,12 @@ class AuthController
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt([
-            'email' => $credentials['email'],
-            'password' => $credentials['password'],
-        ], $request->boolean('remember'))) {
+        if (
+            !Auth::attempt([
+                'email' => $credentials['email'],
+                'password' => $credentials['password'],
+            ], $request->boolean('remember'))
+        ) {
             throw ValidationException::withMessages([
                 'email' => [trans('auth.failed')],
             ]);
@@ -94,7 +96,7 @@ class AuthController
         $user = $request->user();
         $user->load('institutions');
 
-        if (! $user->institutions->pluck('id')->contains($validated['institution_id'])) {
+        if (!$user->institutions->pluck('id')->contains($validated['institution_id'])) {
             throw ValidationException::withMessages([
                 'institution_id' => ['You do not belong to this institution.'],
             ]);

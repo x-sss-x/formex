@@ -165,7 +165,7 @@
         "/user/current-institution": {
             "post": {
                 "operationId": "auth.setCurrentInstitution",
-                "summary": "Set the active institution for this session",
+                "summary": "Persist the active institution for this session (membership validated against the database)",
                 "tags": [
                     "Auth"
                 ],
@@ -198,11 +198,266 @@
                             }
                         }
                     },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/programs": {
+            "get": {
+                "operationId": "programs.index",
+                "tags": [
+                    "ContextProgram"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Program"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "programs.store",
+                "tags": [
+                    "ContextProgram"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "short_name": {
+                                        "type": "string",
+                                        "maxLength": 50
+                                    },
+                                    "intake": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "short_name",
+                                    "intake"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Program created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Program"
+                                        }
+                                    },
+                                    "required": [
+                                        "message",
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "$ref": "#/components/responses/ValidationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/programs/{program}": {
+            "get": {
+                "operationId": "programs.show",
+                "tags": [
+                    "ContextProgram"
+                ],
+                "parameters": [
+                    {
+                        "name": "program",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Program"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "put": {
+                "operationId": "programs.update",
+                "tags": [
+                    "ContextProgram"
+                ],
+                "parameters": [
+                    {
+                        "name": "program",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "short_name": {
+                                        "type": "string",
+                                        "maxLength": 50
+                                    },
+                                    "intake": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Program updated successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Program"
+                                        }
+                                    },
+                                    "required": [
+                                        "message",
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "programs.destroy",
+                "tags": [
+                    "ContextProgram"
+                ],
+                "parameters": [
+                    {
+                        "name": "program",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Program deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Program"
+                                        }
+                                    },
+                                    "required": [
+                                        "message",
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
                     }
                 }
             }
@@ -223,10 +478,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Institution"
-                                            }
+                                            "type": "string"
                                         }
                                     },
                                     "required": [
@@ -317,7 +569,7 @@
                 }
             }
         },
-        "/institutions/{id}": {
+        "/institutions/{institution}": {
             "get": {
                 "operationId": "institutions.show",
                 "summary": "Display the specified resource",
@@ -326,9 +578,10 @@
                 ],
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "institution",
                         "in": "path",
                         "required": true,
+                        "description": "The institution ID",
                         "schema": {
                             "type": "string"
                         }
@@ -343,7 +596,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "string"
+                                            "$ref": "#/components/schemas/Institution"
                                         }
                                     },
                                     "required": [
@@ -352,6 +605,9 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
@@ -366,9 +622,10 @@
                 ],
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "institution",
                         "in": "path",
                         "required": true,
+                        "description": "The institution ID",
                         "schema": {
                             "type": "string"
                         }
@@ -417,7 +674,7 @@
                                             "const": "Institution updated successfully"
                                         },
                                         "data": {
-                                            "type": "string"
+                                            "$ref": "#/components/schemas/Institution"
                                         }
                                     },
                                     "required": [
@@ -430,6 +687,9 @@
                     },
                     "422": {
                         "$ref": "#/components/responses/ValidationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
@@ -444,9 +704,10 @@
                 ],
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "institution",
                         "in": "path",
                         "required": true,
+                        "description": "The institution ID",
                         "schema": {
                             "type": "string"
                         }
@@ -465,604 +726,7 @@
                                             "const": "Institution deleted successfully"
                                         },
                                         "data": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": [
-                                        "message",
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            }
-        },
-        "/programs": {
-            "get": {
-                "operationId": "programs.index",
-                "summary": "List programs for the current session institution",
-                "tags": [
-                    "Program"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Program"
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            },
-            "post": {
-                "operationId": "programs.store",
-                "summary": "Create a program under the current session institution",
-                "tags": [
-                    "Program"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "short_name": {
-                                        "type": "string",
-                                        "maxLength": 50
-                                    },
-                                    "intake": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "short_name",
-                                    "intake"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Program created successfully"
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
-                                        }
-                                    },
-                                    "required": [
-                                        "message",
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            }
-        },
-        "/programs/{program}": {
-            "get": {
-                "operationId": "programs.show",
-                "summary": "Show a program under the current session institution",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "program",
-                        "in": "path",
-                        "required": true,
-                        "description": "The program ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            },
-            "put": {
-                "operationId": "programs.update",
-                "summary": "Update a program under the current session institution",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "program",
-                        "in": "path",
-                        "required": true,
-                        "description": "The program ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "short_name": {
-                                        "type": "string",
-                                        "maxLength": 50
-                                    },
-                                    "intake": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Program updated successfully"
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
-                                        }
-                                    },
-                                    "required": [
-                                        "message",
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            },
-            "delete": {
-                "operationId": "programs.destroy",
-                "summary": "Delete a program under the current session institution",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "program",
-                        "in": "path",
-                        "required": true,
-                        "description": "The program ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Program deleted successfully"
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
-                                        }
-                                    },
-                                    "required": [
-                                        "message",
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            }
-        },
-        "/institutions/{institution}/programs": {
-            "get": {
-                "operationId": "institutions.programs.index",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "institution",
-                        "in": "path",
-                        "required": true,
-                        "description": "The institution ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Program"
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            },
-            "post": {
-                "operationId": "institutions.programs.store",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "institution",
-                        "in": "path",
-                        "required": true,
-                        "description": "The institution ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "short_name": {
-                                        "type": "string",
-                                        "maxLength": 50
-                                    },
-                                    "intake": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "short_name",
-                                    "intake"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Program created successfully"
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
-                                        }
-                                    },
-                                    "required": [
-                                        "message",
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            }
-        },
-        "/institutions/{institution}/programs/{program}": {
-            "get": {
-                "operationId": "institutions.programs.show",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "institution",
-                        "in": "path",
-                        "required": true,
-                        "description": "The institution ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "program",
-                        "in": "path",
-                        "required": true,
-                        "description": "The program ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            },
-            "put": {
-                "operationId": "institutions.programs.update",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "institution",
-                        "in": "path",
-                        "required": true,
-                        "description": "The institution ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "program",
-                        "in": "path",
-                        "required": true,
-                        "description": "The program ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "short_name": {
-                                        "type": "string",
-                                        "maxLength": 50
-                                    },
-                                    "intake": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Program updated successfully"
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
-                                        }
-                                    },
-                                    "required": [
-                                        "message",
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/ModelNotFoundException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            },
-            "delete": {
-                "operationId": "institutions.programs.destroy",
-                "tags": [
-                    "Program"
-                ],
-                "parameters": [
-                    {
-                        "name": "institution",
-                        "in": "path",
-                        "required": true,
-                        "description": "The institution ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "program",
-                        "in": "path",
-                        "required": true,
-                        "description": "The program ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Program deleted successfully"
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/Program"
+                                            "$ref": "#/components/schemas/Institution"
                                         }
                                     },
                                     "required": [

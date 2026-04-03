@@ -1,9 +1,12 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Manrope, Oswald, Roboto_Slab } from "next/font/google";
+import { headers } from "next/headers";
 import { Toaster } from "sonner";
 import { QueryProvider } from "../components/providers/query-provider";
 import { TooltipProvider } from "../components/ui/tooltip";
+import { getIncomingCookieHeader } from "../lib/server/incoming-cookie-header";
+import { dehydrateAppQueries } from "../lib/server/prefetch-queries";
 import { cn } from "../lib/utils";
 
 const robotoSlabHeading = Roboto_Slab({
@@ -24,11 +27,18 @@ export const metadata: Metadata = {
   description: "Genarate diploma formats in minutes.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieHeader = await getIncomingCookieHeader();
+  const requestHeaders = await headers();
+  const dehydratedState =
+    cookieHeader.length > 0
+      ? await dehydrateAppQueries(cookieHeader, requestHeaders)
+      : undefined;
+
   return (
     <html
       lang="en"
@@ -37,7 +47,7 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${robotoSlabHeading.variable} ${oswald.variable} border-border bg-background antialiased`}
       >
-        <QueryProvider>
+        <QueryProvider dehydratedState={dehydratedState}>
           <TooltipProvider>
             {children}
             <Toaster />

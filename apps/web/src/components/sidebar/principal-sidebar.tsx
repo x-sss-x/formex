@@ -10,6 +10,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import type React from "react";
+import { Suspense } from "react";
 import { getTemplatePagesByType } from "@/components/tempalate-pages";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
@@ -72,7 +73,15 @@ export function PrincipalSidebar({
           </SidebarMenu>
         </SidebarGroup>
 
-        <PrincipalProgramsSection />
+        <Suspense
+          fallback={
+            <div className="text-xs text-muted-foreground px-2 py-2">
+              Loading programs…
+            </div>
+          }
+        >
+          <PrincipalProgramsSection />
+        </Suspense>
 
         <SidebarGroup>
           <SidebarGroupLabel>INSTITUTION FORMATS</SidebarGroupLabel>
@@ -94,7 +103,9 @@ export function PrincipalSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <AppSidebarFooter />
+      <Suspense fallback={<div className="h-16 px-2 py-2" />}>
+        <AppSidebarFooter />
+      </Suspense>
     </Sidebar>
   );
 }

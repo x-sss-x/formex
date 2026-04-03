@@ -4,7 +4,8 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Institution } from "./institution";
 
 export type InstitutionsShow200 = {
-  data: string;
+  data: Institution;
 };

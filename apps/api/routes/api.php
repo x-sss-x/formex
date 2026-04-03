@@ -17,9 +17,8 @@ Route::middleware('web')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/user/current-institution', [AuthController::class, 'setCurrentInstitution']);
-    Route::apiResource('programs', ContextProgramController::class);
     Route::apiResource('institutions', InstitutionController::class);
-    Route::apiResource('institutions.programs', ProgramController::class)->scoped();
+    Route::apiResource('programs', ContextProgramController::class);
     Route::apiResource('institutions.programs.students', StudentController::class)->scoped();
     Route::apiResource('institutions.programs.subjects', SubjectController::class)->scoped();
 });

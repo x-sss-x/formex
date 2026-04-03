@@ -13,7 +13,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -61,7 +61,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useAuthUser } from "@/lib/api/generated/auth/auth";
 import type { Program } from "@/lib/api/generated/models/program";
 import type { ValidationExceptionResponse } from "@/lib/api/generated/models/validationExceptionResponse";
 import {
@@ -69,8 +68,9 @@ import {
   programsDestroy,
   programsStore,
   programsUpdate,
-  useProgramsIndex,
-} from "@/lib/api/generated/program/program";
+  useProgramsIndexSuspense,
+} from "@/lib/api/generated/context-program/context-program";
+import { useAuthUserSuspense } from "@/lib/api/generated/auth/auth";
 
 const programFormSchema = z.object({
   name: z.string().min(1, "Required").max(255),
@@ -98,22 +98,81 @@ function isValidationError(data: unknown): data is ValidationExceptionResponse {
   );
 }
 
+function PrincipalProgramsListBody({
+  institutionId,
+  pathname,
+  onEdit,
+  onDelete,
+}: {
+  institutionId: string;
+  pathname: string;
+  onEdit: (program: Program) => void;
+  onDelete: (program: Program) => void;
+}) {
+  const { data: programsData } = useProgramsIndexSuspense({
+    query: { queryKey: [...getProgramsIndexQueryKey(), institutionId] },
+  });
+  const programs: Program[] =
+    programsData.status === 200 ? programsData.data.data : [];
+
+  if (programs.length === 0) {
+    return (
+      <p className="px-2 py-1 text-xs text-muted-foreground">
+        No programs yet. Use + to add one.
+      </p>
+    );
+  }
+
+  return (
+    <>
+      {programs.map((program) => (
+        <SidebarMenuItem key={program.id} className="group/menu-item relative">
+          <SidebarMenuButton
+            asChild
+            isActive={pathname.startsWith(`/p/${program.id}`)}
+            className="pr-8"
+          >
+            <Link href={`/p/${program.id}`}>
+              <HugeiconsIcon icon={CubeIcon} />
+              <span className="flex-1 truncate">{program.name}</span>
+            </Link>
+          </SidebarMenuButton>
+          <DropdownMenu>
+            <SidebarMenuAction asChild showOnHover>
+              <DropdownMenuTrigger>
+                <HugeiconsIcon icon={MoreHorizontal} className="h-3.5 w-3.5" />
+                <span className="sr-only">Program options</span>
+              </DropdownMenuTrigger>
+            </SidebarMenuAction>
+            <DropdownMenuContent side="right" align="start">
+              <DropdownMenuItem onClick={() => onEdit(program)}>
+                <HugeiconsIcon icon={Pen01Icon} className="mr-2 h-3.5 w-3.5" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => onDelete(program)}
+                className="text-destructive focus:text-destructive"
+              >
+                <HugeiconsIcon
+                  icon={Delete01Icon}
+                  className="mr-2 h-3.5 w-3.5"
+                />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      ))}
+    </>
+  );
+}
+
 export function PrincipalProgramsSection() {
   const pathname = usePathname();
   const queryClient = useQueryClient();
-  const { data: authData } = useAuthUser();
-  const session = authData?.status === 200 ? authData.data : null;
+  const { data: authData } = useAuthUserSuspense();
+  const session = authData.status === 200 ? authData.data : null;
   const institutionId = session?.current_institution_id ?? null;
-
-  const { data: programsData, isPending: programsLoading } = useProgramsIndex({
-    query: {
-      queryKey: [...getProgramsIndexQueryKey(), institutionId ?? ""],
-      enabled: Boolean(institutionId),
-    },
-  });
-
-  const programs: Program[] =
-    programsData?.status === 200 ? programsData.data.data : [];
 
   const [createOpen, setCreateOpen] = useState(false);
   const createForm = useForm<ProgramFormValues>({
@@ -224,62 +283,21 @@ export function PrincipalProgramsSection() {
               <p className="px-2 py-1 text-xs text-muted-foreground">
                 Select an institution to load programs.
               </p>
-            ) : programsLoading ? (
-              <p className="px-2 py-1 text-xs text-muted-foreground">
-                Loading…
-              </p>
-            ) : programs.length === 0 ? (
-              <p className="px-2 py-1 text-xs text-muted-foreground">
-                No programs yet. Use + to add one.
-              </p>
             ) : (
-              programs.map((program) => (
-                <SidebarMenuItem
-                  key={program.id}
-                  className="group/menu-item relative"
-                >
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname.startsWith(`/p/${program.id}`)}
-                    className="pr-8"
-                  >
-                    <Link href={`/p/${program.id}`}>
-                      <HugeiconsIcon icon={CubeIcon} />
-                      <span className="flex-1 truncate">{program.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                  <DropdownMenu>
-                    <SidebarMenuAction asChild showOnHover>
-                      <DropdownMenuTrigger>
-                        <HugeiconsIcon
-                          icon={MoreHorizontal}
-                          className="h-3.5 w-3.5"
-                        />
-                        <span className="sr-only">Program options</span>
-                      </DropdownMenuTrigger>
-                    </SidebarMenuAction>
-                    <DropdownMenuContent side="right" align="start">
-                      <DropdownMenuItem onClick={() => setEditProgram(program)}>
-                        <HugeiconsIcon
-                          icon={Pen01Icon}
-                          className="mr-2 h-3.5 w-3.5"
-                        />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => setDeleteProgram(program)}
-                        className="text-destructive focus:text-destructive"
-                      >
-                        <HugeiconsIcon
-                          icon={Delete01Icon}
-                          className="mr-2 h-3.5 w-3.5"
-                        />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
-              ))
+              <Suspense
+                fallback={
+                  <p className="px-2 py-1 text-xs text-muted-foreground">
+                    Loading…
+                  </p>
+                }
+              >
+                <PrincipalProgramsListBody
+                  institutionId={institutionId}
+                  pathname={pathname}
+                  onEdit={setEditProgram}
+                  onDelete={setDeleteProgram}
+                />
+              </Suspense>
             )}
           </SidebarMenu>
         </SidebarGroupContent>

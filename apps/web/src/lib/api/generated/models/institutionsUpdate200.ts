@@ -4,8 +4,9 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Institution } from "./institution";
 
 export type InstitutionsUpdate200 = {
   message: "Institution updated successfully";
-  data: string;
+  data: Institution;
 };

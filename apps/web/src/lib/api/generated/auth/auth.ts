@@ -18,8 +18,10 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
+  UseSuspenseQueryOptions,
+  UseSuspenseQueryResult,
 } from "@tanstack/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { $api } from "../../mutator";
 import type {
   AuthenticationExceptionResponse,
@@ -509,8 +511,125 @@ export function useAuthUser<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
+export const getAuthUserSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof authUser>>,
+  TError = AuthenticationExceptionResponse,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<Awaited<ReturnType<typeof authUser>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof $api>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getAuthUserQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof authUser>>> = ({
+    signal,
+  }) => authUser({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof authUser>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type AuthUserSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof authUser>>
+>;
+export type AuthUserSuspenseQueryError = AuthenticationExceptionResponse;
+
+export function useAuthUserSuspense<
+  TData = Awaited<ReturnType<typeof authUser>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof authUser>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useAuthUserSuspense<
+  TData = Awaited<ReturnType<typeof authUser>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof authUser>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useAuthUserSuspense<
+  TData = Awaited<ReturnType<typeof authUser>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof authUser>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
- * @summary Set the active institution for this session
+ * @summary Return the authenticated user for the current session
+ */
+
+export function useAuthUserSuspense<
+  TData = Awaited<ReturnType<typeof authUser>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof authUser>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getAuthUserSuspenseQueryOptions(options);
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Persist the active institution for this session (membership validated against the database)
  */
 export type authSetCurrentInstitutionResponse200 = {
   data: AuthSession;
@@ -609,7 +728,7 @@ export type AuthSetCurrentInstitutionMutationError =
   | ValidationExceptionResponse;
 
 /**
- * @summary Set the active institution for this session
+ * @summary Persist the active institution for this session (membership validated against the database)
  */
 export const useAuthSetCurrentInstitution = <
   TError = AuthenticationExceptionResponse | ValidationExceptionResponse,

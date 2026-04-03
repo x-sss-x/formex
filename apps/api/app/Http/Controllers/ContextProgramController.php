@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Support\CurrentInstitutionSession;
 use Illuminate\Http\Request;
 

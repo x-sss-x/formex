@@ -1,21 +1,20 @@
-import { cookies, headers } from "next/headers";
+import "server-only";
+
+import { headers } from "next/headers";
 import type { AuthSession } from "../lib/api/generated/models/authSession";
 import type { User } from "../lib/api/generated/models/user";
 import { getStatefulHeadersForLaravel } from "../lib/api/laravel-stateful-headers";
+import { getIncomingCookieHeader } from "../lib/server/incoming-cookie-header";
 
 export type { AuthSession };
 
 export async function getServerSession(): Promise<AuthSession | null> {
-  const cookieStore = await cookies();
-  const fromStore = cookieStore
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join("; ");
-  const hdrs = await headers();
-  const rawCookie = hdrs.get("cookie") ?? fromStore;
+  const rawCookie = await getIncomingCookieHeader();
   if (!rawCookie) {
     return null;
   }
+
+  const hdrs = await headers();
 
   const backend = (
     process.env.LARAVEL_BACKEND_URL ?? "http://127.0.0.1:8000"

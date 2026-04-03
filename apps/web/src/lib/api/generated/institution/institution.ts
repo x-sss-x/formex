@@ -18,8 +18,10 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
+  UseSuspenseQueryOptions,
+  UseSuspenseQueryResult,
 } from "@tanstack/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { $api } from "../../mutator";
 import type {
   AuthenticationExceptionResponse,
@@ -30,6 +32,7 @@ import type {
   InstitutionsStoreBody,
   InstitutionsUpdate200,
   InstitutionsUpdateBody,
+  ModelNotFoundExceptionResponse,
   ValidationExceptionResponse,
 } from "../models";
 
@@ -211,6 +214,128 @@ export function useInstitutionsIndex<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
+export const getInstitutionsIndexSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof institutionsIndex>>,
+  TError = AuthenticationExceptionResponse,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<
+      Awaited<ReturnType<typeof institutionsIndex>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof $api>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getInstitutionsIndexQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof institutionsIndex>>
+  > = ({ signal }) => institutionsIndex({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof institutionsIndex>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type InstitutionsIndexSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof institutionsIndex>>
+>;
+export type InstitutionsIndexSuspenseQueryError =
+  AuthenticationExceptionResponse;
+
+export function useInstitutionsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsIndex>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsIndex>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsIndex>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Display a listing of the resource
+ */
+
+export function useInstitutionsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsIndex>>,
+  TError = AuthenticationExceptionResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getInstitutionsIndexSuspenseQueryOptions(options);
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
 /**
  * @summary Store a newly created resource in storage
  */
@@ -343,10 +468,18 @@ export type institutionsShowResponse401 = {
   status: 401;
 };
 
+export type institutionsShowResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type institutionsShowResponseSuccess = institutionsShowResponse200 & {
   headers: Headers;
 };
-export type institutionsShowResponseError = institutionsShowResponse401 & {
+export type institutionsShowResponseError = (
+  | institutionsShowResponse401
+  | institutionsShowResponse404
+) & {
   headers: Headers;
 };
 
@@ -354,29 +487,29 @@ export type institutionsShowResponse =
   | institutionsShowResponseSuccess
   | institutionsShowResponseError;
 
-export const getInstitutionsShowUrl = (id: string) => {
-  return `/institutions/${id}`;
+export const getInstitutionsShowUrl = (institution: string) => {
+  return `/institutions/${institution}`;
 };
 
 export const institutionsShow = async (
-  id: string,
+  institution: string,
   options?: RequestInit,
 ): Promise<institutionsShowResponse> => {
-  return $api<institutionsShowResponse>(getInstitutionsShowUrl(id), {
+  return $api<institutionsShowResponse>(getInstitutionsShowUrl(institution), {
     ...options,
     method: "GET",
   });
 };
 
-export const getInstitutionsShowQueryKey = (id: string) => {
-  return [`/institutions/${id}`] as const;
+export const getInstitutionsShowQueryKey = (institution: string) => {
+  return [`/institutions/${institution}`] as const;
 };
 
 export const getInstitutionsShowQueryOptions = <
   TData = Awaited<ReturnType<typeof institutionsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  id: string,
+  institution: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -390,16 +523,18 @@ export const getInstitutionsShowQueryOptions = <
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getInstitutionsShowQueryKey(id);
+  const queryKey =
+    queryOptions?.queryKey ?? getInstitutionsShowQueryKey(institution);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof institutionsShow>>
-  > = ({ signal }) => institutionsShow(id, { signal, ...requestOptions });
+  > = ({ signal }) =>
+    institutionsShow(institution, { signal, ...requestOptions });
 
   return {
     queryKey,
     queryFn,
-    enabled: !!id,
+    enabled: !!institution,
     ...queryOptions,
   } as UseQueryOptions<
     Awaited<ReturnType<typeof institutionsShow>>,
@@ -411,13 +546,15 @@ export const getInstitutionsShowQueryOptions = <
 export type InstitutionsShowQueryResult = NonNullable<
   Awaited<ReturnType<typeof institutionsShow>>
 >;
-export type InstitutionsShowQueryError = AuthenticationExceptionResponse;
+export type InstitutionsShowQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 export function useInstitutionsShow<
   TData = Awaited<ReturnType<typeof institutionsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  id: string,
+  institution: string,
   options: {
     query: Partial<
       UseQueryOptions<
@@ -442,9 +579,9 @@ export function useInstitutionsShow<
 };
 export function useInstitutionsShow<
   TData = Awaited<ReturnType<typeof institutionsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  id: string,
+  institution: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -469,9 +606,9 @@ export function useInstitutionsShow<
 };
 export function useInstitutionsShow<
   TData = Awaited<ReturnType<typeof institutionsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  id: string,
+  institution: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -492,9 +629,9 @@ export function useInstitutionsShow<
 
 export function useInstitutionsShow<
   TData = Awaited<ReturnType<typeof institutionsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  id: string,
+  institution: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -509,12 +646,147 @@ export function useInstitutionsShow<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getInstitutionsShowQueryOptions(id, options);
+  const queryOptions = getInstitutionsShowQueryOptions(institution, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
     TError
   > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getInstitutionsShowSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof institutionsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getInstitutionsShowQueryKey(institution);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof institutionsShow>>
+  > = ({ signal }) =>
+    institutionsShow(institution, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof institutionsShow>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type InstitutionsShowSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof institutionsShow>>
+>;
+export type InstitutionsShowSuspenseQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
+
+export function useInstitutionsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+/**
+ * @summary Display the specified resource
+ */
+
+export function useInstitutionsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getInstitutionsShowSuspenseQueryOptions(
+    institution,
+    options,
+  );
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
@@ -532,6 +804,11 @@ export type institutionsUpdateResponse401 = {
   status: 401;
 };
 
+export type institutionsUpdateResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type institutionsUpdateResponse422 = {
   data: ValidationExceptionResponse;
   status: 422;
@@ -543,6 +820,7 @@ export type institutionsUpdateResponseSuccess =
   };
 export type institutionsUpdateResponseError = (
   | institutionsUpdateResponse401
+  | institutionsUpdateResponse404
   | institutionsUpdateResponse422
 ) & {
   headers: Headers;
@@ -552,38 +830,44 @@ export type institutionsUpdateResponse =
   | institutionsUpdateResponseSuccess
   | institutionsUpdateResponseError;
 
-export const getInstitutionsUpdateUrl = (id: string) => {
-  return `/institutions/${id}`;
+export const getInstitutionsUpdateUrl = (institution: string) => {
+  return `/institutions/${institution}`;
 };
 
 export const institutionsUpdate = async (
-  id: string,
+  institution: string,
   institutionsUpdateBody: InstitutionsUpdateBody,
   options?: RequestInit,
 ): Promise<institutionsUpdateResponse> => {
-  return $api<institutionsUpdateResponse>(getInstitutionsUpdateUrl(id), {
-    ...options,
-    method: "PUT",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(institutionsUpdateBody),
-  });
+  return $api<institutionsUpdateResponse>(
+    getInstitutionsUpdateUrl(institution),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(institutionsUpdateBody),
+    },
+  );
 };
 
 export const getInstitutionsUpdateMutationOptions = <
-  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof institutionsUpdate>>,
     TError,
-    { id: string; data: InstitutionsUpdateBody },
+    { institution: string; data: InstitutionsUpdateBody },
     TContext
   >;
   request?: SecondParameter<typeof $api>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof institutionsUpdate>>,
   TError,
-  { id: string; data: InstitutionsUpdateBody },
+  { institution: string; data: InstitutionsUpdateBody },
   TContext
 > => {
   const mutationKey = ["institutionsUpdate"];
@@ -597,11 +881,11 @@ export const getInstitutionsUpdateMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof institutionsUpdate>>,
-    { id: string; data: InstitutionsUpdateBody }
+    { institution: string; data: InstitutionsUpdateBody }
   > = (props) => {
-    const { id, data } = props ?? {};
+    const { institution, data } = props ?? {};
 
-    return institutionsUpdate(id, data, requestOptions);
+    return institutionsUpdate(institution, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -613,20 +897,24 @@ export type InstitutionsUpdateMutationResult = NonNullable<
 export type InstitutionsUpdateMutationBody = InstitutionsUpdateBody;
 export type InstitutionsUpdateMutationError =
   | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse
   | ValidationExceptionResponse;
 
 /**
  * @summary Update the specified resource in storage
  */
 export const useInstitutionsUpdate = <
-  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof institutionsUpdate>>,
       TError,
-      { id: string; data: InstitutionsUpdateBody },
+      { institution: string; data: InstitutionsUpdateBody },
       TContext
     >;
     request?: SecondParameter<typeof $api>;
@@ -635,7 +923,7 @@ export const useInstitutionsUpdate = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof institutionsUpdate>>,
   TError,
-  { id: string; data: InstitutionsUpdateBody },
+  { institution: string; data: InstitutionsUpdateBody },
   TContext
 > => {
   return useMutation(
@@ -656,48 +944,58 @@ export type institutionsDestroyResponse401 = {
   status: 401;
 };
 
+export type institutionsDestroyResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type institutionsDestroyResponseSuccess =
   institutionsDestroyResponse200 & {
     headers: Headers;
   };
-export type institutionsDestroyResponseError =
-  institutionsDestroyResponse401 & {
-    headers: Headers;
-  };
+export type institutionsDestroyResponseError = (
+  | institutionsDestroyResponse401
+  | institutionsDestroyResponse404
+) & {
+  headers: Headers;
+};
 
 export type institutionsDestroyResponse =
   | institutionsDestroyResponseSuccess
   | institutionsDestroyResponseError;
 
-export const getInstitutionsDestroyUrl = (id: string) => {
-  return `/institutions/${id}`;
+export const getInstitutionsDestroyUrl = (institution: string) => {
+  return `/institutions/${institution}`;
 };
 
 export const institutionsDestroy = async (
-  id: string,
+  institution: string,
   options?: RequestInit,
 ): Promise<institutionsDestroyResponse> => {
-  return $api<institutionsDestroyResponse>(getInstitutionsDestroyUrl(id), {
-    ...options,
-    method: "DELETE",
-  });
+  return $api<institutionsDestroyResponse>(
+    getInstitutionsDestroyUrl(institution),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export const getInstitutionsDestroyMutationOptions = <
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof institutionsDestroy>>,
     TError,
-    { id: string },
+    { institution: string },
     TContext
   >;
   request?: SecondParameter<typeof $api>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof institutionsDestroy>>,
   TError,
-  { id: string },
+  { institution: string },
   TContext
 > => {
   const mutationKey = ["institutionsDestroy"];
@@ -711,11 +1009,11 @@ export const getInstitutionsDestroyMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof institutionsDestroy>>,
-    { id: string }
+    { institution: string }
   > = (props) => {
-    const { id } = props ?? {};
+    const { institution } = props ?? {};
 
-    return institutionsDestroy(id, requestOptions);
+    return institutionsDestroy(institution, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -725,20 +1023,22 @@ export type InstitutionsDestroyMutationResult = NonNullable<
   Awaited<ReturnType<typeof institutionsDestroy>>
 >;
 
-export type InstitutionsDestroyMutationError = AuthenticationExceptionResponse;
+export type InstitutionsDestroyMutationError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 /**
  * @summary Remove the specified resource from storage
  */
 export const useInstitutionsDestroy = <
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof institutionsDestroy>>,
       TError,
-      { id: string },
+      { institution: string },
       TContext
     >;
     request?: SecondParameter<typeof $api>;
@@ -747,7 +1047,7 @@ export const useInstitutionsDestroy = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof institutionsDestroy>>,
   TError,
-  { id: string },
+  { institution: string },
   TContext
 > => {
   return useMutation(

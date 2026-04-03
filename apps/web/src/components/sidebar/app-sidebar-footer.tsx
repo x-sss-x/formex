@@ -7,9 +7,9 @@ import { signOutSession } from "@/auth/client";
 import {
   getAuthUserQueryKey,
   useAuthSetCurrentInstitution,
-  useAuthUser,
+  useAuthUserSuspense,
 } from "@/lib/api/generated/auth/auth";
-import { getProgramsIndexQueryKey } from "@/lib/api/generated/program/program";
+import { getProgramsIndexQueryKey } from "@/lib/api/generated/context-program/context-program";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -28,7 +28,7 @@ import {
 
 export function AppSidebarFooter() {
   const queryClient = useQueryClient();
-  const { data, isPending } = useAuthUser();
+  const { data } = useAuthUserSuspense();
   const { mutate: setCurrentInstitution, isPending: isSwitching } =
     useAuthSetCurrentInstitution({
       mutation: {
@@ -50,9 +50,7 @@ export function AppSidebarFooter() {
   return (
     <SidebarFooter className="pb-6">
       <SidebarMenu>
-        {isPending ? (
-          <p className="px-2 py-1.5 text-xs text-muted-foreground">Loading…</p>
-        ) : user ? (
+        {user ? (
           <DropdownMenu>
             <SidebarMenuItem>
               <DropdownMenuTrigger className="group/dropdown-menu" asChild>

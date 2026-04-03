@@ -18,8 +18,10 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
+  UseSuspenseQueryOptions,
+  UseSuspenseQueryResult,
 } from "@tanstack/react-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { $api } from "../../mutator";
 import type {
   AuthenticationExceptionResponse,
@@ -251,6 +253,148 @@ export function useInstitutionsProgramsStudentsIndex<
     TData,
     TError
   > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getInstitutionsProgramsStudentsIndexSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getInstitutionsProgramsStudentsIndexQueryKey(institution, program);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>
+  > = ({ signal }) =>
+    institutionsProgramsStudentsIndex(institution, program, {
+      signal,
+      ...requestOptions,
+    });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type InstitutionsProgramsStudentsIndexSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>
+>;
+export type InstitutionsProgramsStudentsIndexSuspenseQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
+
+export function useInstitutionsProgramsStudentsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsProgramsStudentsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsProgramsStudentsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useInstitutionsProgramsStudentsIndexSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsIndex>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getInstitutionsProgramsStudentsIndexSuspenseQueryOptions(
+    institution,
+    program,
+    options,
+  );
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
@@ -645,6 +789,154 @@ export function useInstitutionsProgramsStudentsShow<
     TData,
     TError
   > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getInstitutionsProgramsStudentsShowSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  student: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getInstitutionsProgramsStudentsShowQueryKey(institution, program, student);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>
+  > = ({ signal }) =>
+    institutionsProgramsStudentsShow(institution, program, student, {
+      signal,
+      ...requestOptions,
+    });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type InstitutionsProgramsStudentsShowSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>
+>;
+export type InstitutionsProgramsStudentsShowSuspenseQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
+
+export function useInstitutionsProgramsStudentsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  student: string,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsProgramsStudentsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  student: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useInstitutionsProgramsStudentsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  student: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useInstitutionsProgramsStudentsShowSuspense<
+  TData = Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  institution: string,
+  program: string,
+  student: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof institutionsProgramsStudentsShow>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getInstitutionsProgramsStudentsShowSuspenseQueryOptions(
+    institution,
+    program,
+    student,
+    options,
+  );
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
