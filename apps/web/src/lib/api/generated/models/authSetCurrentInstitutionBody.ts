@@ -4,8 +4,7 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
-import type { User } from "./user";
 
-export type AuthUser200 = {
-  user: User;
+export type AuthSetCurrentInstitutionBody = {
+  institution_id: string;
 };

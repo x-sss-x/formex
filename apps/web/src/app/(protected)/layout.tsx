@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import type React from "react";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
+import { AppSidebarRail } from "@/components/sidebar/app-sidebar-rail";
 import { getServerSessionUser } from "../../auth/session";
 import { SidebarInset } from "../../components/ui/sidebar";
-import { AppSidebarRail } from "@/components/sidebar/app-sidebar-rail";
-import { AppSidebarProvider } from "@/components/sidebar/app-sidebar-provider";
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
 
 export default async function Layout({
   children,
@@ -15,6 +15,10 @@ export default async function Layout({
 
   if (!user) {
     redirect("/sign-in");
+  }
+
+  if (user.institutions.length === 0) {
+    redirect("/institutions/new");
   }
 
   return (

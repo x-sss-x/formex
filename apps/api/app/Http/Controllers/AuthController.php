@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Support\CurrentInstitutionSession;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -75,10 +77,46 @@ class AuthController
     /**
      * Return the authenticated user for the current session.
      */
-    public function user(Request $request)
+    public function user(Request $request): JsonResponse
     {
+        return $this->authSessionResponse($request);
+    }
+
+    /**
+     * Persist the active institution for this session (membership validated against the database).
+     */
+    public function setCurrentInstitution(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'institution_id' => ['required', 'string'],
+        ]);
+
+        $user = $request->user();
+        $user->load('institutions');
+
+        if (! $user->institutions->pluck('id')->contains($validated['institution_id'])) {
+            throw ValidationException::withMessages([
+                'institution_id' => ['You do not belong to this institution.'],
+            ]);
+        }
+
+        $request->session()->put(
+            CurrentInstitutionSession::SESSION_KEY,
+            $validated['institution_id'],
+        );
+
+        return $this->authSessionResponse($request);
+    }
+
+    private function authSessionResponse(Request $request): JsonResponse
+    {
+        $user = $request->user()->load('institutions');
+        [$currentInstitution, $currentInstitutionId] = CurrentInstitutionSession::sync($request, $user);
+
         return response()->json([
-            'user' => $request->user(),
+            'user' => $user,
+            'current_institution' => $currentInstitution,
+            'current_institution_id' => $currentInstitutionId,
         ]);
     }
 }

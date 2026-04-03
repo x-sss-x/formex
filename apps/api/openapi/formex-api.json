@@ -151,21 +151,58 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "user": {
-                                            "$ref": "#/components/schemas/User"
-                                        }
-                                    },
-                                    "required": [
-                                        "user"
-                                    ]
+                                    "$ref": "#/components/schemas/AuthSession"
                                 }
                             }
                         }
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/user/current-institution": {
+            "post": {
+                "operationId": "auth.setCurrentInstitution",
+                "summary": "Set the active institution for this session",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "institution_id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "institution_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthSession"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             }
@@ -1774,6 +1811,12 @@
                             "null"
                         ],
                         "format": "date-time"
+                    },
+                    "institutions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Institution"
+                        }
                     }
                 },
                 "required": [
@@ -1782,9 +1825,44 @@
                     "email",
                     "email_verified_at",
                     "created_at",
-                    "updated_at"
+                    "updated_at",
+                    "institutions"
                 ],
                 "title": "User"
+            },
+            "AuthSession": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "current_institution": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Institution"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "current_institution_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "user",
+                    "current_institution",
+                    "current_institution_id"
+                ],
+                "title": "AuthSession"
             }
         },
         "responses": {

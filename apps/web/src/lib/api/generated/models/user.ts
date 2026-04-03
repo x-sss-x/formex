@@ -4,6 +4,7 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Institution } from "./institution";
 
 export interface User {
   id: string;
@@ -15,4 +16,5 @@ export interface User {
   created_at: string | null;
   /** @nullable */
   updated_at: string | null;
+  institutions: Institution[];
 }

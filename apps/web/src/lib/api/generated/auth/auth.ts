@@ -26,7 +26,8 @@ import type {
   AuthLogin200,
   AuthLoginBody,
   AuthRegisterBody,
-  AuthUser200,
+  AuthSession,
+  AuthSetCurrentInstitutionBody,
   ValidationExceptionResponse,
 } from "../models";
 
@@ -358,7 +359,7 @@ export const useAuthLogout = <
  * @summary Return the authenticated user for the current session
  */
 export type authUserResponse200 = {
-  data: AuthUser200;
+  data: AuthSession;
   status: 200;
 };
 
@@ -507,3 +508,131 @@ export function useAuthUser<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Set the active institution for this session
+ */
+export type authSetCurrentInstitutionResponse200 = {
+  data: AuthSession;
+  status: 200;
+};
+
+export type authSetCurrentInstitutionResponse401 = {
+  data: AuthenticationExceptionResponse;
+  status: 401;
+};
+
+export type authSetCurrentInstitutionResponse422 = {
+  data: ValidationExceptionResponse;
+  status: 422;
+};
+
+export type authSetCurrentInstitutionResponseSuccess =
+  authSetCurrentInstitutionResponse200 & {
+    headers: Headers;
+  };
+export type authSetCurrentInstitutionResponseError = (
+  | authSetCurrentInstitutionResponse401
+  | authSetCurrentInstitutionResponse422
+) & {
+  headers: Headers;
+};
+
+export type authSetCurrentInstitutionResponse =
+  | authSetCurrentInstitutionResponseSuccess
+  | authSetCurrentInstitutionResponseError;
+
+export const getAuthSetCurrentInstitutionUrl = () => {
+  return `/user/current-institution`;
+};
+
+export const authSetCurrentInstitution = async (
+  authSetCurrentInstitutionBody: AuthSetCurrentInstitutionBody,
+  options?: RequestInit,
+): Promise<authSetCurrentInstitutionResponse> => {
+  return $api<authSetCurrentInstitutionResponse>(
+    getAuthSetCurrentInstitutionUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(authSetCurrentInstitutionBody),
+    },
+  );
+};
+
+export const getAuthSetCurrentInstitutionMutationOptions = <
+  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authSetCurrentInstitution>>,
+    TError,
+    { data: AuthSetCurrentInstitutionBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof $api>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof authSetCurrentInstitution>>,
+  TError,
+  { data: AuthSetCurrentInstitutionBody },
+  TContext
+> => {
+  const mutationKey = ["authSetCurrentInstitution"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof authSetCurrentInstitution>>,
+    { data: AuthSetCurrentInstitutionBody }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return authSetCurrentInstitution(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AuthSetCurrentInstitutionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof authSetCurrentInstitution>>
+>;
+export type AuthSetCurrentInstitutionMutationBody =
+  AuthSetCurrentInstitutionBody;
+export type AuthSetCurrentInstitutionMutationError =
+  | AuthenticationExceptionResponse
+  | ValidationExceptionResponse;
+
+/**
+ * @summary Set the active institution for this session
+ */
+export const useAuthSetCurrentInstitution = <
+  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof authSetCurrentInstitution>>,
+      TError,
+      { data: AuthSetCurrentInstitutionBody },
+      TContext
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof authSetCurrentInstitution>>,
+  TError,
+  { data: AuthSetCurrentInstitutionBody },
+  TContext
+> => {
+  return useMutation(
+    getAuthSetCurrentInstitutionMutationOptions(options),
+    queryClient,
+  );
+};

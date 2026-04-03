@@ -1,8 +1,11 @@
 import { cookies, headers } from "next/headers";
-import type { User } from "../lib/api/generated/models";
+import type { AuthSession } from "../lib/api/generated/models/authSession";
+import type { User } from "../lib/api/generated/models/user";
 import { getStatefulHeadersForLaravel } from "../lib/api/laravel-stateful-headers";
 
-export async function getServerSessionUser(): Promise<User | null> {
+export type { AuthSession };
+
+export async function getServerSession(): Promise<AuthSession | null> {
   const cookieStore = await cookies();
   const fromStore = cookieStore
     .getAll()
@@ -32,6 +35,12 @@ export async function getServerSessionUser(): Promise<User | null> {
     return null;
   }
 
-  const json = (await res.json()) as { user: User };
-  return json.user ?? null;
+  const json = (await res.json()) as AuthSession;
+  return json.user ? json : null;
+}
+
+export async function getServerSessionUser(): Promise<User | null> {
+  const session = await getServerSession();
+
+  return session?.user ?? null;
 }

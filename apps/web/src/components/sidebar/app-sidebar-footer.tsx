@@ -2,8 +2,13 @@
 
 import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { signOutSession } from "@/auth/client";
-import { useAuthLogout, useAuthUser } from "@/lib/api/generated/auth/auth";
+import {
+  getAuthUserQueryKey,
+  useAuthSetCurrentInstitution,
+  useAuthUser,
+} from "@/lib/api/generated/auth/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -21,9 +26,22 @@ import {
 } from "../ui/sidebar";
 
 export function AppSidebarFooter() {
+  const queryClient = useQueryClient();
   const { data, isPending } = useAuthUser();
-  const {} = useAuthLogout();
-  const user = data?.status === 200 ? data.data.user : null;
+  const { mutate: setCurrentInstitution, isPending: isSwitching } =
+    useAuthSetCurrentInstitution({
+      mutation: {
+        onSettled: () => {
+          void queryClient.invalidateQueries({
+            queryKey: getAuthUserQueryKey(),
+          });
+        },
+      },
+    });
+
+  const session = data?.status === 200 ? data.data : null;
+  const user = session?.user ?? null;
+  const currentInstitution = session?.current_institution;
 
   return (
     <SidebarFooter className="pb-6">
@@ -45,6 +63,11 @@ export function AppSidebarFooter() {
                     <p className="text-xs text-muted-foreground">
                       {user.email}
                     </p>
+                    {currentInstitution ? (
+                      <p className="text-xs text-muted-foreground/90 truncate max-w-44">
+                        {currentInstitution.name}
+                      </p>
+                    ) : null}
                   </div>
 
                   <HugeiconsIcon
@@ -68,6 +91,30 @@ export function AppSidebarFooter() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              {user.institutions.length > 1 ? (
+                <>
+                  <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                    Institution
+                  </DropdownMenuLabel>
+                  {user.institutions.map((institution) => (
+                    <DropdownMenuItem
+                      key={institution.id}
+                      disabled={
+                        isSwitching ||
+                        institution.id === session?.current_institution_id
+                      }
+                      onClick={() => {
+                        setCurrentInstitution({
+                          data: { institution_id: institution.id },
+                        });
+                      }}
+                    >
+                      {institution.name}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                </>
+              ) : null}
               <DropdownMenuItem
                 onClick={() => {
                   void signOutSession().then(() => window.location.reload());
