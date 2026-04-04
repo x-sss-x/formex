@@ -26,6 +26,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('institutions.programs.subjects', SubjectController::class)->scoped();
 
+    // Subjects Paths
+    Route::apiResource('subjects', SubjectController::class)->except(['store']);
+    Route::get('/programs/{program}/subjects', [SubjectController::class, 'listByProgram']);
+    Route::get('/programs/{program}/subjects/{semester}', [SubjectController::class, 'listbysemester']);
+    Route::post('/programs/{program}/subjects', [SubjectController::class, 'store']);
+
     // Internships Paths
     Route::apiResource('internships', InternshipController::class)->except(['store']);
     Route::get('/programs/{program}/internships', [InternshipController::class, 'listByProgram']);
