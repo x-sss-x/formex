@@ -6,6 +6,7 @@ use App\Models\Institution;
 use App\Models\Program;
 use App\Models\Roomreport;
 use App\Models\Subject;
+use App\Support\CurrentInstitutionSession;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,10 @@ class RoomReportController
     /**
      * Display a listing of the resource.
      */
-    public function listByInstitution(Institution $institution)
+    public function index(Request $request)
     {
-        $roomreports = $institution->roomreports()->get();
+        $institution = CurrentInstitutionSession::requireInstitution($request);
+        $roomreports = $institution->roomreports()->latest()->get();
         return response()->json([
             'data' => $roomreports
         ]);
@@ -30,44 +32,30 @@ class RoomReportController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Institution $institution, Program $program, Subject $subject, User $user)
+    public function store(Request $request, Program $program, Subject $subject, User $user)
     {
         //
-        if ($program->institution_id !== $institution->id) {
-            return response()->json([
-                'message' => 'Program does not belong to this institution'
-            ], 404);
-        }
-        if ($subject->program_id !== $program->id) {
-            return response()->json([
-                'message' => 'Subject does not belong to this program'
-            ], 404);
-        }
-        if ($user->subject_id !== $subject->id) {
-            return response()->json([
-                'message' => 'Cc does not belong to this subject'
-            ], 404);
-        }
+
         $validated = $request->validate([
             'room_number' => 'required|string|max:255',
             'acad_year' => 'required|integer|min:2000',
             'semester' => 'required|integer|min:1',
             'strength' => 'required|integer|min:1',
             'present' => 'required|integer|min:1',
-            'attendance_register' => 'required|in: Maintained, Not Maintained',
-            'student_attendance' => 'required|in: Present, Absent',
+            'attendance_register' => 'required|in: maintained, not_maintained',
+            'student_attendance' => 'required|in: present, absent',
             'topic_planned' => 'required|string|max:255',
             'topic_taught' => 'required|string|max:255',
             'pedagogy_used' => 'required|string|max:255',
             'aids_used' => 'required|string|max:255',
-            'teaching_skill' => 'required|in: Satisfactory,Good',
-            'interaction' => 'required|in:Satisfactory,Good',
-            'learning_outcome' => 'required|in: Achieved,Not Achieved',
-            'valuation' => 'required|in:Done,Not Done',
+            'teaching_skill' => 'required|in: satisfactory,good',
+            'interaction' => 'required|in:satisfactory,good',
+            'learning_outcome' => 'required|in: achieved,not_achieved',
+            'valuation' => 'required|in:done,not_done',
             'principal_remarks' => 'required|string|max:255',
             'report_date' => 'required|date',
         ]);
-        $roomreport = $user->roomreports()->create([...$validated, "institution_id" => $institution->id, "program_id" => $program->id, "subject_id" => $subject->id, "user_id" => $user->id]);
+        $roomreport = $user->roomreports()->create([...$validated, "institution_id" => $program->institution_id, "program_id" => $program->id, "subject_id" => $subject->id, "user_id" => $user->id]);
         return response()->json([
             'message' => 'Room report created successfully',
             'data' => $roomreport
@@ -97,16 +85,16 @@ class RoomReportController
             'semester' => 'sometimes|required|integer|min:1',
             'strength' => 'sometimes|required|integer|min:1',
             'present' => 'sometimes|required|integer|min:1',
-            'attendance_register' => 'sometimes|required|in: Maintained, Not Maintained',
-            'student_attendance' => 'sometimes|required|in: Present, Absent',
+            'attendance_register' => 'sometimes|required|in:maintained,not_maintained',
+            'student_attendance' => 'sometimes|required|in:present,absent',
             'topic_planned' => 'sometimes|required|string|max:255',
             'topic_taught' => 'sometimes|required|string|max:255',
             'pedagogy_used' => 'sometimes|required|string|max:255',
             'aids_used' => 'sometimes|required|string|max:255',
-            'teaching_skill' => 'sometimes|required|in: Satisfactory,Good',
-            'interaction' => 'sometimes|required|in:Satisfactory,Good',
-            'learning_outcome' => 'sometimes|required|in: Achieved,Not Achieved',
-            'valuation' => 'sometimes|required|in:Done,Not Done',
+            'teaching_skill' => 'sometimes|required|in:satisfactory,good',
+            'interaction' => 'sometimes|required|in:satisfactory,good',
+            'learning_outcome' => 'sometimes|required|in:achieved,not_achieved',
+            'valuation' => 'sometimes|required|in:done,not_done',
             'principal_remarks' => 'sometimes|required|string|max:255',
             'report_date' => 'sometimes|required|date',
         ]);

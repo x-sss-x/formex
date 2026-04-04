@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContextProgramController;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\InternshipController;
+use App\Http\Controllers\RoomReportController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\PlacementController;
@@ -49,6 +50,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/programs/{program}/higher-educations', [HigherEducationController::class, 'listByProgram']);
     Route::post('/students/{student}/higher-educations', [HigherEducationController::class, 'store']);
 
+    // Room Reports Paths
+    // Route::apiResource('room-reports', RoomReportController::class)->except(['store']);
+    // Route::get('/programs/{program}/room-reports', [RoomReportController::class, 'listByProgram']);
+    // Route::get('/subjects/{subject}/room-reports', [RoomReportController::class, 'listBySubject']);
+    // Route::post('/programs/{program}/subjects/{subject}/room-reports', [RoomReportController::class, 'store']);
 
 });
 
