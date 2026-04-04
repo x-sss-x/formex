@@ -28,6 +28,7 @@ import {
 import { $api } from "@/lib/api/mutator";
 import type { Student } from "@/lib/api/generated/models/student";
 import { useProgramsShow } from "@/lib/api/hooks/useProgramsShow";
+import { useProgramsStudentsIndex } from "@/lib/api/generated/student/student";
 type ApiEnvelope<T> = {
   data: T;
   status: number;
@@ -50,19 +51,12 @@ export function StudentsPage() {
   const selectedSemester = clampSemester(searchParams.get("semester"));
   const currentYear = new Date().getFullYear();
 
-  const studentsQueryKey = ["programsStudents", programId] as const;
-
-  const { data: allStudents = [] } = useQuery({
-    queryKey: studentsQueryKey,
-    enabled: !!programId,
-    queryFn: async () => {
-      const res = await $api<ApiEnvelope<StudentsIndexJson>>(
-        `/programs/${programId}/students`,
-        { method: "GET" },
-      );
-      return res.data.data;
-    },
+  const studentsQuery = useProgramsStudentsIndex(programId, {
+    query: { enabled: !!programId },
   });
+
+  const allStudents =
+    studentsQuery.data?.status == 200 ? studentsQuery.data.data.data : [];
 
   const [search, setSearch] = useState("");
   const visibleStudents = useMemo(() => {
@@ -103,9 +97,7 @@ export function StudentsPage() {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link href={`/p/${programId}`}>
-                      {programShow?.name}
-                    </Link>
+                    <Link href={`/p/${programId}`}>{programShow?.name}</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
@@ -143,6 +135,7 @@ export function StudentsPage() {
           ) : null}
         </div>
 
+        {}
         <DataTable columns={columns} data={visibleStudents} />
       </Container>
     </>

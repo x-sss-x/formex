@@ -60,6 +60,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import React, { useMemo, useState } from "react";
+import { Spinner } from "../ui/spinner";
 
 function clampSemester(value: string | null): number {
   const n = Number(value);
@@ -141,7 +142,13 @@ export function SubjectsPage() {
           ) : null}
         </div>
 
-        <DataTable columns={subjectColumns} data={rows} />
+        {subjectsQuery.isLoading ? (
+          <div className="flex h-[calc(100svh-40svh)] w-full items-center justify-center">
+            <Spinner className="size-8" />
+          </div>
+        ) : (
+          <DataTable columns={subjectColumns} data={rows} />
+        )}
       </Container>
     </>
   );

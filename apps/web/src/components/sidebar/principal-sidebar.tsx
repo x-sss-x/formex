@@ -3,6 +3,8 @@
 import {
   GridIcon,
   Home01Icon,
+  LaborIcon,
+  PermanentJobIcon,
   UserSquareIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -32,6 +34,8 @@ const institutionFormats = getTemplatePagesByType("institution");
 const items = [
   { id: 1, label: "Home", icon: Home01Icon, href: "/" },
   { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
+  { id: 3, label: "Internships", icon: LaborIcon, href: "/internships" },
+  { id: 4, label: "Placements", icon: PermanentJobIcon, href: "/placements" },
 ];
 
 export function PrincipalSidebar({
@@ -43,10 +47,10 @@ export function PrincipalSidebar({
   return (
     <Sidebar
       collapsible="none"
-      className={cn("shrink-0 border-r", className)}
+      className={cn("flex-1 w-[16rem]! border-r", className)}
       {...props}
     >
-      <SidebarHeader className="flex-row h-12 border-b items-center">
+      <SidebarHeader className="flex-row h-12  border-b items-center">
         <span className="text-2xl text-primary px-1.5 font-medium font-brand">
           FORMEX
         </span>

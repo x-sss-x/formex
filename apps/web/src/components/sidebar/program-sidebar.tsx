@@ -9,7 +9,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type React from "react";
-import { Badge } from "../ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +19,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
 } from "../ui/sidebar";
 import { cn } from "@/lib/utils";
 import {
@@ -30,10 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import {
-  useProgramsShow,
-  useProgramsShowSuspense,
-} from "@/lib/api/generated/context-program/context-program";
+import { useProgramsShowSuspense } from "@/lib/api/generated/context-program/context-program";
 
 type ProgramSidebarProps = {
   programId: string;
@@ -94,7 +89,7 @@ export function ProgramSidebar({
   return (
     <Sidebar
       collapsible="none"
-      className={cn("shrink-0 border-r bg-sidebar", className)}
+      className={cn("flex-1 flex", className)}
       {...props}
     >
       <SidebarHeader className="gap-2 border-b px-2 h-12 justify-center">
