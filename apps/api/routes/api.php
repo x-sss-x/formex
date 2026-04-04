@@ -37,13 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/students/{student}/internships', [InternshipController::class, 'store']);
 
     // Placements Paths
-    Route::get('/institutions/{institution}/placements', [PlacementController::class, 'listByInstitution']);
+    Route::apiResource('placements', PlacementController::class)->except(['store']);
     Route::get('/programs/{program}/placements', [PlacementController::class, 'listByProgram']);
     Route::get('/students/{student}/placements', [PlacementController::class, 'listByStudent']);
     Route::post('/students/{student}/placements', [PlacementController::class, 'store']);
-    Route::get('/placements/{placement}', [PlacementController::class, 'show']);
-    Route::put('/placements/{placement}', [PlacementController::class, 'update']);
-    Route::delete('/placements/{placement}', [PlacementController::class, 'destroy']);
+
 
     // Higher Education Paths
     Route::post('/students/{student}/highereducations', [HigherEducationController::class, 'store']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Support\CurrentInstitutionSession;
 use Illuminate\Http\Request;
 use App\Models\Institution;
 use App\Models\Program;
@@ -14,9 +15,12 @@ class PlacementController
     /**
      * Display a listing of the resource.
      */
-    public function listByInstitution(Institution $institution)
+    public function index(Request $request)
     {
-        $placements = $institution->placements()->get();
+        $institution = CurrentInstitutionSession::requireInstitution($request);
+        $placements = $institution->placements()
+            ->latest()
+            ->get();
         return response()->json([
             'data' => $placements
         ]);
