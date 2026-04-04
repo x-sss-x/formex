@@ -44,13 +44,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Higher Education Paths
-    Route::post('/students/{student}/highereducations', [HigherEducationController::class, 'store']);
-    Route::get('/students/{student}/highereducations', [HigherEducationController::class, 'listByStudent']);
-    Route::get('/institutions/{institution}/highereducations', [HigherEducationController::class, 'listByInstitution']);
-    Route::get('/programs/{program}/highereducations', [HigherEducationController::class, 'listByProgram']);
-    Route::get('/highereducations/{highereducation}', [HigherEducationController::class, 'show']);
-    Route::put('/highereducations/{highereducation}', [HigherEducationController::class, 'update']);
-    Route::delete('/highereducations/{highereducation}', [HigherEducationController::class, 'destroy']);
+    Route::apiResource('higher-educations', HigherEducationController::class)->except(['store']);
+    Route::get('/students/{student}/higher-educations', [HigherEducationController::class, 'listByStudent']);
+    Route::get('/programs/{program}/higher-educations', [HigherEducationController::class, 'listByProgram']);
+    Route::post('/students/{student}/higher-educations', [HigherEducationController::class, 'store']);
+
 
 });
 

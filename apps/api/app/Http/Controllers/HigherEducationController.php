@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Highereducation;
 use App\Models\Student;
+use App\Support\CurrentInstitutionSession;
 use Illuminate\Http\Request;
 use App\Models\Institution;
 use App\Models\Program;
@@ -21,8 +22,9 @@ class HigherEducationController
         ]);
     }
 
-    public function listByInstitution(Institution $institution)
+    public function index(Request $request)
     {
+        $institution = CurrentInstitutionSession::requireInstitution($request);
         $highereducations = $institution->highereducations()->get();
         return response()->json([
             'data' => $highereducations
