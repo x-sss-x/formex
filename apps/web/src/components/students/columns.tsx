@@ -3,6 +3,10 @@
 import { MoreVertical, Pencil, Trash } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
+import { DeleteStudentDialog } from "@/components/students/delete-student-dialog";
+import { EditStudentSheet } from "@/components/students/edit-student-sheet";
+import type { Student } from "@/lib/api/generated/models/student";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -10,17 +14,77 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import type { Student } from "@/lib/api/generated/models/student";
 
-type StudentColumnActions = {
-  onEdit: (student: Student) => void;
-  onDelete: (student: Student) => void;
+export type StudentColumnsContext = {
+  programId: string | undefined;
+  listSemester: number;
 };
 
-export function getStudentColumns({
-  onEdit,
-  onDelete,
-}: StudentColumnActions): ColumnDef<Student>[] {
+function StudentRowActions({
+  student,
+  programId,
+  listSemester,
+}: {
+  student: Student;
+  programId: string;
+  listSemester: number;
+}) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <HugeiconsIcon icon={MoreVertical} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              setEditOpen(true);
+            }}
+          >
+            <HugeiconsIcon icon={Pencil} />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            variant="destructive"
+            onSelect={(e) => {
+              e.preventDefault();
+              setDeleteOpen(true);
+            }}
+          >
+            <HugeiconsIcon icon={Trash} />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <EditStudentSheet
+        student={student}
+        programId={programId}
+        listSemester={listSemester}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+      />
+      <DeleteStudentDialog
+        student={student}
+        programId={programId}
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+      />
+    </>
+  );
+}
+
+export function getStudentColumns(
+  ctx: StudentColumnsContext,
+): ColumnDef<Student>[] {
+  const { programId, listSemester } = ctx;
+
   return [
     {
       accessorKey: "full_name",
@@ -54,32 +118,16 @@ export function getStudentColumns({
     },
     {
       id: "actions",
-      cell: ({ row }) => {
-        const student = row.original;
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <HugeiconsIcon icon={MoreVertical} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(student)}>
-                <HugeiconsIcon icon={Pencil} />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() => onDelete(student)}
-              >
-                <HugeiconsIcon icon={Trash} />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: ({ row }) =>
+        programId ? (
+          <StudentRowActions
+            student={row.original}
+            programId={programId}
+            listSemester={listSemester}
+          />
+        ) : (
+          <div className="text-muted-foreground text-sm">—</div>
+        ),
     },
   ];
 }
