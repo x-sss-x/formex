@@ -16,7 +16,7 @@ export const PlacementsIndexResponse = zod.object({
   "student_id": zod.string(),
   "institution_id": zod.string(),
   "program_id": zod.string(),
-  "acad_year": zod.number(),
+  "academic_year": zod.number(),
   "industry_name": zod.string(),
   "industry_address": zod.string(),
   "role": zod.string(),
@@ -39,7 +39,7 @@ export const PlacementsShowResponse = zod.object({
   "student_id": zod.string(),
   "institution_id": zod.string(),
   "program_id": zod.string(),
-  "acad_year": zod.number(),
+  "academic_year": zod.number(),
   "industry_name": zod.string(),
   "industry_address": zod.string(),
   "role": zod.string(),
@@ -64,16 +64,13 @@ export const placementsUpdateBodyRoleMax = 255;
 
 export const placementsUpdateBodyCtcMax = 255;
 
-export const placementsUpdateBodyAcadYearMin = 2000;
-
 
 
 export const PlacementsUpdateBody = zod.object({
   "industry_name": zod.string().max(placementsUpdateBodyIndustryNameMax),
   "industry_address": zod.string().max(placementsUpdateBodyIndustryAddressMax),
   "role": zod.string().max(placementsUpdateBodyRoleMax),
-  "ctc": zod.string().max(placementsUpdateBodyCtcMax),
-  "acad_year": zod.number().min(placementsUpdateBodyAcadYearMin)
+  "ctc": zod.string().max(placementsUpdateBodyCtcMax)
 })
 
 export const PlacementsUpdateResponse = zod.object({
@@ -83,7 +80,7 @@ export const PlacementsUpdateResponse = zod.object({
   "student_id": zod.string(),
   "institution_id": zod.string(),
   "program_id": zod.string(),
-  "acad_year": zod.number(),
+  "academic_year": zod.number(),
   "industry_name": zod.string(),
   "industry_address": zod.string(),
   "role": zod.string(),
@@ -107,7 +104,7 @@ export const PlacementsDestroyResponse = zod.object({
   "student_id": zod.string(),
   "institution_id": zod.string(),
   "program_id": zod.string(),
-  "acad_year": zod.number(),
+  "academic_year": zod.number(),
   "industry_name": zod.string(),
   "industry_address": zod.string(),
   "role": zod.string(),
@@ -127,7 +124,7 @@ export const PlacementListByProgramResponse = zod.object({
   "student_id": zod.string(),
   "institution_id": zod.string(),
   "program_id": zod.string(),
-  "acad_year": zod.number(),
+  "academic_year": zod.number(),
   "industry_name": zod.string(),
   "industry_address": zod.string(),
   "role": zod.string(),
@@ -147,7 +144,7 @@ export const PlacementListByStudentResponse = zod.object({
   "student_id": zod.string(),
   "institution_id": zod.string(),
   "program_id": zod.string(),
-  "acad_year": zod.number(),
+  "academic_year": zod.number(),
   "industry_name": zod.string(),
   "industry_address": zod.string(),
   "role": zod.string(),
@@ -172,16 +169,13 @@ export const placementStoreBodyRoleMax = 255;
 
 export const placementStoreBodyCtcMax = 255;
 
-export const placementStoreBodyAcadYearMin = 2000;
-
 
 
 export const PlacementStoreBody = zod.object({
   "industry_name": zod.string().max(placementStoreBodyIndustryNameMax),
   "industry_address": zod.string().max(placementStoreBodyIndustryAddressMax),
   "role": zod.string().max(placementStoreBodyRoleMax),
-  "ctc": zod.string().max(placementStoreBodyCtcMax),
-  "acad_year": zod.number().min(placementStoreBodyAcadYearMin)
+  "ctc": zod.string().max(placementStoreBodyCtcMax)
 })
 
 export const PlacementStoreResponse = zod.object({
@@ -191,7 +185,7 @@ export const PlacementStoreResponse = zod.object({
   "student_id": zod.string(),
   "institution_id": zod.string(),
   "program_id": zod.string(),
-  "acad_year": zod.number(),
+  "academic_year": zod.number(),
   "industry_name": zod.string(),
   "industry_address": zod.string(),
   "role": zod.string(),

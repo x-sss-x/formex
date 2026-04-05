@@ -13,8 +13,6 @@ export type ProgramsStudentsStoreBody = {
   date_of_birth?: string | null;
   /** @minimum 1 */
   semester: number;
-  /** @minimum 2000 */
-  academic_year: number;
   /**
    * @maxLength 100
    * @nullable

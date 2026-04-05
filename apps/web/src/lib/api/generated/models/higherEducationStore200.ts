@@ -4,9 +4,9 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
-import type { Highereducation } from "./highereducation";
+import type { HigherEducation } from "./higherEducation";
 
 export type HigherEducationStore200 = {
   message: "Higher Education created successfully";
-  data: Highereducation;
+  data: HigherEducation;
 };

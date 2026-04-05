@@ -9,4 +9,4 @@
  * @minItems 0
  * @maxItems 0
  */
-export type Highereducation = string[];
+export type HigherEducation = string[];

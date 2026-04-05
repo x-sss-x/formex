@@ -344,25 +344,32 @@ export type higherEducationsShowResponse401 = {
   status: 401;
 };
 
+export type higherEducationsShowResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type higherEducationsShowResponseSuccess =
   higherEducationsShowResponse200 & {
     headers: Headers;
   };
-export type higherEducationsShowResponseError =
-  higherEducationsShowResponse401 & {
-    headers: Headers;
-  };
+export type higherEducationsShowResponseError = (
+  | higherEducationsShowResponse401
+  | higherEducationsShowResponse404
+) & {
+  headers: Headers;
+};
 
 export type higherEducationsShowResponse =
   | higherEducationsShowResponseSuccess
   | higherEducationsShowResponseError;
 
-export const getHigherEducationsShowUrl = (higherEducation: string) => {
+export const getHigherEducationsShowUrl = (higherEducation: number) => {
   return `/higher-educations/${higherEducation}`;
 };
 
 export const higherEducationsShow = async (
-  higherEducation: string,
+  higherEducation: number,
   options?: RequestInit,
 ): Promise<higherEducationsShowResponse> => {
   return $api<higherEducationsShowResponse>(
@@ -374,15 +381,15 @@ export const higherEducationsShow = async (
   );
 };
 
-export const getHigherEducationsShowQueryKey = (higherEducation: string) => {
+export const getHigherEducationsShowQueryKey = (higherEducation: number) => {
   return [`/higher-educations/${higherEducation}`] as const;
 };
 
 export const getHigherEducationsShowQueryOptions = <
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -419,13 +426,15 @@ export const getHigherEducationsShowQueryOptions = <
 export type HigherEducationsShowQueryResult = NonNullable<
   Awaited<ReturnType<typeof higherEducationsShow>>
 >;
-export type HigherEducationsShowQueryError = AuthenticationExceptionResponse;
+export type HigherEducationsShowQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options: {
     query: Partial<
       UseQueryOptions<
@@ -450,9 +459,9 @@ export function useHigherEducationsShow<
 };
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -477,9 +486,9 @@ export function useHigherEducationsShow<
 };
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -500,9 +509,9 @@ export function useHigherEducationsShow<
 
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -532,9 +541,9 @@ export function useHigherEducationsShow<
 
 export const getHigherEducationsShowSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
@@ -567,13 +576,14 @@ export type HigherEducationsShowSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof higherEducationsShow>>
 >;
 export type HigherEducationsShowSuspenseQueryError =
-  AuthenticationExceptionResponse;
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options: {
     query: Partial<
       UseSuspenseQueryOptions<
@@ -590,9 +600,9 @@ export function useHigherEducationsShowSuspense<
 };
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
@@ -609,9 +619,9 @@ export function useHigherEducationsShowSuspense<
 };
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
@@ -632,9 +642,9 @@ export function useHigherEducationsShowSuspense<
 
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  higherEducation: string,
+  higherEducation: number,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
@@ -677,6 +687,11 @@ export type higherEducationsUpdateResponse401 = {
   status: 401;
 };
 
+export type higherEducationsUpdateResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type higherEducationsUpdateResponse422 = {
   data: ValidationExceptionResponse;
   status: 422;
@@ -688,6 +703,7 @@ export type higherEducationsUpdateResponseSuccess =
   };
 export type higherEducationsUpdateResponseError = (
   | higherEducationsUpdateResponse401
+  | higherEducationsUpdateResponse404
   | higherEducationsUpdateResponse422
 ) & {
   headers: Headers;
@@ -697,12 +713,12 @@ export type higherEducationsUpdateResponse =
   | higherEducationsUpdateResponseSuccess
   | higherEducationsUpdateResponseError;
 
-export const getHigherEducationsUpdateUrl = (higherEducation: string) => {
+export const getHigherEducationsUpdateUrl = (higherEducation: number) => {
   return `/higher-educations/${higherEducation}`;
 };
 
 export const higherEducationsUpdate = async (
-  higherEducation: string,
+  higherEducation: number,
   higherEducationsUpdateBody: HigherEducationsUpdateBody,
   options?: RequestInit,
 ): Promise<higherEducationsUpdateResponse> => {
@@ -718,20 +734,23 @@ export const higherEducationsUpdate = async (
 };
 
 export const getHigherEducationsUpdateMutationOptions = <
-  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof higherEducationsUpdate>>,
     TError,
-    { higherEducation: string; data: HigherEducationsUpdateBody },
+    { higherEducation: number; data: HigherEducationsUpdateBody },
     TContext
   >;
   request?: SecondParameter<typeof $api>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof higherEducationsUpdate>>,
   TError,
-  { higherEducation: string; data: HigherEducationsUpdateBody },
+  { higherEducation: number; data: HigherEducationsUpdateBody },
   TContext
 > => {
   const mutationKey = ["higherEducationsUpdate"];
@@ -745,7 +764,7 @@ export const getHigherEducationsUpdateMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof higherEducationsUpdate>>,
-    { higherEducation: string; data: HigherEducationsUpdateBody }
+    { higherEducation: number; data: HigherEducationsUpdateBody }
   > = (props) => {
     const { higherEducation, data } = props ?? {};
 
@@ -761,20 +780,24 @@ export type HigherEducationsUpdateMutationResult = NonNullable<
 export type HigherEducationsUpdateMutationBody = HigherEducationsUpdateBody;
 export type HigherEducationsUpdateMutationError =
   | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse
   | ValidationExceptionResponse;
 
 /**
  * @summary Update the specified resource in storage
  */
 export const useHigherEducationsUpdate = <
-  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof higherEducationsUpdate>>,
       TError,
-      { higherEducation: string; data: HigherEducationsUpdateBody },
+      { higherEducation: number; data: HigherEducationsUpdateBody },
       TContext
     >;
     request?: SecondParameter<typeof $api>;
@@ -783,7 +806,7 @@ export const useHigherEducationsUpdate = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof higherEducationsUpdate>>,
   TError,
-  { higherEducation: string; data: HigherEducationsUpdateBody },
+  { higherEducation: number; data: HigherEducationsUpdateBody },
   TContext
 > => {
   return useMutation(
@@ -804,25 +827,32 @@ export type higherEducationsDestroyResponse401 = {
   status: 401;
 };
 
+export type higherEducationsDestroyResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type higherEducationsDestroyResponseSuccess =
   higherEducationsDestroyResponse200 & {
     headers: Headers;
   };
-export type higherEducationsDestroyResponseError =
-  higherEducationsDestroyResponse401 & {
-    headers: Headers;
-  };
+export type higherEducationsDestroyResponseError = (
+  | higherEducationsDestroyResponse401
+  | higherEducationsDestroyResponse404
+) & {
+  headers: Headers;
+};
 
 export type higherEducationsDestroyResponse =
   | higherEducationsDestroyResponseSuccess
   | higherEducationsDestroyResponseError;
 
-export const getHigherEducationsDestroyUrl = (higherEducation: string) => {
+export const getHigherEducationsDestroyUrl = (higherEducation: number) => {
   return `/higher-educations/${higherEducation}`;
 };
 
 export const higherEducationsDestroy = async (
-  higherEducation: string,
+  higherEducation: number,
   options?: RequestInit,
 ): Promise<higherEducationsDestroyResponse> => {
   return $api<higherEducationsDestroyResponse>(
@@ -835,20 +865,20 @@ export const higherEducationsDestroy = async (
 };
 
 export const getHigherEducationsDestroyMutationOptions = <
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof higherEducationsDestroy>>,
     TError,
-    { higherEducation: string },
+    { higherEducation: number },
     TContext
   >;
   request?: SecondParameter<typeof $api>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof higherEducationsDestroy>>,
   TError,
-  { higherEducation: string },
+  { higherEducation: number },
   TContext
 > => {
   const mutationKey = ["higherEducationsDestroy"];
@@ -862,7 +892,7 @@ export const getHigherEducationsDestroyMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof higherEducationsDestroy>>,
-    { higherEducation: string }
+    { higherEducation: number }
   > = (props) => {
     const { higherEducation } = props ?? {};
 
@@ -877,20 +907,21 @@ export type HigherEducationsDestroyMutationResult = NonNullable<
 >;
 
 export type HigherEducationsDestroyMutationError =
-  AuthenticationExceptionResponse;
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 /**
  * @summary Remove the specified resource from storage
  */
 export const useHigherEducationsDestroy = <
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof higherEducationsDestroy>>,
       TError,
-      { higherEducation: string },
+      { higherEducation: number },
       TContext
     >;
     request?: SecondParameter<typeof $api>;
@@ -899,7 +930,7 @@ export const useHigherEducationsDestroy = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof higherEducationsDestroy>>,
   TError,
-  { higherEducation: string },
+  { higherEducation: number },
   TContext
 > => {
   return useMutation(

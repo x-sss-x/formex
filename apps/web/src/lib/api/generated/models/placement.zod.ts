@@ -10,7 +10,7 @@ export interface Placement {
   student_id: string;
   institution_id: string;
   program_id: string;
-  acad_year: number;
+  academic_year: number;
   industry_name: string;
   industry_address: string;
   role: string;

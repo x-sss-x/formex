@@ -20,7 +20,7 @@ export const HigherEducationsIndexResponse = zod.object({
  * @summary Display the specified resource
  */
 export const HigherEducationsShowParams = zod.object({
-  "higher_education": zod.string()
+  "higher_education": zod.number().describe('The higher education ID')
 })
 
 export const higherEducationsShowResponseDataMin = 0;
@@ -36,20 +36,17 @@ export const HigherEducationsShowResponse = zod.object({
  * @summary Update the specified resource in storage
  */
 export const HigherEducationsUpdateParams = zod.object({
-  "higher_education": zod.string()
+  "higher_education": zod.number().describe('The higher education ID')
 })
 
 export const higherEducationsUpdateBodyCollegeNameMax = 255;
 
 
-export const higherEducationsUpdateBodyAcadYearMin = 2000;
-
 
 
 export const HigherEducationsUpdateBody = zod.object({
   "college_name": zod.string().max(higherEducationsUpdateBodyCollegeNameMax),
-  "rank": zod.number().min(1),
-  "acad_year": zod.number().min(higherEducationsUpdateBodyAcadYearMin)
+  "rank": zod.number().min(1)
 })
 
 export const higherEducationsUpdateResponseDataMin = 0;
@@ -66,7 +63,7 @@ export const HigherEducationsUpdateResponse = zod.object({
  * @summary Remove the specified resource from storage
  */
 export const HigherEducationsDestroyParams = zod.object({
-  "higher_education": zod.string()
+  "higher_education": zod.number().describe('The higher education ID')
 })
 
 export const higherEducationsDestroyResponseDataMin = 0;
@@ -105,14 +102,11 @@ export const HigherEducationStoreParams = zod.object({
 export const higherEducationStoreBodyCollegeNameMax = 255;
 
 
-export const higherEducationStoreBodyAcadYearMin = 2000;
-
 
 
 export const HigherEducationStoreBody = zod.object({
   "college_name": zod.string().max(higherEducationStoreBodyCollegeNameMax),
-  "rank": zod.number().min(1),
-  "acad_year": zod.number().min(higherEducationStoreBodyAcadYearMin)
+  "rank": zod.number().min(1)
 })
 
 export const higherEducationStoreResponseDataMin = 0;

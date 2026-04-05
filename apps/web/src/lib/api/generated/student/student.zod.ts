@@ -38,8 +38,6 @@ export const ProgramsStudentsStoreParams = zod.object({
 export const programsStudentsStoreBodyFullNameMax = 255;
 
 
-export const programsStudentsStoreBodyAcademicYearMin = 2000;
-
 export const programsStudentsStoreBodyRegisterNoMax = 100;
 
 export const programsStudentsStoreBodyMobileMax = 20;
@@ -52,7 +50,6 @@ export const ProgramsStudentsStoreBody = zod.object({
   "full_name": zod.string().max(programsStudentsStoreBodyFullNameMax),
   "date_of_birth": zod.iso.datetime({}).nullish(),
   "semester": zod.number().min(1),
-  "academic_year": zod.number().min(programsStudentsStoreBodyAcademicYearMin),
   "register_no": zod.string().max(programsStudentsStoreBodyRegisterNoMax).nullish(),
   "gender": zod.enum(['male', 'female']).nullish(),
   "category": zod.string().nullish(),
@@ -94,8 +91,6 @@ export const ProgramsStudentsUpdateParams = zod.object({
 export const programsStudentsUpdateBodyFullNameMax = 255;
 
 
-export const programsStudentsUpdateBodyAcademicYearMin = 2000;
-
 export const programsStudentsUpdateBodyRegisterNoMax = 100;
 
 export const programsStudentsUpdateBodyMobileMax = 20;
@@ -108,7 +103,6 @@ export const ProgramsStudentsUpdateBody = zod.object({
   "full_name": zod.string().max(programsStudentsUpdateBodyFullNameMax).optional(),
   "date_of_birth": zod.iso.datetime({}).nullish(),
   "semester": zod.number().min(1).optional(),
-  "academic_year": zod.number().min(programsStudentsUpdateBodyAcademicYearMin).optional(),
   "register_no": zod.string().max(programsStudentsUpdateBodyRegisterNoMax).nullish(),
   "gender": zod.string().nullish(),
   "category": zod.string().nullish(),

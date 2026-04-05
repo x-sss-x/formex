@@ -4,8 +4,8 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
-import type { Highereducation } from './highereducation';
+import type { HigherEducation } from './higherEducation';
 
 export type HigherEducationsIndex200 = {
-  data: Highereducation[];
+  data: HigherEducation[];
 };

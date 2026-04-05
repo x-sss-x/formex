@@ -67,8 +67,6 @@ export const internshipsUpdateBodyIndustryAddressMax = 255;
 export const internshipsUpdateBodyRoleMax = 255;
 
 
-export const internshipsUpdateBodyAcadYearMin = 2000;
-
 
 
 export const InternshipsUpdateBody = zod.object({
@@ -77,8 +75,7 @@ export const InternshipsUpdateBody = zod.object({
   "role": zod.string().max(internshipsUpdateBodyRoleMax).optional(),
   "from_date": zod.iso.datetime({}).optional(),
   "to_date": zod.iso.datetime({}).optional(),
-  "semester": zod.number().min(1).optional(),
-  "acad_year": zod.number().min(internshipsUpdateBodyAcadYearMin).optional()
+  "semester": zod.number().min(1).optional()
 })
 
 export const InternshipsUpdateResponse = zod.object({
@@ -184,8 +181,6 @@ export const internshipStoreBodyIndustryAddressMax = 255;
 export const internshipStoreBodyRoleMax = 255;
 
 
-export const internshipStoreBodyAcadYearMin = 2000;
-
 
 
 export const InternshipStoreBody = zod.object({
@@ -194,8 +189,7 @@ export const InternshipStoreBody = zod.object({
   "role": zod.string().max(internshipStoreBodyRoleMax),
   "from_date": zod.iso.datetime({}),
   "to_date": zod.iso.datetime({}),
-  "semester": zod.number().min(1),
-  "acad_year": zod.number().min(internshipStoreBodyAcadYearMin)
+  "semester": zod.number().min(1)
 })
 
 export const InternshipStoreResponse = zod.object({
