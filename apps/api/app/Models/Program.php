@@ -46,5 +46,9 @@ class Program extends Model
     {
         return $this->hasMany(Roomreport::class);
     }
-    
+    public function skillprograms(): HasMany
+    {
+        return $this->hasMany(Skillprogram::class);
+    }
+
 }

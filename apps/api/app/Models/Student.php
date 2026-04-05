@@ -61,4 +61,8 @@ class Student extends Model
     {
         return $this->hasMany(Highereducation::class);
     }
+    public function skillprograms(): HasMany
+    {
+        return $this->hasMany(Skillprogram::class);
+    }
 }
