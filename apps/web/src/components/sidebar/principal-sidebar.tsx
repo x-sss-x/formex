@@ -28,13 +28,7 @@ import {
 } from "../ui/sidebar";
 import { AppSidebarFooter } from "./app-sidebar-footer";
 import { PrincipalProgramsSection } from "./principal-programs-section";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { AcademicYearSelect } from "./academic-year-select";
 
 const institutionFormats = getTemplatePagesByType("institution");
 
@@ -70,20 +64,7 @@ export function PrincipalSidebar({
       </SidebarHeader>
 
       <SidebarHeader className="border-b">
-        <Select defaultValue={new Date().getFullYear().toString()}>
-          <SelectTrigger size="sm" className="w-full">
-            <SelectValue placeholder="Academic Year" />
-          </SelectTrigger>
-          <SelectContent>
-            {["2026", "2025"].map((acadyear) => {
-              return (
-                <SelectItem key={acadyear} value={String(acadyear)}>
-                  Academic Year - {acadyear}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
+        <AcademicYearSelect />
       </SidebarHeader>
 
       <SidebarContent>
