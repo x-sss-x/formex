@@ -3,6 +3,8 @@
 import {
   GridIcon,
   Home01Icon,
+  LaborIcon,
+  PermanentJobIcon,
   UserSquareIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -26,12 +28,21 @@ import {
 } from "../ui/sidebar";
 import { AppSidebarFooter } from "./app-sidebar-footer";
 import { PrincipalProgramsSection } from "./principal-programs-section";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const institutionFormats = getTemplatePagesByType("institution");
 
 const items = [
   { id: 1, label: "Home", icon: Home01Icon, href: "/" },
   { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
+  { id: 3, label: "Internships", icon: LaborIcon, href: "/internships" },
+  { id: 4, label: "Placements", icon: PermanentJobIcon, href: "/placements" },
 ];
 
 export function PrincipalSidebar({
@@ -43,11 +54,11 @@ export function PrincipalSidebar({
   return (
     <Sidebar
       collapsible="none"
-      className={cn("shrink-0 border-r", className)}
+      className={cn("w-[16rem]! border-r", className)}
       {...props}
     >
-      <SidebarHeader className="flex-row h-12 border-b items-center">
-        <span className="text-lg text-primary px-1.5 font-bold font-heading">
+      <SidebarHeader className="flex-row h-12  border-b items-center">
+        <span className="text-2xl text-primary px-1.5 font-medium font-brand">
           FORMEX
         </span>
         <Badge
@@ -56,6 +67,23 @@ export function PrincipalSidebar({
         >
           PRINCIPAL
         </Badge>
+      </SidebarHeader>
+
+      <SidebarHeader className="border-b">
+        <Select defaultValue={new Date().getFullYear().toString()}>
+          <SelectTrigger size="sm" className="w-full">
+            <SelectValue placeholder="Academic Year" />
+          </SelectTrigger>
+          <SelectContent>
+            {["2026", "2025"].map((acadyear) => {
+              return (
+                <SelectItem key={acadyear} value={String(acadyear)}>
+                  Academic Year - {acadyear}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
       </SidebarHeader>
 
       <SidebarContent>

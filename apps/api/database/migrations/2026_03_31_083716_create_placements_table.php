@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,10 +12,10 @@ return new class extends Migration
     {
         Schema::create('placements', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('student_id')->constrained();
-            $table->foreignUlid('institution_id')->constrained();
-            $table->foreignUlid('program_id')->constrained();
-            $table->integer('acad_year');
+            $table->foreignUlid('student_id')->index();
+            $table->foreignUlid('institution_id')->index();
+            $table->foreignUlid('program_id')->index();
+            $table->integer('academic_year');
             $table->string('industry_name');
             $table->string('industry_address');
             $table->string('role');

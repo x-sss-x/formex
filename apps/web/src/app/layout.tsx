@@ -1,14 +1,18 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Manrope, Oswald, Roboto_Slab, Roboto, Space_Grotesk } from "next/font/google";
+import { Oswald, Roboto, Space_Grotesk } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 import { QueryProvider } from "../components/providers/query-provider";
 import { TooltipProvider } from "../components/ui/tooltip";
 import { cn } from "../lib/utils";
 
-const spaceGroteskHeading = Space_Grotesk({subsets:['latin'],variable:'--font-heading'});
+const spaceGroteskHeading = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
 
-const roboto = Roboto({subsets:['latin'],variable:'--font-sans'});
+const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -35,10 +39,12 @@ export default async function RootLayout({
         className={`${roboto.variable} ${spaceGroteskHeading.variable} ${oswald.variable} border-border bg-background antialiased`}
       >
         <QueryProvider>
-          <TooltipProvider>
-            {children}
-            <Toaster />
-          </TooltipProvider>
+          <NuqsAdapter>
+            <TooltipProvider>
+              {children}
+              <Toaster />
+            </TooltipProvider>
+          </NuqsAdapter>
         </QueryProvider>
       </body>
     </html>
