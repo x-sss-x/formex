@@ -122,7 +122,7 @@ export function SubjectsPage() {
         </Breadcrumb>
       </Header>
 
-      <Container className="space-y-4">
+      <Container>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <InputGroup className="max-w-sm min-w-[200px]">
             <InputGroupAddon>

@@ -210,7 +210,7 @@ export default function Page() {
           </BreadcrumbList>
         </Breadcrumb>
       </Header>
-      <Container className="space-y-4">
+      <Container>
         <div className="flex justify-between">
           <InputGroup className="max-w-sm">
             <InputGroupAddon>
