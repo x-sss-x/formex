@@ -38,6 +38,7 @@ class Institution extends Model
     {
         return $this->hasMany(Placement::class);
     }
+
     public function higher_educations(): HasMany
     {
         return $this->hasMany(HigherEducation::class);
@@ -47,8 +48,14 @@ class Institution extends Model
     {
         return $this->hasMany(RoomReport::class);
     }
+
     public function skill_programs(): HasMany
     {
         return $this->hasMany(SkillProgram::class);
+    }
+
+    public function students(): HasMany
+    {
+        return $this->hasMany(Student::class);
     }
 }

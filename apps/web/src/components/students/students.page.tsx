@@ -26,8 +26,8 @@ import {
 } from "@/components/ui/input-group";
 import { useProgramsShow } from "@/lib/api/hooks/useProgramsShow";
 import { useProgramsStudentsIndex } from "@/lib/api/generated/student/student";
-import { Spinner } from "../ui/spinner";
 import { useAuthUserSuspense } from "@/lib/api/generated/auth/auth";
+import { SpinnerPage } from "../spinner-page";
 
 function clampSemester(value: string | null): number {
   const n = Number(value);
@@ -130,9 +130,7 @@ export function StudentsPage() {
         </div>
 
         {studentsQuery.isLoading ? (
-          <div className="flex h-[calc(100svh-40svh)] w-full items-center justify-center">
-            <Spinner className="size-8" />
-          </div>
+          <SpinnerPage />
         ) : (
           <DataTable columns={columns} data={visibleStudents} />
         )}

@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\HigherEducationController;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\InternshipController;
+use App\Http\Controllers\PlacementController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoomReportController;
 use App\Http\Controllers\SkillProgramController;
-use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('programs', ProgramController::class);
 
     // Program Students Paths
-    Route::apiResource('programs.students', StudentController::class)->scoped();
+    Route::apiResource('programs.students', StudentController::class);
+    Route::get('/students', [StudentController::class, 'search']);
 
     // Subjects Paths
     Route::apiResource('subjects', SubjectController::class)->except(['store']);

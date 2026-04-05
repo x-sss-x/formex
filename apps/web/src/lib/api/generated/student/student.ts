@@ -33,6 +33,9 @@ import type {
   ProgramsStudentsStoreBody,
   ProgramsStudentsUpdate200,
   ProgramsStudentsUpdateBody,
+  StudentSearch200,
+  StudentSearch400,
+  StudentSearchParams,
   ValidationExceptionResponse,
 } from "../models";
 
@@ -1116,3 +1119,309 @@ export const useProgramsStudentsDestroy = <
     queryClient,
   );
 };
+export type studentSearchResponse200 = {
+  data: StudentSearch200;
+  status: 200;
+};
+
+export type studentSearchResponse400 = {
+  data: StudentSearch400;
+  status: 400;
+};
+
+export type studentSearchResponse401 = {
+  data: AuthenticationExceptionResponse;
+  status: 401;
+};
+
+export type studentSearchResponseSuccess = studentSearchResponse200 & {
+  headers: Headers;
+};
+export type studentSearchResponseError = (
+  | studentSearchResponse400
+  | studentSearchResponse401
+) & {
+  headers: Headers;
+};
+
+export type studentSearchResponse =
+  | studentSearchResponseSuccess
+  | studentSearchResponseError;
+
+export const getStudentSearchUrl = (params?: StudentSearchParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/students?${stringifiedParams}`
+    : `/students`;
+};
+
+export const studentSearch = async (
+  params?: StudentSearchParams,
+  options?: RequestInit,
+): Promise<studentSearchResponse> => {
+  return $api<studentSearchResponse>(getStudentSearchUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getStudentSearchQueryKey = (params?: StudentSearchParams) => {
+  return [`/students`, ...(params ? [params] : [])] as const;
+};
+
+export const getStudentSearchQueryOptions = <
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof studentSearch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getStudentSearchQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof studentSearch>>> = ({
+    signal,
+  }) => studentSearch(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof studentSearch>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type StudentSearchQueryResult = NonNullable<
+  Awaited<ReturnType<typeof studentSearch>>
+>;
+export type StudentSearchQueryError =
+  | StudentSearch400
+  | AuthenticationExceptionResponse;
+
+export function useStudentSearch<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params: undefined | StudentSearchParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof studentSearch>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof studentSearch>>,
+          TError,
+          Awaited<ReturnType<typeof studentSearch>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStudentSearch<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof studentSearch>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof studentSearch>>,
+          TError,
+          Awaited<ReturnType<typeof studentSearch>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStudentSearch<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof studentSearch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useStudentSearch<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof studentSearch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getStudentSearchQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getStudentSearchSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof studentSearch>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getStudentSearchQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof studentSearch>>> = ({
+    signal,
+  }) => studentSearch(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof studentSearch>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type StudentSearchSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof studentSearch>>
+>;
+export type StudentSearchSuspenseQueryError =
+  | StudentSearch400
+  | AuthenticationExceptionResponse;
+
+export function useStudentSearchSuspense<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params: undefined | StudentSearchParams,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof studentSearch>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStudentSearchSuspense<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof studentSearch>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStudentSearchSuspense<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof studentSearch>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useStudentSearchSuspense<
+  TData = Awaited<ReturnType<typeof studentSearch>>,
+  TError = StudentSearch400 | AuthenticationExceptionResponse,
+>(
+  params?: StudentSearchParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof studentSearch>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getStudentSearchSuspenseQueryOptions(params, options);
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}

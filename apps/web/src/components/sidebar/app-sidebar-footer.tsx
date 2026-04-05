@@ -24,7 +24,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { useSession } from "@/hooks/react-query/useAuthUser";
+import { useSession } from "@/hooks/react-query/useSession";
 
 export function AppSidebarFooter() {
   const queryClient = useQueryClient();

@@ -22,8 +22,12 @@ import Container from "../container";
 import Link from "next/link";
 import { DataTable } from "../data-table";
 import { columns } from "./columns";
+import { CreatePlacementSheet } from "./create-placement-sheet";
+import { usePlacementsList } from "@/hooks/react-query/usePlacementsList";
+import { SpinnerPage } from "../spinner-page";
 
 export function PlacementsPage() {
+  const { placemnets, placementsQuery } = usePlacementsList();
   const [search, setSearch] = useQueryState(
     "q",
     parseAsString.withDefault("").withOptions({
@@ -61,12 +65,18 @@ export function PlacementsPage() {
               onChange={(e) => setSearch(e.target.value || null)}
             />
           </InputGroup>
-          <Button>
-            Add <HugeiconsIcon icon={PlusSignIcon} />
-          </Button>
+          <CreatePlacementSheet>
+            <Button>
+              Add <HugeiconsIcon icon={PlusSignIcon} />
+            </Button>
+          </CreatePlacementSheet>
         </div>
 
-        <DataTable data={[]} columns={columns} />
+        {placementsQuery.isLoading ? (
+          <SpinnerPage />
+        ) : (
+          <DataTable data={placemnets ?? []} columns={columns} />
+        )}
       </Container>
     </>
   );

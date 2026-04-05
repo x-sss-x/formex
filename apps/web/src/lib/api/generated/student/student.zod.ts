@@ -142,3 +142,27 @@ export const ProgramsStudentsDestroyResponse = zod.object({
   "message": zod.literal("Student deleted successfully")
 })
 
+export const StudentSearchQueryParams = zod.object({
+  "q": zod.string().optional()
+})
+
+export const StudentSearchResponse = zod.object({
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}))
+})
+
