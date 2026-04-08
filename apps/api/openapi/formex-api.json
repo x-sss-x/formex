@@ -262,7 +262,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `HigherEducation`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -302,13 +302,13 @@
                         "required": true,
                         "description": "The higher education ID",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`HigherEducation`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -346,7 +346,7 @@
                         "required": true,
                         "description": "The higher education ID",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -422,7 +422,7 @@
                         "required": true,
                         "description": "The higher education ID",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -479,7 +479,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `HigherEducation`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -603,7 +603,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `HigherEducation`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3768,13 +3768,63 @@
                 "title": "AuthSession"
             },
             "HigherEducation": {
-                "type": "array",
-                "items": {
-                    "type": "string"
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "student_id": {
+                        "type": "string"
+                    },
+                    "institution_id": {
+                        "type": "string"
+                    },
+                    "program_id": {
+                        "type": "string"
+                    },
+                    "college_name": {
+                        "type": "string"
+                    },
+                    "rank": {
+                        "type": "integer",
+                        "format": "integer"
+                    },
+                    "academic_year": {
+                        "type": "integer",
+                        "format": "integer"
+                    },
+                    "created_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "student": {
+                        "$ref": "#/components/schemas/Student"
+                    },
+                    "program": {
+                        "$ref": "#/components/schemas/Program"
+                    }
                 },
-                "minItems": 0,
-                "maxItems": 0,
-                "additionalItems": false,
+                "required": [
+                    "id",
+                    "student_id",
+                    "institution_id",
+                    "program_id",
+                    "college_name",
+                    "rank",
+                    "academic_year",
+                    "created_at",
+                    "updated_at"
+                ],
                 "title": "HigherEducation"
             },
             "Institution": {
@@ -3854,7 +3904,7 @@
                         "format": "date"
                     },
                     "acad_year": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "semester": {
                         "type": "integer"

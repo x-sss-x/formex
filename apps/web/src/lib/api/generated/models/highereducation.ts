@@ -4,9 +4,21 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Program } from "./program";
+import type { Student } from "./student";
 
-/**
- * @minItems 0
- * @maxItems 0
- */
-export type HigherEducation = string[];
+export interface HigherEducation {
+  id: string;
+  student_id: string;
+  institution_id: string;
+  program_id: string;
+  college_name: string;
+  rank: number;
+  academic_year: number;
+  /** @nullable */
+  created_at: string | null;
+  /** @nullable */
+  updated_at: string | null;
+  student?: Student;
+  program?: Program;
+}

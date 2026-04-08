@@ -17,7 +17,7 @@ export interface Internship {
   role: string;
   from_date: string;
   to_date: string;
-  acad_year: number;
+  acad_year: string;
   semester: number;
   /** @nullable */
   created_at: string | null;

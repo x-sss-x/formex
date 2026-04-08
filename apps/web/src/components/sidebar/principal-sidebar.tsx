@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  GraduationCap,
   GridIcon,
   Home01Icon,
   LaborIcon,
@@ -37,6 +38,12 @@ const items = [
   { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
   { id: 3, label: "Internships", icon: LaborIcon, href: "/internships" },
   { id: 4, label: "Placements", icon: PermanentJobIcon, href: "/placements" },
+  {
+    id: 5,
+    label: "Higher Education",
+    icon: GraduationCap,
+    href: "/higher-educations",
+  },
 ];
 
 export function PrincipalSidebar({
