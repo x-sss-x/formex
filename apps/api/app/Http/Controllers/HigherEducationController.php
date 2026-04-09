@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\HigherEducationResource;
 use App\Models\HigherEducation;
+use App\Models\Program;
 use App\Models\Student;
 use App\Support\CurrentInstitutionSession;
 use Illuminate\Http\Request;
-use App\Models\Program;
 
 class HigherEducationController
 {
@@ -15,29 +16,25 @@ class HigherEducationController
      */
     public function listByStudent(Student $student)
     {
-        $highereducations = $student->higher_educations()->get();
-        return response()->json([
-            'data' => $highereducations
-        ]);
+        $higher_educations = $student->higher_educations()->with('student', 'program')->get();
+
+        return HigherEducationResource::collection($higher_educations);
     }
 
     public function index(Request $request)
     {
         $institution = CurrentInstitutionSession::requireInstitution($request);
-        $highereducations = $institution->higher_educations()->get();
-        return response()->json([
-            'data' => $highereducations
-        ]);
+        $higher_educations = $institution->higher_educations()->with('student', 'program')->get();
+
+        return HigherEducationResource::collection($higher_educations);
     }
 
     public function listByProgram(Program $program)
     {
-        $highereducations = $program->higher_educations()->get();
-        return response()->json([
-            'data' => $highereducations
-        ]);
-    }
+        $higher_educations = $program->higher_educations()->with('student', 'program')->get();
 
+        return HigherEducationResource::collection($higher_educations);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -49,19 +46,21 @@ class HigherEducationController
             'college_name' => 'required|string|max:255',
             'rank' => 'required|integer|min:1',
         ]);
+
         $highereducation = $student
             ->higher_educations()
             ->create(
                 [
                     ...$validated,
-                    "institution_id" => $student->institution->id,
-                    "program_id" => $student->program->id,
-                    "academic_year" => $institution->academic_year
+                    'institution_id' => $student->institution->id,
+                    'program_id' => $student->program->id,
+                    'academic_year' => $institution->academic_year,
                 ]
             );
+
         return response()->json([
             'message' => 'Higher Education created successfully',
-            'data' => $highereducation
+            'data' => HigherEducationResource::make($highereducation->load('student', 'program')),
         ]);
     }
 
@@ -71,9 +70,7 @@ class HigherEducationController
     public function show(HigherEducation $higher_education)
     {
         //
-        return response()->json([
-            'data' => $higher_education
-        ]);
+        return HigherEducationResource::make($higher_education->load('student', 'program'));
     }
 
     /**
@@ -87,9 +84,10 @@ class HigherEducationController
             'rank' => 'required|integer|min:1',
         ]);
         $higher_education->update($validated);
+
         return response()->json([
             'message' => 'Higher Education updated successfully',
-            'data' => $higher_education
+            'data' => HigherEducationResource::make($higher_education->load('student', 'program')),
         ]);
     }
 
@@ -100,9 +98,10 @@ class HigherEducationController
     {
         //
         $higher_education->delete();
+
         return response()->json([
             'message' => 'Higher Education deleted successfully',
-            'data' => $higher_education
+            'data' => HigherEducationResource::make($higher_education->load('student', 'program')),
         ]);
     }
 }

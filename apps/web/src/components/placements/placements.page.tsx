@@ -18,18 +18,27 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignIcon, Search01Icon } from "@hugeicons/core-free-icons";
 import { parseAsString, throttle, useQueryState } from "nuqs";
+import { useMemo } from "react";
 import Container from "../container";
 import Link from "next/link";
 import { DataTable } from "../data-table";
-import { columns } from "./columns";
+import { getPlacementColumns } from "./columns";
+import { CreatePlacementSheet } from "./create-placement-sheet";
+import { usePlacementsList } from "@/lib/api/hooks/usePlacementsList";
+import { SpinnerPage } from "../spinner-page";
 
 export function PlacementsPage() {
+  const { placements, placementsQuery } = usePlacementsList();
   const [search, setSearch] = useQueryState(
     "q",
     parseAsString.withDefault("").withOptions({
       limitUrlUpdates: throttle(300),
     }),
   );
+
+  const rows = placements ?? [];
+
+  const columns = useMemo(() => getPlacementColumns(), []);
 
   return (
     <>
@@ -49,7 +58,7 @@ export function PlacementsPage() {
         </Breadcrumb>
       </Header>
 
-      <Container className="space-y-4">
+      <Container>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <InputGroup className="max-w-sm min-w-[200px]">
             <InputGroupAddon>
@@ -61,12 +70,18 @@ export function PlacementsPage() {
               onChange={(e) => setSearch(e.target.value || null)}
             />
           </InputGroup>
-          <Button>
-            Add <HugeiconsIcon icon={PlusSignIcon} />
-          </Button>
+          <CreatePlacementSheet>
+            <Button>
+              Add <HugeiconsIcon icon={PlusSignIcon} />
+            </Button>
+          </CreatePlacementSheet>
         </div>
 
-        <DataTable data={[]} columns={columns} />
+        {placementsQuery.isLoading ? (
+          <SpinnerPage />
+        ) : (
+          <DataTable data={rows} columns={columns} />
+        )}
       </Container>
     </>
   );

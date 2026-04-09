@@ -14,8 +14,4 @@ export type InternshipsUpdateBody = {
   role?: string;
   from_date?: string;
   to_date?: string;
-  /** @minimum 1 */
-  semester?: number;
-  /** @minimum 2000 */
-  acad_year?: number;
 };

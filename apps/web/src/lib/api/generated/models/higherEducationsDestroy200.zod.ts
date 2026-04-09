@@ -4,9 +4,9 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
-import type { Highereducation } from './highereducation';
+import type { HigherEducation } from './higherEducation';
 
 export type HigherEducationsDestroy200 = {
   message: 'Higher Education deleted successfully';
-  data: Highereducation;
+  data: HigherEducation;
 };

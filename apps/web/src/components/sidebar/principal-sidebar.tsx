@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  GraduationCap,
   GridIcon,
   Home01Icon,
   LaborIcon,
@@ -28,13 +29,7 @@ import {
 } from "../ui/sidebar";
 import { AppSidebarFooter } from "./app-sidebar-footer";
 import { PrincipalProgramsSection } from "./principal-programs-section";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { AcademicYearSelect } from "./academic-year-select";
 
 const institutionFormats = getTemplatePagesByType("institution");
 
@@ -43,6 +38,12 @@ const items = [
   { id: 2, label: "Faculty", icon: UserSquareIcon, href: "/faculty" },
   { id: 3, label: "Internships", icon: LaborIcon, href: "/internships" },
   { id: 4, label: "Placements", icon: PermanentJobIcon, href: "/placements" },
+  {
+    id: 5,
+    label: "Higher Education",
+    icon: GraduationCap,
+    href: "/higher-educations",
+  },
 ];
 
 export function PrincipalSidebar({
@@ -70,20 +71,7 @@ export function PrincipalSidebar({
       </SidebarHeader>
 
       <SidebarHeader className="border-b">
-        <Select defaultValue={new Date().getFullYear().toString()}>
-          <SelectTrigger size="sm" className="w-full">
-            <SelectValue placeholder="Academic Year" />
-          </SelectTrigger>
-          <SelectContent>
-            {["2026", "2025"].map((acadyear) => {
-              return (
-                <SelectItem key={acadyear} value={String(acadyear)}>
-                  Academic Year - {acadyear}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
+        <AcademicYearSelect />
       </SidebarHeader>
 
       <SidebarContent>

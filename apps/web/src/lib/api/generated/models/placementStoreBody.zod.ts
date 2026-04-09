@@ -14,6 +14,4 @@ export type PlacementStoreBody = {
   role: string;
   /** @maxLength 255 */
   ctc: string;
-  /** @minimum 2000 */
-  acad_year: number;
 };

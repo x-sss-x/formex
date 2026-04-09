@@ -42,7 +42,7 @@ export default async function RootLayout({
           <NuqsAdapter>
             <TooltipProvider>
               {children}
-              <Toaster />
+              <Toaster richColors />
             </TooltipProvider>
           </NuqsAdapter>
         </QueryProvider>

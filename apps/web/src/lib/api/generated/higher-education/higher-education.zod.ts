@@ -7,76 +7,197 @@
 import * as zod from 'zod';
 
 
-export const higherEducationsIndexResponseDataItemMin = 0;
-export const higherEducationsIndexResponseDataItemMax = 0;
-
-
-
 export const HigherEducationsIndexResponse = zod.object({
-  "data": zod.array(zod.array(zod.string()).min(higherEducationsIndexResponseDataItemMin).max(higherEducationsIndexResponseDataItemMax))
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "student_id": zod.string(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "college_name": zod.string(),
+  "rank": zod.number(),
+  "academic_year": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "student": zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
+}))
 })
 
 /**
  * @summary Display the specified resource
  */
 export const HigherEducationsShowParams = zod.object({
-  "higher_education": zod.string()
+  "higher_education": zod.string().describe('The higher education ID')
 })
 
-export const higherEducationsShowResponseDataMin = 0;
-export const higherEducationsShowResponseDataMax = 0;
-
-
-
 export const HigherEducationsShowResponse = zod.object({
-  "data": zod.array(zod.string()).min(higherEducationsShowResponseDataMin).max(higherEducationsShowResponseDataMax)
+  "data": zod.object({
+  "id": zod.string(),
+  "student_id": zod.string(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "college_name": zod.string(),
+  "rank": zod.number(),
+  "academic_year": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "student": zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
+})
 })
 
 /**
  * @summary Update the specified resource in storage
  */
 export const HigherEducationsUpdateParams = zod.object({
-  "higher_education": zod.string()
+  "higher_education": zod.string().describe('The higher education ID')
 })
 
 export const higherEducationsUpdateBodyCollegeNameMax = 255;
 
 
-export const higherEducationsUpdateBodyAcadYearMin = 2000;
-
 
 
 export const HigherEducationsUpdateBody = zod.object({
   "college_name": zod.string().max(higherEducationsUpdateBodyCollegeNameMax),
-  "rank": zod.number().min(1),
-  "acad_year": zod.number().min(higherEducationsUpdateBodyAcadYearMin)
+  "rank": zod.number().min(1)
 })
-
-export const higherEducationsUpdateResponseDataMin = 0;
-export const higherEducationsUpdateResponseDataMax = 0;
-
-
 
 export const HigherEducationsUpdateResponse = zod.object({
   "message": zod.literal("Higher Education updated successfully"),
-  "data": zod.array(zod.string()).min(higherEducationsUpdateResponseDataMin).max(higherEducationsUpdateResponseDataMax)
+  "data": zod.object({
+  "id": zod.string(),
+  "student_id": zod.string(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "college_name": zod.string(),
+  "rank": zod.number(),
+  "academic_year": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "student": zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
+})
 })
 
 /**
  * @summary Remove the specified resource from storage
  */
 export const HigherEducationsDestroyParams = zod.object({
-  "higher_education": zod.string()
+  "higher_education": zod.string().describe('The higher education ID')
 })
-
-export const higherEducationsDestroyResponseDataMin = 0;
-export const higherEducationsDestroyResponseDataMax = 0;
-
-
 
 export const HigherEducationsDestroyResponse = zod.object({
   "message": zod.literal("Higher Education deleted successfully"),
-  "data": zod.array(zod.string()).min(higherEducationsDestroyResponseDataMin).max(higherEducationsDestroyResponseDataMax)
+  "data": zod.object({
+  "id": zod.string(),
+  "student_id": zod.string(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "college_name": zod.string(),
+  "rank": zod.number(),
+  "academic_year": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "student": zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
+})
 })
 
 /**
@@ -86,13 +207,44 @@ export const HigherEducationListByStudentParams = zod.object({
   "student": zod.string().describe('The student ID')
 })
 
-export const higherEducationListByStudentResponseDataItemMin = 0;
-export const higherEducationListByStudentResponseDataItemMax = 0;
-
-
-
 export const HigherEducationListByStudentResponse = zod.object({
-  "data": zod.array(zod.array(zod.string()).min(higherEducationListByStudentResponseDataItemMin).max(higherEducationListByStudentResponseDataItemMax))
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "student_id": zod.string(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "college_name": zod.string(),
+  "rank": zod.number(),
+  "academic_year": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "student": zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
+}))
 })
 
 /**
@@ -105,36 +257,95 @@ export const HigherEducationStoreParams = zod.object({
 export const higherEducationStoreBodyCollegeNameMax = 255;
 
 
-export const higherEducationStoreBodyAcadYearMin = 2000;
-
 
 
 export const HigherEducationStoreBody = zod.object({
   "college_name": zod.string().max(higherEducationStoreBodyCollegeNameMax),
-  "rank": zod.number().min(1),
-  "acad_year": zod.number().min(higherEducationStoreBodyAcadYearMin)
+  "rank": zod.number().min(1)
 })
-
-export const higherEducationStoreResponseDataMin = 0;
-export const higherEducationStoreResponseDataMax = 0;
-
-
 
 export const HigherEducationStoreResponse = zod.object({
   "message": zod.literal("Higher Education created successfully"),
-  "data": zod.array(zod.string()).min(higherEducationStoreResponseDataMin).max(higherEducationStoreResponseDataMax)
+  "data": zod.object({
+  "id": zod.string(),
+  "student_id": zod.string(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "college_name": zod.string(),
+  "rank": zod.number(),
+  "academic_year": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "student": zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
+})
 })
 
 export const HigherEducationListByProgramParams = zod.object({
   "program": zod.string().describe('The program ID')
 })
 
-export const higherEducationListByProgramResponseDataItemMin = 0;
-export const higherEducationListByProgramResponseDataItemMax = 0;
-
-
-
 export const HigherEducationListByProgramResponse = zod.object({
-  "data": zod.array(zod.array(zod.string()).min(higherEducationListByProgramResponseDataItemMin).max(higherEducationListByProgramResponseDataItemMax))
+  "data": zod.array(zod.object({
+  "id": zod.string(),
+  "student_id": zod.string(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "college_name": zod.string(),
+  "rank": zod.number(),
+  "academic_year": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "student": zod.object({
+  "id": zod.string(),
+  "full_name": zod.string(),
+  "date_of_birth": zod.iso.datetime({}).nullable(),
+  "institution_id": zod.string(),
+  "program_id": zod.string(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
+  "register_no": zod.string().nullable(),
+  "gender": zod.string().nullable(),
+  "category": zod.string().nullable(),
+  "email": zod.string().nullable(),
+  "mobile": zod.string().nullable(),
+  "appar_id": zod.string().nullable(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
+}))
 })
 

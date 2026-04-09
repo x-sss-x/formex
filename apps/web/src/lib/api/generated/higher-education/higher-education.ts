@@ -344,14 +344,21 @@ export type higherEducationsShowResponse401 = {
   status: 401;
 };
 
+export type higherEducationsShowResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type higherEducationsShowResponseSuccess =
   higherEducationsShowResponse200 & {
     headers: Headers;
   };
-export type higherEducationsShowResponseError =
-  higherEducationsShowResponse401 & {
-    headers: Headers;
-  };
+export type higherEducationsShowResponseError = (
+  | higherEducationsShowResponse401
+  | higherEducationsShowResponse404
+) & {
+  headers: Headers;
+};
 
 export type higherEducationsShowResponse =
   | higherEducationsShowResponseSuccess
@@ -380,7 +387,7 @@ export const getHigherEducationsShowQueryKey = (higherEducation: string) => {
 
 export const getHigherEducationsShowQueryOptions = <
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -419,11 +426,13 @@ export const getHigherEducationsShowQueryOptions = <
 export type HigherEducationsShowQueryResult = NonNullable<
   Awaited<ReturnType<typeof higherEducationsShow>>
 >;
-export type HigherEducationsShowQueryError = AuthenticationExceptionResponse;
+export type HigherEducationsShowQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options: {
@@ -450,7 +459,7 @@ export function useHigherEducationsShow<
 };
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -477,7 +486,7 @@ export function useHigherEducationsShow<
 };
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -500,7 +509,7 @@ export function useHigherEducationsShow<
 
 export function useHigherEducationsShow<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -532,7 +541,7 @@ export function useHigherEducationsShow<
 
 export const getHigherEducationsShowSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -567,11 +576,12 @@ export type HigherEducationsShowSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof higherEducationsShow>>
 >;
 export type HigherEducationsShowSuspenseQueryError =
-  AuthenticationExceptionResponse;
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options: {
@@ -590,7 +600,7 @@ export function useHigherEducationsShowSuspense<
 };
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -609,7 +619,7 @@ export function useHigherEducationsShowSuspense<
 };
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -632,7 +642,7 @@ export function useHigherEducationsShowSuspense<
 
 export function useHigherEducationsShowSuspense<
   TData = Awaited<ReturnType<typeof higherEducationsShow>>,
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
   higherEducation: string,
   options?: {
@@ -677,6 +687,11 @@ export type higherEducationsUpdateResponse401 = {
   status: 401;
 };
 
+export type higherEducationsUpdateResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type higherEducationsUpdateResponse422 = {
   data: ValidationExceptionResponse;
   status: 422;
@@ -688,6 +703,7 @@ export type higherEducationsUpdateResponseSuccess =
   };
 export type higherEducationsUpdateResponseError = (
   | higherEducationsUpdateResponse401
+  | higherEducationsUpdateResponse404
   | higherEducationsUpdateResponse422
 ) & {
   headers: Headers;
@@ -718,7 +734,10 @@ export const higherEducationsUpdate = async (
 };
 
 export const getHigherEducationsUpdateMutationOptions = <
-  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -761,13 +780,17 @@ export type HigherEducationsUpdateMutationResult = NonNullable<
 export type HigherEducationsUpdateMutationBody = HigherEducationsUpdateBody;
 export type HigherEducationsUpdateMutationError =
   | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse
   | ValidationExceptionResponse;
 
 /**
  * @summary Update the specified resource in storage
  */
 export const useHigherEducationsUpdate = <
-  TError = AuthenticationExceptionResponse | ValidationExceptionResponse,
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
   TContext = unknown,
 >(
   options?: {
@@ -804,14 +827,21 @@ export type higherEducationsDestroyResponse401 = {
   status: 401;
 };
 
+export type higherEducationsDestroyResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
 export type higherEducationsDestroyResponseSuccess =
   higherEducationsDestroyResponse200 & {
     headers: Headers;
   };
-export type higherEducationsDestroyResponseError =
-  higherEducationsDestroyResponse401 & {
-    headers: Headers;
-  };
+export type higherEducationsDestroyResponseError = (
+  | higherEducationsDestroyResponse401
+  | higherEducationsDestroyResponse404
+) & {
+  headers: Headers;
+};
 
 export type higherEducationsDestroyResponse =
   | higherEducationsDestroyResponseSuccess
@@ -835,7 +865,7 @@ export const higherEducationsDestroy = async (
 };
 
 export const getHigherEducationsDestroyMutationOptions = <
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -877,13 +907,14 @@ export type HigherEducationsDestroyMutationResult = NonNullable<
 >;
 
 export type HigherEducationsDestroyMutationError =
-  AuthenticationExceptionResponse;
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
 
 /**
  * @summary Remove the specified resource from storage
  */
 export const useHigherEducationsDestroy = <
-  TError = AuthenticationExceptionResponse,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
   TContext = unknown,
 >(
   options?: {

@@ -58,7 +58,7 @@ class CurrentInstitutionSession
     public static function setAcademicYear(Request $request, string $institutionId, int $year): void
     {
         $map = $request->session()->get(self::ACADEMIC_YEAR_BY_INSTITUTION_KEY, []);
-        if (!is_array($map)) {
+        if (! is_array($map)) {
             $map = [];
         }
 
@@ -69,7 +69,7 @@ class CurrentInstitutionSession
     public static function ensureAcademicYear(Request $request, string $institutionId): int
     {
         $map = $request->session()->get(self::ACADEMIC_YEAR_BY_INSTITUTION_KEY, []);
-        if (!is_array($map)) {
+        if (! is_array($map)) {
             $map = [];
         }
 
@@ -89,6 +89,10 @@ class CurrentInstitutionSession
         return $map[$institutionId];
     }
 
+    /**
+     * Resolve the current institution and attach the session academic year as a model attribute
+     * (not a database column) for use in controllers.
+     */
     public static function requireInstitution(Request $request): Institution
     {
         $user = $request->user();
@@ -96,11 +100,16 @@ class CurrentInstitutionSession
             abort(401);
         }
 
-        [$institution] = self::sync($request, $user);
+        [$institution, , $academicYear] = self::sync($request, $user);
 
         if ($institution === null) {
             abort(404);
         }
+
+        $institution->setAttribute(
+            'academic_year',
+            $academicYear ?? (int) now()->year,
+        );
 
         return $institution;
     }

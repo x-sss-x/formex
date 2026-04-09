@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Institution;
 use App\Models\Program;
 use App\Models\Student;
 use App\Support\CurrentInstitutionSession;
@@ -16,7 +17,9 @@ class StudentController
         /** @var Program $scopedProgram */
         $scopedProgram = $institution->programs()->whereKey($program->id)->firstOrFail();
 
-        $students = $scopedProgram->students()
+        $students = $scopedProgram
+            ->students()
+            ->where('academic_year', $institution->academic_year)
             ->latest()
             ->get();
 
@@ -59,18 +62,25 @@ class StudentController
 
     public function search(Request $request)
     {
-        $query = $request->input("q");
+        $query = $request->input('q');
 
         if (!$query) {
-            return response()->json(["message" => "Search query is required"], 400);
+            return response()->json(['message' => 'Search query is required'], 400);
         }
 
+        /**
+         * @var Institution $institution
+         */
         $institution = CurrentInstitutionSession::requireInstitution($request);
+
         $students = $institution->students()
-            ->where('full_name', 'like', '%' . $query . '%')
+            ->whereLike('register_no', "%$query%")
+            ->orWhereLike('full_name', "%$query%")
+            ->orWhereLike('email', "%$query%")
             ->where('academic_year', $institution->academic_year)
             ->get();
-        return response()->json(["data" => $students]);
+
+        return response()->json(['data' => $students]);
     }
 
     // 🔍 Show student

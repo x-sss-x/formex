@@ -10,6 +10,4 @@ export type HigherEducationStoreBody = {
   college_name: string;
   /** @minimum 1 */
   rank: number;
-  /** @minimum 2000 */
-  acad_year: number;
 };

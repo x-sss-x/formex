@@ -4,6 +4,8 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Program } from './program';
+import type { Student } from './student';
 
 export interface Internship {
   id: string;
@@ -15,10 +17,12 @@ export interface Internship {
   role: string;
   from_date: string;
   to_date: string;
-  acad_year: number;
+  acad_year: string;
   semester: number;
   /** @nullable */
   created_at: string | null;
   /** @nullable */
   updated_at: string | null;
+  student?: Student;
+  program?: Program;
 }
