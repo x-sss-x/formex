@@ -4,8 +4,9 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { RoomReport } from './roomReport';
 
 export type RoomReportStore201 = {
   message: 'Room report created successfully';
-  data: string;
+  data: RoomReport;
 };

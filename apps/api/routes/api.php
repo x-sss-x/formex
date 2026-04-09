@@ -7,7 +7,6 @@ use App\Http\Controllers\HigherEducationController;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\InternshipController;
 use App\Http\Controllers\PlacementController;
-use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoomReportController;
 use App\Http\Controllers\SkillProgramController;
 use App\Http\Controllers\StudentController;
