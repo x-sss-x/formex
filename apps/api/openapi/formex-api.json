@@ -263,7 +263,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `Bridge`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -309,7 +309,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`Bridge`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -412,7 +412,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`Bridge`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -459,7 +459,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`Bridge`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -467,15 +467,10 @@
                                     "properties": {
                                         "data": {
                                             "$ref": "#/components/schemas/Bridge"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Bridge deleted successfully"
                                         }
                                     },
                                     "required": [
-                                        "data",
-                                        "message"
+                                        "data"
                                     ]
                                 }
                             }
@@ -509,7 +504,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `Bridge`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -557,7 +552,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `Bridge`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -663,7 +658,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`Bridge`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -685,6 +680,163 @@
                     },
                     "404": {
                         "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/faculty-invitations/accept": {
+            "post": {
+                "operationId": "facultyInvitation.accept",
+                "summary": "Accept invitation and create account with fixed invitation details",
+                "tags": [
+                    "FacultyInvitation"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "token": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    }
+                                },
+                                "required": [
+                                    "token",
+                                    "password",
+                                    "password_confirmation"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/faculty-invitations/{token}": {
+            "get": {
+                "operationId": "facultyInvitation.show",
+                "summary": "Resolve invitation details for the signup page",
+                "tags": [
+                    "FacultyInvitation"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "full_name": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "full_name",
+                                                "email"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/institutions/current/faculty/invitations": {
+            "post": {
+                "operationId": "facultyInvitation.store",
+                "summary": "Invite faculty by name and email, then send signup link",
+                "tags": [
+                    "FacultyInvitation"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "required": [
+                                    "full_name",
+                                    "email"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Invitation sent successfully."
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
@@ -1340,6 +1492,318 @@
                                     "required": [
                                         "message",
                                         "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/institutions/current/faculty": {
+            "get": {
+                "operationId": "faculty.index",
+                "summary": "List coordinator faculty in the current institution",
+                "tags": [
+                    "InstitutionFaculty"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "faculty.store",
+                "summary": "Assign a coordinator role to a user in the current institution",
+                "tags": [
+                    "InstitutionFaculty"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "type": "string"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "program_coordinator",
+                                            "course_coordinator"
+                                        ]
+                                    },
+                                    "program_ids": {
+                                        "type": [
+                                            "array",
+                                            "null"
+                                        ],
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "subject_ids": {
+                                        "type": [
+                                            "array",
+                                            "null"
+                                        ],
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "user_id",
+                                    "role"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Faculty assignment saved successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "role": {
+                                                    "type": "string"
+                                                },
+                                                "programs": {
+                                                    "type": "string"
+                                                },
+                                                "subjects": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "name",
+                                                "email",
+                                                "role",
+                                                "programs",
+                                                "subjects"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "message",
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/institutions/current/faculty/{faculty}": {
+            "put": {
+                "operationId": "faculty.update",
+                "summary": "Update an existing faculty assignment in the current institution",
+                "tags": [
+                    "InstitutionFaculty"
+                ],
+                "parameters": [
+                    {
+                        "name": "faculty",
+                        "in": "path",
+                        "required": true,
+                        "description": "The faculty ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "program_coordinator",
+                                            "course_coordinator"
+                                        ]
+                                    },
+                                    "program_ids": {
+                                        "type": [
+                                            "array",
+                                            "null"
+                                        ],
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "subject_ids": {
+                                        "type": [
+                                            "array",
+                                            "null"
+                                        ],
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "role"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Faculty assignment updated successfully."
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "role": {
+                                                    "type": "string"
+                                                },
+                                                "programs": {
+                                                    "type": "string"
+                                                },
+                                                "subjects": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "name",
+                                                "email",
+                                                "role",
+                                                "programs",
+                                                "subjects"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "message",
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "faculty.destroy",
+                "summary": "Remove faculty membership from the current institution",
+                "tags": [
+                    "InstitutionFaculty"
+                ],
+                "parameters": [
+                    {
+                        "name": "faculty",
+                        "in": "path",
+                        "required": true,
+                        "description": "The faculty ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Faculty removed successfully."
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
                                     ]
                                 }
                             }
@@ -4195,24 +4659,104 @@
                             "integer",
                             "null"
                         ]
+                    },
+                    "current_institution_role": {
+                        "type": "string"
                     }
                 },
                 "required": [
                     "user",
                     "current_institution",
                     "current_institution_id",
-                    "current_academic_year"
+                    "current_academic_year",
+                    "current_institution_role"
                 ],
                 "title": "AuthSession"
             },
             "Bridge": {
-                "type": "array",
-                "items": {
-                    "type": "string"
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "institution_id": {
+                        "type": "string"
+                    },
+                    "program_id": {
+                        "type": "string"
+                    },
+                    "course_coordinator_id": {
+                        "type": "string"
+                    },
+                    "subject_id": {
+                        "type": "string"
+                    },
+                    "curriculum_gap": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "string"
+                    },
+                    "conducted_date": {
+                        "type": "string"
+                    },
+                    "venue": {
+                        "type": "string"
+                    },
+                    "resource_person_name": {
+                        "type": "string"
+                    },
+                    "company_name": {
+                        "type": "string"
+                    },
+                    "designation": {
+                        "type": "string"
+                    },
+                    "students_present": {
+                        "type": "string"
+                    },
+                    "relevance": {
+                        "type": "string"
+                    },
+                    "academic_year": {
+                        "type": "string"
+                    },
+                    "semester": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    },
+                    "program": {
+                        "$ref": "#/components/schemas/Program"
+                    },
+                    "subject": {
+                        "$ref": "#/components/schemas/Subject"
+                    }
                 },
-                "minItems": 0,
-                "maxItems": 0,
-                "additionalItems": false,
+                "required": [
+                    "id",
+                    "institution_id",
+                    "program_id",
+                    "course_coordinator_id",
+                    "subject_id",
+                    "curriculum_gap",
+                    "details",
+                    "conducted_date",
+                    "venue",
+                    "resource_person_name",
+                    "company_name",
+                    "designation",
+                    "students_present",
+                    "relevance",
+                    "academic_year",
+                    "semester",
+                    "created_at",
+                    "updated_at"
+                ],
                 "title": "Bridge"
             },
             "HigherEducation": {
@@ -4779,12 +5323,6 @@
                     "short_name": {
                         "type": "string"
                     },
-                    "institution_id": {
-                        "type": "string"
-                    },
-                    "program_id": {
-                        "type": "string"
-                    },
                     "type": {
                         "type": "string"
                     },
@@ -4807,14 +5345,15 @@
                             "null"
                         ],
                         "format": "date-time"
+                    },
+                    "program": {
+                        "$ref": "#/components/schemas/Program"
                     }
                 },
                 "required": [
                     "id",
                     "name",
                     "short_name",
-                    "institution_id",
-                    "program_id",
                     "type",
                     "semester",
                     "scheme",

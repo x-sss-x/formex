@@ -13,4 +13,5 @@ export interface AuthSession {
   current_institution_id: string;
   /** @nullable */
   current_academic_year: number | null;
+  current_institution_role: string;
 }

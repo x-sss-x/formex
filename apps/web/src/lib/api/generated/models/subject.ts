@@ -4,13 +4,12 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Program } from "./program";
 
 export interface Subject {
   id: string;
   name: string;
   short_name: string;
-  institution_id: string;
-  program_id: string;
   type: string;
   semester: number;
   scheme: string;
@@ -18,4 +17,5 @@ export interface Subject {
   created_at: string | null;
   /** @nullable */
   updated_at: string | null;
+  program?: Program;
 }

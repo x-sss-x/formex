@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\InstitutionRoleEnum;
 use App\Models\Institution;
 use Dedoc\Scramble\Attributes\SchemaName;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class InstitutionResource extends JsonResource
             'code' => $this->code,
             'address' => $this->address,
             'type' => $this->type,
+            'role' => InstitutionRoleEnum::tryFrom($this->pivot?->role ?? ''),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

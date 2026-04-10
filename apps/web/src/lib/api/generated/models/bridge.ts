@@ -4,9 +4,28 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Program } from "./program";
+import type { Subject } from "./subject";
 
-/**
- * @minItems 0
- * @maxItems 0
- */
-export type Bridge = string[];
+export interface Bridge {
+  id: string;
+  institution_id: string;
+  program_id: string;
+  course_coordinator_id: string;
+  subject_id: string;
+  curriculum_gap: string;
+  details: string;
+  conducted_date: string;
+  venue: string;
+  resource_person_name: string;
+  company_name: string;
+  designation: string;
+  students_present: string;
+  relevance: string;
+  academic_year: string;
+  semester: string;
+  created_at: string;
+  updated_at: string;
+  program?: Program;
+  subject?: Subject;
+}

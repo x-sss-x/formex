@@ -3,10 +3,14 @@
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { signUpWithPassword } from "@/auth/client";
+import {
+  getFacultyInvitation,
+  signUpWithInvitation,
+  signUpWithPassword,
+} from "@/auth/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,11 +44,49 @@ export default function SignUpPage() {
     passwordConfirmation: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isInvitationLoading, setIsInvitationLoading] = useState(false);
+  const [invitationLocked, setInvitationLocked] = useState(false);
 
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const invitationToken = useMemo(
+    () => searchParams.get("invitation"),
+    [searchParams],
+  );
+
+  useEffect(() => {
+    if (!invitationToken) {
+      setInvitationLocked(false);
+      return;
+    }
+
+    setIsInvitationLoading(true);
+    getFacultyInvitation(invitationToken)
+      .then((result) => {
+        if (!result.ok) {
+          toast.error(result.message);
+          return;
+        }
+
+        setFormState((current) => ({
+          ...current,
+          name: result.data.full_name,
+          email: result.data.email,
+        }));
+        setInvitationLocked(true);
+      })
+      .finally(() => {
+        setIsInvitationLoading(false);
+      });
+  }, [invitationToken]);
 
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (invitationToken && !invitationLocked) {
+      toast.error("Invitation token is invalid or expired.");
+      return;
+    }
+
     const parse = schema.safeParse(formState);
     if (!parse.success) {
       const issue = parse.error.issues[0]?.message ?? "Check your input.";
@@ -53,12 +95,19 @@ export default function SignUpPage() {
     }
     setIsSubmitting(true);
     try {
-      const result = await signUpWithPassword(
-        formState.name,
-        formState.email,
-        formState.password,
-        formState.passwordConfirmation,
-      );
+      const result =
+        invitationToken && invitationLocked
+          ? await signUpWithInvitation(
+              invitationToken,
+              formState.password,
+              formState.passwordConfirmation,
+            )
+          : await signUpWithPassword(
+              formState.name,
+              formState.email,
+              formState.password,
+              formState.passwordConfirmation,
+            );
 
       if (result.ok) {
         router.push(callbackUrl);
@@ -98,6 +147,8 @@ export default function SignUpPage() {
                     setFormState((s) => ({ ...s, name: e.target.value }))
                   }
                   required
+                  readOnly={invitationLocked}
+                  disabled={isInvitationLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -112,6 +163,8 @@ export default function SignUpPage() {
                     setFormState((s) => ({ ...s, email: e.target.value }))
                   }
                   required
+                  readOnly={invitationLocked}
+                  disabled={isInvitationLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -149,9 +202,14 @@ export default function SignUpPage() {
               <Button
                 type="submit"
                 className="w-full mt-2"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isInvitationLoading}
               >
-                {isSubmitting ? (
+                {isInvitationLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading invitation…
+                  </>
+                ) : isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Creating account…

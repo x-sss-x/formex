@@ -16,7 +16,7 @@ class Institution extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->withPivot('role');
     }
 
     public function programs(): HasMany
@@ -53,7 +53,7 @@ class Institution extends Model
     {
         return $this->hasMany(SkillProgram::class);
     }
-  
+
     public function bridges(): HasMany
     {
         return $this->hasMany(Bridge::class);

@@ -73,7 +73,8 @@ export const AuthUserResponse = zod.object({
   "updated_at": zod.iso.datetime({}).nullable()
 }),zod.null()]),
   "current_institution_id": zod.string(),
-  "current_academic_year": zod.number().nullable()
+  "current_academic_year": zod.number().nullable(),
+  "current_institution_role": zod.string()
 })
 
 /**
@@ -111,7 +112,8 @@ export const AuthSetCurrentInstitutionResponse = zod.object({
   "updated_at": zod.iso.datetime({}).nullable()
 }),zod.null()]),
   "current_institution_id": zod.string(),
-  "current_academic_year": zod.number().nullable()
+  "current_academic_year": zod.number().nullable(),
+  "current_institution_role": zod.string()
 })
 
 /**
@@ -154,6 +156,7 @@ export const AuthSetAcademicYearResponse = zod.object({
   "updated_at": zod.iso.datetime({}).nullable()
 }),zod.null()]),
   "current_institution_id": zod.string(),
-  "current_academic_year": zod.number().nullable()
+  "current_academic_year": zod.number().nullable(),
+  "current_institution_role": zod.string()
 })
 

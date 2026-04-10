@@ -10,13 +10,15 @@ class CurrentInstitutionSession
 {
     public const string SESSION_KEY = 'current_institution_id';
 
+    public const string ROLE_SESSION_KEY = 'current_institution_role';
+
     /**
      * Session map of institution id → academic year (calendar year), per institution.
      */
     public const string ACADEMIC_YEAR_BY_INSTITUTION_KEY = 'academic_year_by_institution';
 
     /**
-     * @return array{0: Institution|null, 1: string|null, 2: int|null}
+     * @return array{0: Institution|null, 1: string|null, 2: int|null, 3: string|null}
      */
     public static function sync(Request $request, User $user): array
     {
@@ -25,8 +27,9 @@ class CurrentInstitutionSession
         if ($user->institutions->isEmpty()) {
             $request->session()->forget(self::SESSION_KEY);
             $request->session()->forget(self::ACADEMIC_YEAR_BY_INSTITUTION_KEY);
+            $request->session()->forget(self::ROLE_SESSION_KEY);
 
-            return [null, null, null];
+            return [null, null, null, null];
         }
 
         $ids = $user->institutions->pluck('id');
@@ -36,8 +39,10 @@ class CurrentInstitutionSession
             $institution = $user->institutions->firstWhere('id', $currentId);
             if ($institution !== null) {
                 $year = self::ensureAcademicYear($request, (string) $currentId);
+                $role = self::resolveRole($institution);
+                self::storeRole($request, $role);
 
-                return [$institution, (string) $currentId, $year];
+                return [$institution, (string) $currentId, $year, $role];
             }
         }
 
@@ -45,14 +50,17 @@ class CurrentInstitutionSession
         if ($default === null) {
             $request->session()->forget(self::SESSION_KEY);
             $request->session()->forget(self::ACADEMIC_YEAR_BY_INSTITUTION_KEY);
+            $request->session()->forget(self::ROLE_SESSION_KEY);
 
-            return [null, null, null];
+            return [null, null, null, null];
         }
 
         $request->session()->put(self::SESSION_KEY, $default->id);
         $year = self::ensureAcademicYear($request, $default->id);
+        $role = self::resolveRole($default);
+        self::storeRole($request, $role);
 
-        return [$default, $default->id, $year];
+        return [$default, $default->id, $year, $role];
     }
 
     public static function setAcademicYear(Request $request, string $institutionId, int $year): void
@@ -112,5 +120,38 @@ class CurrentInstitutionSession
         );
 
         return $institution;
+    }
+
+    public static function requireRole(Request $request): string
+    {
+        $user = $request->user();
+        if ($user === null) {
+            abort(401);
+        }
+
+        [, , , $role] = self::sync($request, $user);
+        if (! is_string($role) || $role === '') {
+            abort(403);
+        }
+
+        return $role;
+    }
+
+    private static function resolveRole(Institution $institution): ?string
+    {
+        $role = $institution->pivot?->role;
+
+        return is_string($role) && $role !== '' ? $role : null;
+    }
+
+    private static function storeRole(Request $request, ?string $role): void
+    {
+        if ($role === null) {
+            $request->session()->forget(self::ROLE_SESSION_KEY);
+
+            return;
+        }
+
+        $request->session()->put(self::ROLE_SESSION_KEY, $role);
     }
 }

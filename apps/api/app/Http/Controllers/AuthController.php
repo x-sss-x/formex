@@ -47,7 +47,7 @@ class AuthController
         ]);
 
         if (
-            !Auth::attempt([
+            ! Auth::attempt([
                 'email' => $credentials['email'],
                 'password' => $credentials['password'],
             ], $request->boolean('remember'))
@@ -97,7 +97,7 @@ class AuthController
         $user = $request->user();
         $user->load('institutions');
 
-        if (!$user->institutions->pluck('id')->contains($validated['institution_id'])) {
+        if (! $user->institutions->pluck('id')->contains($validated['institution_id'])) {
             throw ValidationException::withMessages([
                 'institution_id' => ['You do not belong to this institution.'],
             ]);
@@ -129,13 +129,14 @@ class AuthController
     private function authSessionResponse(Request $request): JsonResponse
     {
         $user = $request->user()->load('institutions');
-        [$currentInstitution, $currentInstitutionId, $currentAcademicYear] = CurrentInstitutionSession::sync($request, $user);
+        [$currentInstitution, $currentInstitutionId, $currentAcademicYear, $currentInstitutionRole] = CurrentInstitutionSession::sync($request, $user);
 
         return AuthSessionResource::make([
             'user' => $user,
             'current_institution' => $currentInstitution,
             'current_institution_id' => $currentInstitutionId,
             'current_academic_year' => $currentAcademicYear,
+            'current_institution_role' => $currentInstitutionRole,
         ])->response();
     }
 }

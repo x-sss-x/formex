@@ -47,7 +47,8 @@ test('user payload includes institutions for onboarding', function () {
         ->assertJsonPath('user.institutions', [])
         ->assertJsonPath('current_institution', null)
         ->assertJsonPath('current_institution_id', null)
-        ->assertJsonPath('current_academic_year', null);
+        ->assertJsonPath('current_academic_year', null)
+        ->assertJsonPath('current_institution_role', null);
 });
 
 test('creating institution attaches user and lists only their institutions', function () {
@@ -88,6 +89,7 @@ test('creating institution attaches user and lists only their institutions', fun
         ->assertJsonCount(1, 'user.institutions')
         ->assertJsonPath('current_institution.code', 'TC001')
         ->assertJsonPath('current_academic_year', (int) date('Y'))
+        ->assertJsonPath('current_institution_role', 'principal')
         ->assertJson(fn (AssertableJson $json) => $json
             ->whereType('current_institution_id', 'string')
             ->etc());
@@ -155,13 +157,15 @@ test('session defaults current institution to first by name and can be switched'
 
     $this->getJson('/api/user', institutionSpaHeaders())
         ->assertOk()
-        ->assertJsonPath('current_institution.name', 'Alpha College');
+        ->assertJsonPath('current_institution.name', 'Alpha College')
+        ->assertJsonPath('current_institution_role', 'course_coordinator');
 
     $this->postJson('/api/user/current-institution', [
         'institution_id' => $zebra->id,
     ], institutionSpaHeaders())
         ->assertOk()
-        ->assertJsonPath('current_institution.name', 'Zebra Institute');
+        ->assertJsonPath('current_institution.name', 'Zebra Institute')
+        ->assertJsonPath('current_institution_role', 'course_coordinator');
 
     Auth::forgetGuards();
 

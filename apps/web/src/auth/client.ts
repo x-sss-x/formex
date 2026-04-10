@@ -6,6 +6,7 @@ import {
   authLogout,
   authRegister,
 } from "../lib/api/generated/auth/auth";
+import { facultyInvitationAccept, facultyInvitationShow } from "../lib/api/generated/faculty-invitation/faculty-invitation";
 import type { ValidationExceptionResponse } from "../lib/api/generated/models";
 
 function validationMessage(body: ValidationExceptionResponse): string {
@@ -54,7 +55,49 @@ export async function signUpWithPassword(
   return { ok: false, message: "Unable to sign up." };
 }
 
+export async function getFacultyInvitation(
+  token: string,
+): Promise<
+  | { ok: true; data: { full_name: string; email: string } }
+  | { ok: false; message: string }
+> {
+  const response = await facultyInvitationShow(token,{headers:{
+   "Content-Type": "application/json",
+  }});
+
+  if (response.status === 200) {
+    const fullName = response.data?.data?.full_name;
+    const email = response.data?.data?.email;
+    if (typeof fullName === "string" && typeof email === "string") {
+      return { ok: true, data: { full_name: fullName, email } };
+    }
+  }
+
+  return {
+    ok: false,
+    message: "Invitation token is invalid or expired.",
+  };
+}
+
+export async function signUpWithInvitation(
+  token: string,
+  password: string,
+  password_confirmation: string,
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  await ensureSanctumCsrf();
+
+  const response = await facultyInvitationAccept({password,token,password_confirmation},{headers:{
+    "Content-Type": "application/json",
+  }})
+
+  if (response.status === 201) {
+    return { ok: true };
+  }
+
+  return { ok: false, message: response.data?.message ?? "Unable to sign up." };
+}
+
 export async function signOutSession(): Promise<void> {
   await ensureSanctumCsrf();
-  await authLogout().then(()=>window.location.href);
+  await authLogout().then(() => window.location.href);
 }

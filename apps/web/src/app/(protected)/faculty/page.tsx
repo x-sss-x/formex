@@ -1,29 +1,22 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusSignIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import Container from "@/components/container";
+import { DataTable } from "@/components/data-table";
 import Header from "@/components/header";
-import { getFacultyColumns, type Faculty } from "./columns";
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import Container from "@/components/container";
-import { DataTable } from "@/components/data-table";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -33,173 +26,107 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { PlusSignIcon, Search01Icon } from "@hugeicons/core-free-icons";
-import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ensureSanctumCsrf } from "@/lib/api/csrf";
+import { $api } from "@/lib/api/mutator";
+import { type Faculty, getFacultyColumns } from "./columns";
 
-const facultyList: Faculty[] = [
-  {
-    id: "1",
-    name: "Dr. Rajesh Kumar",
-    email: "rajesh@example.com",
-    role: "hod",
-    branch: "CSE",
-    createdAt: "2026-01-05T09:00:00Z",
-  },
-  {
-    id: "2",
-    name: "Anita Sharma",
-    email: "anita@example.com",
-    role: "staff",
-    createdAt: "2026-01-08T11:30:00Z",
-  },
-  {
-    id: "3",
-    name: "Vikram Reddy",
-    email: "vikram@example.com",
-    role: "staff",
-    createdAt: "2026-01-12T14:20:00Z",
-  },
-  {
-    id: "4",
-    name: "Dr. Meena Iyer",
-    email: "meena@example.com",
-    role: "hod",
-    branch: "ECE",
-    createdAt: "2026-01-15T10:10:00Z",
-  },
-];
+const inviteFacultySchema = z.object({
+  fullName: z.string().min(1, "Full name is required"),
+  email: z.string().email("Enter a valid email"),
+});
 
-const branches = ["CSE", "ECE", "EEE", "MECH", "CIVIL"] as const;
+type InviteFacultyValues = z.infer<typeof inviteFacultySchema>;
 
-const facultyFormSchema = z
-  .object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Enter a valid email"),
-    role: z.enum(["staff", "hod"]),
-    branch: z.string().optional(),
-  })
-  .superRefine((values, ctx) => {
-    if (values.role === "hod" && !values.branch) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["branch"],
-        message: "Branch is required for HOD",
-      });
-    }
-  });
-
-type FacultyFormValues = z.infer<typeof facultyFormSchema>;
+type FacultyApiRow = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  programs: Array<{ id: string; name: string }>;
+  subjects: Array<{ id: string; name: string }>;
+};
 
 export default function Page() {
-  const [faculty, setFaculty] = useState<Faculty[]>(facultyList);
-  const [createOpen, setCreateOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const queryClient = useQueryClient();
 
-  const createForm = useForm<FacultyFormValues>({
-    resolver: zodResolver(facultyFormSchema),
-    defaultValues: { name: "", email: "", role: "staff", branch: "" },
+  const inviteForm = useForm<InviteFacultyValues>({
+    resolver: zodResolver(inviteFacultySchema),
+    defaultValues: { fullName: "", email: "" },
   });
-  const createRole = createForm.watch("role");
 
-  const editForm = useForm<FacultyFormValues>({
-    resolver: zodResolver(facultyFormSchema),
-    defaultValues: { name: "", email: "", role: "staff", branch: "" },
+  const facultyQuery = useQuery({
+    queryKey: ["faculty-index"],
+    queryFn: async (): Promise<Faculty[]> => {
+      const response = await $api<{ data: FacultyApiRow[]; status: number }>(
+        "/institutions/current/faculty",
+        {
+          method: "GET",
+        },
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Unable to load faculty.");
+      }
+
+      return response.data.map((row) => ({
+        id: row.id,
+        name: row.name,
+        email: row.email,
+        role: row.role,
+        programs: row.programs ?? [],
+        subjects: row.subjects ?? [],
+      }));
+    },
   });
-  const editRole = editForm.watch("role");
 
-  const columns = useMemo(
-    () =>
-      getFacultyColumns({
-        onEdit: (item) => {
-          setSelectedFaculty(item);
-          editForm.reset({
-            name: item.name,
-            email: item.email,
-            role: item.role,
-            branch: item.branch ?? "",
-          });
-          setEditOpen(true);
+  const inviteMutation = useMutation({
+    mutationFn: async (values: InviteFacultyValues): Promise<void> => {
+      await ensureSanctumCsrf();
+
+      const response = await $api<{
+        status: number;
+        data?: { message?: string };
+      }>("/institutions/current/faculty/invitations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        onDelete: (item) => {
-          setSelectedFaculty(item);
-          setDeleteOpen(true);
-        },
-      }),
-    [editForm],
-  );
+        body: JSON.stringify({
+          full_name: values.fullName,
+          email: values.email,
+        }),
+      });
 
-  function onCreate(values: FacultyFormValues) {
-    const next: Faculty = {
-      id: crypto.randomUUID(),
-      name: values.name,
-      email: values.email,
-      role: values.role,
-      branch: values.role === "hod" ? values.branch : undefined,
-      createdAt: new Date().toISOString(),
-    };
+      if (response.status !== 201) {
+        throw new Error(
+          response.data?.message ?? "Failed to send faculty invitation.",
+        );
+      }
+    },
+    onSuccess: () => {
+      toast.success("Invitation sent successfully.");
+      setInviteOpen(false);
+      inviteForm.reset();
+      queryClient.invalidateQueries({ queryKey: ["faculty-index"] });
+    },
+    onError: (error) => {
+      const message =
+        error instanceof Error ? error.message : "Failed to send invitation.";
+      toast.error(message);
+    },
+  });
 
-    setFaculty((prev) => [next, ...prev]);
-    createForm.reset({ name: "", email: "", role: "staff", branch: "" });
-    setCreateOpen(false);
-  }
-
-  function onEdit(values: FacultyFormValues) {
-    if (!selectedFaculty) return;
-
-    setFaculty((prev) =>
-      prev.map((item) =>
-        item.id === selectedFaculty.id
-          ? {
-              ...item,
-              name: values.name,
-              email: values.email,
-              role: values.role,
-              branch: values.role === "hod" ? values.branch : undefined,
-            }
-          : item,
-      ),
-    );
-    setEditOpen(false);
-    setSelectedFaculty(null);
-  }
-
-  function onDelete() {
-    if (!selectedFaculty) return;
-
-    setFaculty((prev) => prev.filter((item) => item.id !== selectedFaculty.id));
-    setDeleteOpen(false);
-    setSelectedFaculty(null);
-  }
+  const columns = useMemo(() => getFacultyColumns(), []);
+  const faculty = facultyQuery.data ?? [];
 
   return (
     <>
@@ -212,47 +139,38 @@ export default function Page() {
       </Header>
       <Container>
         <div className="flex justify-between">
-          <InputGroup className="max-w-sm">
-            <InputGroupAddon>
-              <HugeiconsIcon icon={Search01Icon} />
-            </InputGroupAddon>
-            <InputGroupInput placeholder="Search..." />
-          </InputGroup>
           <Dialog
-            open={createOpen}
+            open={inviteOpen}
             onOpenChange={(open) => {
-              setCreateOpen(open);
+              setInviteOpen(open);
               if (!open) {
-                createForm.reset({
-                  name: "",
-                  email: "",
-                  role: "staff",
-                  branch: "",
-                });
+                inviteForm.reset();
               }
             }}
           >
-            <Button onClick={() => setCreateOpen(true)}>
-              Add <HugeiconsIcon icon={PlusSignIcon} />
+            <Button onClick={() => setInviteOpen(true)}>
+              Invite Faculty <HugeiconsIcon icon={PlusSignIcon} />
             </Button>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create faculty</DialogTitle>
+                <DialogTitle>Invite faculty</DialogTitle>
                 <DialogDescription>
-                  Add faculty details. Default role is staff.
+                  Send an invite email with a secure signup link.
                 </DialogDescription>
               </DialogHeader>
-              <Form {...createForm}>
+              <Form {...inviteForm}>
                 <form
                   className="space-y-3"
-                  onSubmit={createForm.handleSubmit(onCreate)}
+                  onSubmit={inviteForm.handleSubmit((values) =>
+                    inviteMutation.mutate(values),
+                  )}
                 >
                   <FormField
-                    control={createForm.control}
-                    name="name"
+                    control={inviteForm.control}
+                    name="fullName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>Full name</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -261,7 +179,7 @@ export default function Page() {
                     )}
                   />
                   <FormField
-                    control={createForm.control}
+                    control={inviteForm.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
@@ -273,73 +191,17 @@ export default function Page() {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={createForm.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Role</FormLabel>
-                        <Select
-                          value={field.value}
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            if (value !== "hod") {
-                              createForm.setValue("branch", "");
-                            }
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select role" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="staff">Staff</SelectItem>
-                            <SelectItem value="hod">HOD</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {createRole === "hod" && (
-                    <FormField
-                      control={createForm.control}
-                      name="branch"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Branch</FormLabel>
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select branch" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {branches.map((branch) => (
-                                <SelectItem key={branch} value={branch}>
-                                  {branch}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
                   <DialogFooter>
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => setCreateOpen(false)}
+                      onClick={() => setInviteOpen(false)}
                     >
                       Cancel
                     </Button>
-                    <Button type="submit">Create</Button>
+                    <Button type="submit" disabled={inviteMutation.isPending}>
+                      {inviteMutation.isPending ? "Sending..." : "Send Invite"}
+                    </Button>
                   </DialogFooter>
                 </form>
               </Form>
@@ -348,139 +210,6 @@ export default function Page() {
         </div>
         <DataTable columns={columns} data={faculty} />
       </Container>
-
-      <Sheet
-        open={editOpen}
-        onOpenChange={(open) => {
-          setEditOpen(open);
-          if (!open) setSelectedFaculty(null);
-        }}
-      >
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Edit faculty</SheetTitle>
-            <SheetDescription>Update faculty information.</SheetDescription>
-          </SheetHeader>
-          <Form {...editForm}>
-            <form
-              className="space-y-3 px-4"
-              onSubmit={editForm.handleSubmit(onEdit)}
-            >
-              <FormField
-                control={editForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        if (value !== "hod") {
-                          editForm.setValue("branch", "");
-                        }
-                      }}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="staff">Staff</SelectItem>
-                        <SelectItem value="hod">HOD</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {editRole === "hod" && (
-                <FormField
-                  control={editForm.control}
-                  name="branch"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Branch</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select branch" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {branches.map((branch) => (
-                            <SelectItem key={branch} value={branch}>
-                              {branch}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              <SheetFooter className="px-0">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">Save</Button>
-              </SheetFooter>
-            </form>
-          </Form>
-        </SheetContent>
-      </Sheet>
-
-      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete faculty?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={onDelete}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

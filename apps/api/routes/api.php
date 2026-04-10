@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BridgreController;
-use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\FacultyInvitationController;
 use App\Http\Controllers\HigherEducationController;
 use App\Http\Controllers\InstitutionController;
+use App\Http\Controllers\InstitutionFacultyController;
 use App\Http\Controllers\InternshipController;
 use App\Http\Controllers\PlacementController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoomReportController;
 use App\Http\Controllers\SkillProgramController;
 use App\Http\Controllers\StudentController;
@@ -17,6 +19,8 @@ Route::middleware('web')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:web');
+    Route::post('/faculty-invitations/accept', [FacultyInvitationController::class, 'accept']);
+    Route::get('/faculty-invitations/{token}', [FacultyInvitationController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -25,6 +29,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/academic-year', [AuthController::class, 'setAcademicYear']);
 
     Route::apiResource('institutions', InstitutionController::class);
+
+    Route::middleware('institution.role:principal')->group(function () {
+        Route::apiResource('/institutions/current/faculty', InstitutionFacultyController::class);
+        Route::post('/institutions/current/faculty/invitations', [FacultyInvitationController::class, 'store']);
+    });
 
     Route::apiResource('programs', ProgramController::class);
 

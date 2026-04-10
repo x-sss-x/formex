@@ -8,5 +8,4 @@ import type { Bridge } from "./bridge";
 
 export type BridgesDestroy200 = {
   data: Bridge;
-  message: "Bridge deleted successfully";
 };

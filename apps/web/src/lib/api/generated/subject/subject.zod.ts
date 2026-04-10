@@ -15,13 +15,20 @@ export const SubjectsIndexResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
   "type": zod.string(),
   "semester": zod.number(),
   "scheme": zod.string(),
   "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
   "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
 }))
 })
 
@@ -37,13 +44,20 @@ export const SubjectsShowResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
   "type": zod.string(),
   "semester": zod.number(),
   "scheme": zod.string(),
   "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
   "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
 })
 })
 
@@ -74,13 +88,20 @@ export const SubjectsUpdateResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
   "type": zod.string(),
   "semester": zod.number(),
   "scheme": zod.string(),
   "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
   "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
 })
 })
 
@@ -96,13 +117,20 @@ export const SubjectsDestroyResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
   "type": zod.string(),
   "semester": zod.number(),
   "scheme": zod.string(),
   "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
   "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
 })
 })
 
@@ -115,13 +143,20 @@ export const SubjectListByProgramResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
   "type": zod.string(),
   "semester": zod.number(),
   "scheme": zod.string(),
   "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
   "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
 }))
 })
 
@@ -152,13 +187,20 @@ export const SubjectStoreResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
   "type": zod.string(),
   "semester": zod.number(),
   "scheme": zod.string(),
   "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
   "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
 })
 })
 
@@ -172,13 +214,20 @@ export const SubjectListbysemesterResponse = zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
   "type": zod.string(),
   "semester": zod.number(),
   "scheme": zod.string(),
   "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
+  "program": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "short_name": zod.string(),
+  "intake": zod.number(),
+  "institution_id": zod.string(),
+  "created_at": zod.iso.datetime({}).nullable(),
   "updated_at": zod.iso.datetime({}).nullable()
+}).optional()
 }))
 })
 
