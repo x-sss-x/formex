@@ -2,6 +2,7 @@
 
 import {
   BookOpen01Icon,
+  GridIcon,
   Home01Icon,
   UserSquareIcon,
 } from "@hugeicons/core-free-icons";
@@ -60,6 +61,14 @@ const navItems = (programId: string) =>
       href: `/p/${programId}/students`,
       match: (pathname: string) =>
         pathname.startsWith(`/p/${programId}/students`),
+    },
+    {
+      id: "skill-programs",
+      label: "Skill Programs",
+      icon: GridIcon,
+      href: `/p/${programId}/skill-programs`,
+      match: (pathname: string) =>
+        pathname.startsWith(`/p/${programId}/skill-programs`),
     },
   ] as const;
 

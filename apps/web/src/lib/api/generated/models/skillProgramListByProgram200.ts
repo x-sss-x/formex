@@ -4,7 +4,8 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { SkillProgram } from "./skillProgram";
 
 export type SkillProgramListByProgram200 = {
-  data: string;
+  data: SkillProgram[];
 };

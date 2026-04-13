@@ -303,7 +303,7 @@
                         "required": true,
                         "description": "The bridge ID",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -347,7 +347,7 @@
                         "required": true,
                         "description": "The bridge ID",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -453,7 +453,7 @@
                         "required": true,
                         "description": "The bridge ID",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -3299,14 +3299,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `SkillProgram`",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "string"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SkillProgram"
+                                            }
                                         }
                                     },
                                     "required": [
@@ -3342,7 +3345,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`SkillProgram`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3390,10 +3393,6 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "semester": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    },
                                     "details": {
                                         "type": "string",
                                         "maxLength": 255
@@ -3413,10 +3412,6 @@
                                     "conducted_date": {
                                         "type": "string",
                                         "format": "date-time"
-                                    },
-                                    "academic_year": {
-                                        "type": "integer",
-                                        "minimum": 2000
                                     }
                                 }
                             }
@@ -3425,7 +3420,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`SkillProgram`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3471,7 +3466,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`SkillProgram`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3513,14 +3508,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `SkillProgram`",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "string"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SkillProgram"
+                                            }
                                         }
                                     },
                                     "required": [
@@ -3566,14 +3564,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Array of `SkillProgram`",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "string"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SkillProgram"
+                                            }
                                         }
                                     },
                                     "required": [
@@ -3617,10 +3618,6 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "semester": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    },
                                     "details": {
                                         "type": "string",
                                         "maxLength": 255
@@ -3640,20 +3637,14 @@
                                     "conducted_date": {
                                         "type": "string",
                                         "format": "date-time"
-                                    },
-                                    "academic_year": {
-                                        "type": "integer",
-                                        "minimum": 2000
                                     }
                                 },
                                 "required": [
-                                    "semester",
                                     "details",
                                     "resource_person_name",
                                     "company_name",
                                     "designation",
-                                    "conducted_date",
-                                    "academic_year"
+                                    "conducted_date"
                                 ]
                             }
                         }
@@ -3661,14 +3652,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`SkillProgram`",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "string"
+                                            "$ref": "#/components/schemas/SkillProgram"
                                         }
                                     },
                                     "required": [
@@ -4646,22 +4637,30 @@
                         "type": "string"
                     },
                     "students_present": {
-                        "type": "string"
+                        "type": "integer"
                     },
                     "relevance": {
                         "type": "string"
                     },
                     "academic_year": {
-                        "type": "string"
+                        "type": "integer"
                     },
                     "semester": {
-                        "type": "string"
+                        "type": "integer"
                     },
                     "created_at": {
-                        "type": "string"
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     },
                     "updated_at": {
-                        "type": "string"
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
                     },
                     "program": {
                         "$ref": "#/components/schemas/Program"
@@ -5205,6 +5204,12 @@
                             "null"
                         ],
                         "format": "date-time"
+                    },
+                    "program": {
+                        "$ref": "#/components/schemas/Program"
+                    },
+                    "student": {
+                        "$ref": "#/components/schemas/Student"
                     }
                 },
                 "required": [

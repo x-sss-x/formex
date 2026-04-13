@@ -6,8 +6,6 @@
  */
 
 export type SkillProgramStoreBody = {
-  /** @minimum 1 */
-  semester: number;
   /** @maxLength 255 */
   details: string;
   /** @maxLength 255 */
@@ -17,6 +15,4 @@ export type SkillProgramStoreBody = {
   /** @maxLength 255 */
   designation: string;
   conducted_date: string;
-  /** @minimum 2000 */
-  academic_year: number;
 };

@@ -1,5 +1,7 @@
+import { getProgramsStudentsIndexQueryKey } from "@/lib/api/generated/student/student";
+
 export function getProgramsStudentsQueryKey(programId: string) {
-  return ["programsStudents", programId] as const;
+  return getProgramsStudentsIndexQueryKey(programId);
 }
 
 /** HTML `type="date"` value from API / form ISO datetime. */

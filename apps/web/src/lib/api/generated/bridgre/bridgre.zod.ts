@@ -24,12 +24,12 @@ export const BridgesIndexResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.string(),
+  "students_present": zod.number(),
   "relevance": zod.string(),
-  "academic_year": zod.string(),
-  "semester": zod.string(),
-  "created_at": zod.string(),
-  "updated_at": zod.string(),
+  "academic_year": zod.number(),
+  "semester": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -65,7 +65,7 @@ export const BridgesIndexResponse = zod.object({
  * @summary Display the specified resource
  */
 export const BridgesShowParams = zod.object({
-  "bridge": zod.number().describe('The bridge ID')
+  "bridge": zod.string().describe('The bridge ID')
 })
 
 export const BridgesShowResponse = zod.object({
@@ -82,12 +82,12 @@ export const BridgesShowResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.string(),
+  "students_present": zod.number(),
   "relevance": zod.string(),
-  "academic_year": zod.string(),
-  "semester": zod.string(),
-  "created_at": zod.string(),
-  "updated_at": zod.string(),
+  "academic_year": zod.number(),
+  "semester": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -123,7 +123,7 @@ export const BridgesShowResponse = zod.object({
  * @summary Update the specified resource in storage
  */
 export const BridgesUpdateParams = zod.object({
-  "bridge": zod.number().describe('The bridge ID')
+  "bridge": zod.string().describe('The bridge ID')
 })
 
 export const BridgesUpdateBody = zod.object({
@@ -154,12 +154,12 @@ export const BridgesUpdateResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.string(),
+  "students_present": zod.number(),
   "relevance": zod.string(),
-  "academic_year": zod.string(),
-  "semester": zod.string(),
-  "created_at": zod.string(),
-  "updated_at": zod.string(),
+  "academic_year": zod.number(),
+  "semester": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -195,7 +195,7 @@ export const BridgesUpdateResponse = zod.object({
  * @summary Remove the specified resource from storage
  */
 export const BridgesDestroyParams = zod.object({
-  "bridge": zod.number().describe('The bridge ID')
+  "bridge": zod.string().describe('The bridge ID')
 })
 
 export const BridgesDestroyResponse = zod.object({
@@ -212,12 +212,12 @@ export const BridgesDestroyResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.string(),
+  "students_present": zod.number(),
   "relevance": zod.string(),
-  "academic_year": zod.string(),
-  "semester": zod.string(),
-  "created_at": zod.string(),
-  "updated_at": zod.string(),
+  "academic_year": zod.number(),
+  "semester": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -267,12 +267,12 @@ export const BridgreListByProgramResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.string(),
+  "students_present": zod.number(),
   "relevance": zod.string(),
-  "academic_year": zod.string(),
-  "semester": zod.string(),
-  "created_at": zod.string(),
-  "updated_at": zod.string(),
+  "academic_year": zod.number(),
+  "semester": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -322,12 +322,12 @@ export const BridgreListBySubjectResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.string(),
+  "students_present": zod.number(),
   "relevance": zod.string(),
-  "academic_year": zod.string(),
-  "semester": zod.string(),
-  "created_at": zod.string(),
-  "updated_at": zod.string(),
+  "academic_year": zod.number(),
+  "semester": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -393,12 +393,12 @@ export const BridgreStoreResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.string(),
+  "students_present": zod.number(),
   "relevance": zod.string(),
-  "academic_year": zod.string(),
-  "semester": zod.string(),
-  "created_at": zod.string(),
-  "updated_at": zod.string(),
+  "academic_year": zod.number(),
+  "semester": zod.number(),
+  "created_at": zod.iso.datetime({}).nullable(),
+  "updated_at": zod.iso.datetime({}).nullable(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),

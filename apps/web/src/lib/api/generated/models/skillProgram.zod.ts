@@ -4,6 +4,8 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { Program } from './program';
+import type { Student } from './student';
 
 export interface SkillProgram {
   id: string;
@@ -21,4 +23,6 @@ export interface SkillProgram {
   created_at: string | null;
   /** @nullable */
   updated_at: string | null;
+  program?: Program;
+  student?: Student;
 }
