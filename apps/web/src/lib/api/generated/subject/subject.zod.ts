@@ -10,35 +10,26 @@ import * as zod from 'zod';
 /**
  * @summary Display a listing of the resource
  */
-export const subjectsIndexResponseDataItemAssignedStaffTwoMin = 0;
-export const subjectsIndexResponseDataItemAssignedStaffTwoMax = 0;
-
-
-
 export const SubjectsIndexResponse = zod.object({
   "data": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(subjectsIndexResponseDataItemAssignedStaffTwoMin).max(subjectsIndexResponseDataItemAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }))
 })
 
@@ -46,13 +37,8 @@ export const SubjectsIndexResponse = zod.object({
  * @summary Display the specified resource
  */
 export const SubjectsShowParams = zod.object({
-  "subject": zod.string().describe('The subject ID')
+  "subject": zod.number().describe('The subject ID')
 })
-
-export const subjectsShowResponseDataAssignedStaffTwoMin = 0;
-export const subjectsShowResponseDataAssignedStaffTwoMax = 0;
-
-
 
 export const SubjectsShowResponse = zod.object({
   "data": zod.object({
@@ -60,24 +46,20 @@ export const SubjectsShowResponse = zod.object({
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(subjectsShowResponseDataAssignedStaffTwoMin).max(subjectsShowResponseDataAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 })
 })
 
@@ -85,7 +67,7 @@ export const SubjectsShowResponse = zod.object({
  * @summary Update the specified resource in storage
  */
 export const SubjectsUpdateParams = zod.object({
-  "subject": zod.string().describe('The subject ID')
+  "subject": zod.number().describe('The subject ID')
 })
 
 export const subjectsUpdateBodyNameMax = 255;
@@ -103,35 +85,26 @@ export const SubjectsUpdateBody = zod.object({
   "scheme": zod.enum(['C25']).optional()
 })
 
-export const subjectsUpdateResponseDataAssignedStaffTwoMin = 0;
-export const subjectsUpdateResponseDataAssignedStaffTwoMax = 0;
-
-
-
 export const SubjectsUpdateResponse = zod.object({
   "data": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(subjectsUpdateResponseDataAssignedStaffTwoMin).max(subjectsUpdateResponseDataAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 })
 })
 
@@ -139,13 +112,8 @@ export const SubjectsUpdateResponse = zod.object({
  * @summary Remove the specified resource from storage
  */
 export const SubjectsDestroyParams = zod.object({
-  "subject": zod.string().describe('The subject ID')
+  "subject": zod.number().describe('The subject ID')
 })
-
-export const subjectsDestroyResponseDataAssignedStaffTwoMin = 0;
-export const subjectsDestroyResponseDataAssignedStaffTwoMax = 0;
-
-
 
 export const SubjectsDestroyResponse = zod.object({
   "data": zod.object({
@@ -153,35 +121,26 @@ export const SubjectsDestroyResponse = zod.object({
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(subjectsDestroyResponseDataAssignedStaffTwoMin).max(subjectsDestroyResponseDataAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 })
 })
 
 export const SubjectListByProgramParams = zod.object({
-  "program": zod.string().describe('The program ID')
+  "program": zod.number().describe('The program ID')
 })
-
-export const subjectListByProgramResponseDataItemAssignedStaffTwoMin = 0;
-export const subjectListByProgramResponseDataItemAssignedStaffTwoMax = 0;
-
-
 
 export const SubjectListByProgramResponse = zod.object({
   "data": zod.array(zod.object({
@@ -189,24 +148,20 @@ export const SubjectListByProgramResponse = zod.object({
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(subjectListByProgramResponseDataItemAssignedStaffTwoMin).max(subjectListByProgramResponseDataItemAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }))
 })
 
@@ -214,7 +169,7 @@ export const SubjectListByProgramResponse = zod.object({
  * @summary Store a newly created resource in storage
  */
 export const SubjectStoreParams = zod.object({
-  "program": zod.string().describe('The program ID')
+  "program": zod.number().describe('The program ID')
 })
 
 export const subjectStoreBodyNameMax = 255;
@@ -232,47 +187,33 @@ export const SubjectStoreBody = zod.object({
   "scheme": zod.enum(['C25'])
 })
 
-export const subjectStoreResponseDataAssignedStaffTwoMin = 0;
-export const subjectStoreResponseDataAssignedStaffTwoMax = 0;
-
-
-
 export const SubjectStoreResponse = zod.object({
   "data": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(subjectStoreResponseDataAssignedStaffTwoMin).max(subjectStoreResponseDataAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 })
 })
 
 export const SubjectListbysemesterParams = zod.object({
-  "program": zod.string().describe('The program ID'),
+  "program": zod.number().describe('The program ID'),
   "semester": zod.number()
 })
-
-export const subjectListbysemesterResponseDataItemAssignedStaffTwoMin = 0;
-export const subjectListbysemesterResponseDataItemAssignedStaffTwoMax = 0;
-
-
 
 export const SubjectListbysemesterResponse = zod.object({
   "data": zod.array(zod.object({
@@ -280,24 +221,20 @@ export const SubjectListbysemesterResponse = zod.object({
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(subjectListbysemesterResponseDataItemAssignedStaffTwoMin).max(subjectListbysemesterResponseDataItemAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }))
 })
 

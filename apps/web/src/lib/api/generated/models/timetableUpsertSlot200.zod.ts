@@ -4,9 +4,9 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
-import type { TimetableUpsertSlot200Data } from './timetableUpsertSlot200Data';
+import type { TimetableUpsertSlot200Data } from "./timetableUpsertSlot200Data";
 
 export type TimetableUpsertSlot200 = {
-  message: 'Timetable slot saved successfully.';
+  message: "Timetable slot saved successfully.";
   data: TimetableUpsertSlot200Data;
 };

@@ -8,5 +8,5 @@
 export interface SubjectAssignedStaff {
   id: string;
   name: string;
-  role: string | 'course_coordinator';
+  role: string | "course_coordinator";
 }

@@ -8,7 +8,7 @@ import * as zod from 'zod';
 
 
 export const TimetableShowParams = zod.object({
-  "program": zod.string().describe('The program ID')
+  "program": zod.number().describe('The program ID')
 })
 
 export const timetableShowQuerySemesterMax = 12;
@@ -19,41 +19,37 @@ export const TimetableShowQueryParams = zod.object({
   "semester": zod.number().min(1).max(timetableShowQuerySemesterMax)
 })
 
-export const timetableShowResponseTwoDataSlotsMin = 0;
-export const timetableShowResponseTwoDataSlotsMax = 0;
-
-
-
-export const TimetableShowResponse = zod.union([zod.object({
+export const TimetableShowResponse = zod.object({
   "data": zod.object({
-  "id": zod.string(),
-  "semester": zod.string(),
-  "academic_year": zod.string(),
+  "id": zod.string().nullable(),
+  "semester": zod.number(),
+  "academic_year": zod.number(),
   "slots": zod.array(zod.object({
   "id": zod.string(),
   "day": zod.string(),
   "start_hour_no": zod.number(),
   "end_hour_no": zod.number(),
-  "subjects": zod.string()
+  "subjects": zod.array(zod.object({
+  "id": zod.string(),
+  "subject_id": zod.string(),
+  "subject_name": zod.string(),
+  "course_coordinator_id": zod.string(),
+  "course_coordinator_name": zod.string(),
+  "batch": zod.string(),
+  "room_no": zod.string()
+}))
 }))
 })
-}),zod.object({
-  "data": zod.object({
-  "semester": zod.number(),
-  "academic_year": zod.number(),
-  "slots": zod.array(zod.string()).min(timetableShowResponseTwoDataSlotsMin).max(timetableShowResponseTwoDataSlotsMax)
 })
-})])
 
 export const TimetableUpsertSlotParams = zod.object({
-  "program": zod.string().describe('The program ID')
+  "program": zod.number().describe('The program ID')
 })
 
 export const timetableUpsertSlotBodySemesterMax = 12;
 
 export const timetableUpsertSlotBodyStartHourNoMax = 7;
 
-export const timetableUpsertSlotBodyEndHourNoMin = 2;
 export const timetableUpsertSlotBodyEndHourNoMax = 7;
 
 export const timetableUpsertSlotBodySubjectsItemBatchMax = 255;
@@ -68,7 +64,7 @@ export const TimetableUpsertSlotBody = zod.object({
   "semester": zod.number().min(1).max(timetableUpsertSlotBodySemesterMax),
   "day": zod.string(),
   "start_hour_no": zod.number().min(1).max(timetableUpsertSlotBodyStartHourNoMax),
-  "end_hour_no": zod.number().min(timetableUpsertSlotBodyEndHourNoMin).max(timetableUpsertSlotBodyEndHourNoMax),
+  "end_hour_no": zod.number().min(1).max(timetableUpsertSlotBodyEndHourNoMax),
   "subjects": zod.array(zod.object({
   "subject_id": zod.string(),
   "course_coordinator_id": zod.string(),
@@ -78,13 +74,37 @@ export const TimetableUpsertSlotBody = zod.object({
 })
 
 export const TimetableUpsertSlotResponse = zod.object({
-  "message": zod.literal("Timetable slot saved successfully."),
+  "message": zod.string(),
   "data": zod.object({
   "id": zod.string(),
   "day": zod.string(),
   "start_hour_no": zod.number(),
   "end_hour_no": zod.number(),
-  "subjects": zod.string()
+  "subjects": zod.array(zod.object({
+  "id": zod.string(),
+  "subject_id": zod.string(),
+  "subject_name": zod.string(),
+  "course_coordinator_id": zod.string(),
+  "course_coordinator_name": zod.string(),
+  "batch": zod.string(),
+  "room_no": zod.string()
+}))
+})
+})
+
+export const TimetablePersonalResponse = zod.object({
+  "data": zod.object({
+  "academic_year": zod.number(),
+  "days": zod.array(zod.unknown()),
+  "rows": zod.array(zod.object({
+  "sl_no": zod.number(),
+  "program_name": zod.string(),
+  "semester": zod.number(),
+  "course_name": zod.string(),
+  "no_of_students": zod.number(),
+  "room_no": zod.string(),
+  "day_slots": zod.unknown()
+}))
 })
 })
 

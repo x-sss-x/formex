@@ -303,7 +303,7 @@
                         "required": true,
                         "description": "The bridge ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -347,7 +347,7 @@
                         "required": true,
                         "description": "The bridge ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -390,7 +390,7 @@
                                         "type": "integer"
                                     },
                                     "course_coordinator_id": {
-                                        "type": "string"
+                                        "type": "integer"
                                     }
                                 },
                                 "required": [
@@ -453,7 +453,7 @@
                         "required": true,
                         "description": "The bridge ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -498,7 +498,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -546,7 +546,7 @@
                         "required": true,
                         "description": "The subject ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -593,7 +593,7 @@
                         "required": true,
                         "description": "The subject ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -633,7 +633,7 @@
                                         "type": "string"
                                     },
                                     "course_coordinator_id": {
-                                        "type": "string"
+                                        "type": "integer"
                                     }
                                 },
                                 "required": [
@@ -888,7 +888,7 @@
                         "required": true,
                         "description": "The higher education ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -932,7 +932,7 @@
                         "required": true,
                         "description": "The higher education ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1008,7 +1008,7 @@
                         "required": true,
                         "description": "The higher education ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1059,7 +1059,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1106,7 +1106,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1183,7 +1183,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1339,7 +1339,7 @@
                         "required": true,
                         "description": "The institution ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1383,7 +1383,7 @@
                         "required": true,
                         "description": "The institution ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1465,7 +1465,7 @@
                         "required": true,
                         "description": "The institution ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1550,7 +1550,7 @@
                                 "type": "object",
                                 "properties": {
                                     "user_id": {
-                                        "type": "string"
+                                        "type": "integer"
                                     },
                                     "role": {
                                         "type": "string",
@@ -1631,7 +1631,7 @@
                         "required": true,
                         "description": "The faculty ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1718,7 +1718,7 @@
                         "required": true,
                         "description": "The faculty ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1800,7 +1800,7 @@
                         "required": true,
                         "description": "The internship ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1844,7 +1844,7 @@
                         "required": true,
                         "description": "The internship ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1927,7 +1927,7 @@
                         "required": true,
                         "description": "The internship ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -1977,7 +1977,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2025,7 +2025,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2072,7 +2072,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2200,7 +2200,7 @@
                         "required": true,
                         "description": "The placement ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2244,7 +2244,7 @@
                         "required": true,
                         "description": "The placement ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2330,7 +2330,7 @@
                         "required": true,
                         "description": "The placement ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2381,7 +2381,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2429,7 +2429,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2476,7 +2476,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2854,7 +2854,7 @@
                         "required": true,
                         "description": "The room report ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -2898,7 +2898,7 @@
                         "required": true,
                         "description": "The room report ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3043,7 +3043,7 @@
                         "required": true,
                         "description": "The room report ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3093,7 +3093,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3339,7 +3339,7 @@
                         "required": true,
                         "description": "The skill program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3383,7 +3383,7 @@
                         "required": true,
                         "description": "The skill program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3461,7 +3461,7 @@
                         "required": true,
                         "description": "The skill program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3506,7 +3506,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3554,7 +3554,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -3611,7 +3611,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3698,7 +3698,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3744,7 +3744,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3872,7 +3872,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -3881,7 +3881,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3924,7 +3924,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -3933,7 +3933,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4053,7 +4053,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -4062,7 +4062,7 @@
                         "required": true,
                         "description": "The student ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4206,7 +4206,7 @@
                         "required": true,
                         "description": "The subject ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4250,7 +4250,7 @@
                         "required": true,
                         "description": "The subject ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4333,7 +4333,7 @@
                         "required": true,
                         "description": "The subject ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4378,7 +4378,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4425,7 +4425,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4517,7 +4517,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -4573,7 +4573,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -4589,102 +4589,18 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`TimetableShow`",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "anyOf": [
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "data": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "string"
-                                                        },
-                                                        "semester": {
-                                                            "type": "string"
-                                                        },
-                                                        "academic_year": {
-                                                            "type": "string"
-                                                        },
-                                                        "slots": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "object",
-                                                                "properties": {
-                                                                    "id": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "day": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "start_hour_no": {
-                                                                        "type": "integer"
-                                                                    },
-                                                                    "end_hour_no": {
-                                                                        "type": "integer"
-                                                                    },
-                                                                    "subjects": {
-                                                                        "type": "string"
-                                                                    }
-                                                                },
-                                                                "required": [
-                                                                    "id",
-                                                                    "day",
-                                                                    "start_hour_no",
-                                                                    "end_hour_no",
-                                                                    "subjects"
-                                                                ]
-                                                            }
-                                                        }
-                                                    },
-                                                    "required": [
-                                                        "id",
-                                                        "semester",
-                                                        "academic_year",
-                                                        "slots"
-                                                    ]
-                                                }
-                                            },
-                                            "required": [
-                                                "data"
-                                            ]
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "data": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "semester": {
-                                                            "type": "integer"
-                                                        },
-                                                        "academic_year": {
-                                                            "type": "integer"
-                                                        },
-                                                        "slots": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
-                                                            "minItems": 0,
-                                                            "maxItems": 0,
-                                                            "additionalItems": false
-                                                        }
-                                                    },
-                                                    "required": [
-                                                        "semester",
-                                                        "academic_year",
-                                                        "slots"
-                                                    ]
-                                                }
-                                            },
-                                            "required": [
-                                                "data"
-                                            ]
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/TimetableShow"
                                         }
+                                    },
+                                    "required": [
+                                        "data"
                                     ]
                                 }
                             }
@@ -4713,7 +4629,7 @@
                         "required": true,
                         "description": "The program ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -4739,7 +4655,7 @@
                                     },
                                     "end_hour_no": {
                                         "type": "integer",
-                                        "minimum": 2,
+                                        "minimum": 1,
                                         "maximum": 7
                                     },
                                     "subjects": {
@@ -4786,48 +4702,11 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "`TimetableUpsertSlotResponse`",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "const": "Timetable slot saved successfully."
-                                        },
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id": {
-                                                    "type": "string"
-                                                },
-                                                "day": {
-                                                    "type": "string"
-                                                },
-                                                "start_hour_no": {
-                                                    "type": "integer"
-                                                },
-                                                "end_hour_no": {
-                                                    "type": "integer"
-                                                },
-                                                "subjects": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": [
-                                                "id",
-                                                "day",
-                                                "start_hour_no",
-                                                "end_hour_no",
-                                                "subjects"
-                                            ]
-                                        }
-                                    },
-                                    "required": [
-                                        "message",
-                                        "data"
-                                    ]
+                                    "$ref": "#/components/schemas/TimetableUpsertSlotResponse"
                                 }
                             }
                         }
@@ -4840,6 +4719,57 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/timetable/personal": {
+            "get": {
+                "operationId": "timetable.personal",
+                "tags": [
+                    "Timetable"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`TimetablePersonal`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/TimetablePersonal"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "403": {
+                        "description": "An error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error overview.",
+                                            "example": ""
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -4925,30 +4855,22 @@
                         "type": "string"
                     },
                     "students_present": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "relevance": {
                         "type": "string"
                     },
                     "academic_year": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "semester": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "program": {
                         "$ref": "#/components/schemas/Program"
@@ -5038,26 +4960,18 @@
                         "type": "string"
                     },
                     "rank": {
-                        "type": "integer",
+                        "type": "string",
                         "format": "integer"
                     },
                     "academic_year": {
-                        "type": "integer",
+                        "type": "string",
                         "format": "integer"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "student": {
                         "$ref": "#/components/schemas/Student"
@@ -5080,47 +4994,13 @@
                 "title": "HigherEducation"
             },
             "Institution": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "code": {
-                        "type": "string"
-                    },
-                    "address": {
-                        "type": "string"
-                    },
-                    "type": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    }
+                "type": "array",
+                "items": {
+                    "type": "string"
                 },
-                "required": [
-                    "id",
-                    "name",
-                    "code",
-                    "address",
-                    "type",
-                    "created_at",
-                    "updated_at"
-                ],
+                "minItems": 0,
+                "maxItems": 0,
+                "additionalItems": false,
                 "title": "Institution"
             },
             "InstitutionFaculty": {
@@ -5197,21 +5077,13 @@
                         "type": "string"
                     },
                     "semester": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "student": {
                         "$ref": "#/components/schemas/Student"
@@ -5256,18 +5128,10 @@
                         "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "student": {
                         "$ref": "#/components/schemas/Student"
@@ -5300,24 +5164,16 @@
                         "type": "string"
                     },
                     "intake": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "institution_id": {
                         "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     }
                 },
                 "required": [
@@ -5332,115 +5188,13 @@
                 "title": "Program"
             },
             "RoomReport": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "institution_id": {
-                        "type": "string"
-                    },
-                    "program_id": {
-                        "type": "string"
-                    },
-                    "subject_id": {
-                        "type": "string"
-                    },
-                    "users_id": {
-                        "type": "string"
-                    },
-                    "room_number": {
-                        "type": "string"
-                    },
-                    "academic_year": {
-                        "type": "integer"
-                    },
-                    "semester": {
-                        "type": "integer"
-                    },
-                    "strength": {
-                        "type": "integer"
-                    },
-                    "present": {
-                        "type": "integer"
-                    },
-                    "attendance_register": {
-                        "type": "string"
-                    },
-                    "student_attendance": {
-                        "type": "string"
-                    },
-                    "topic_planned": {
-                        "type": "string"
-                    },
-                    "topic_taught": {
-                        "type": "string"
-                    },
-                    "pedagogy_used": {
-                        "type": "string"
-                    },
-                    "aids_used": {
-                        "type": "string"
-                    },
-                    "teaching_skill": {
-                        "type": "string"
-                    },
-                    "interaction": {
-                        "type": "string"
-                    },
-                    "learning_outcome": {
-                        "type": "string"
-                    },
-                    "valuation": {
-                        "type": "string"
-                    },
-                    "principal_remarks": {
-                        "type": "string"
-                    },
-                    "report_date": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    }
+                "type": "array",
+                "items": {
+                    "type": "string"
                 },
-                "required": [
-                    "id",
-                    "institution_id",
-                    "program_id",
-                    "subject_id",
-                    "users_id",
-                    "room_number",
-                    "academic_year",
-                    "semester",
-                    "strength",
-                    "present",
-                    "attendance_register",
-                    "student_attendance",
-                    "topic_planned",
-                    "topic_taught",
-                    "pedagogy_used",
-                    "aids_used",
-                    "teaching_skill",
-                    "interaction",
-                    "learning_outcome",
-                    "valuation",
-                    "principal_remarks",
-                    "report_date",
-                    "created_at",
-                    "updated_at"
-                ],
+                "minItems": 0,
+                "maxItems": 0,
+                "additionalItems": false,
                 "title": "RoomReport"
             },
             "SkillProgram": {
@@ -5459,7 +5213,7 @@
                         "type": "string"
                     },
                     "semester": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "details": {
                         "type": "string"
@@ -5477,21 +5231,13 @@
                         "type": "string"
                     },
                     "academic_year": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "program": {
                         "$ref": "#/components/schemas/Program"
@@ -5527,11 +5273,7 @@
                         "type": "string"
                     },
                     "date_of_birth": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "institution_id": {
                         "type": "string"
@@ -5540,60 +5282,34 @@
                         "type": "string"
                     },
                     "semester": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "academic_year": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "register_no": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "gender": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "category": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "email": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "mobile": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "appar_id": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     }
                 },
                 "required": [
@@ -5631,24 +5347,16 @@
                         "type": "string"
                     },
                     "semester": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "scheme": {
                         "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "program": {
                         "$ref": "#/components/schemas/Program"
@@ -5670,6 +5378,177 @@
                 ],
                 "title": "Subject"
             },
+            "TimetablePersonal": {
+                "type": "object",
+                "properties": {
+                    "academic_year": {
+                        "type": "integer"
+                    },
+                    "days": {
+                        "type": "array",
+                        "items": {}
+                    },
+                    "rows": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TimetablePersonalRow"
+                        }
+                    }
+                },
+                "required": [
+                    "academic_year",
+                    "days",
+                    "rows"
+                ],
+                "title": "TimetablePersonal"
+            },
+            "TimetablePersonalRow": {
+                "type": "object",
+                "properties": {
+                    "sl_no": {
+                        "type": "integer"
+                    },
+                    "program_name": {
+                        "type": "string"
+                    },
+                    "semester": {
+                        "type": "integer"
+                    },
+                    "course_name": {
+                        "type": "string"
+                    },
+                    "no_of_students": {
+                        "type": "integer"
+                    },
+                    "room_no": {
+                        "type": "string"
+                    },
+                    "day_slots": {}
+                },
+                "required": [
+                    "sl_no",
+                    "program_name",
+                    "semester",
+                    "course_name",
+                    "no_of_students",
+                    "room_no",
+                    "day_slots"
+                ],
+                "title": "TimetablePersonalRow"
+            },
+            "TimetableShow": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "semester": {
+                        "type": "integer"
+                    },
+                    "academic_year": {
+                        "type": "integer"
+                    },
+                    "slots": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TimetableSlot"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "semester",
+                    "academic_year",
+                    "slots"
+                ],
+                "title": "TimetableShow"
+            },
+            "TimetableSlot": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "day": {
+                        "type": "string"
+                    },
+                    "start_hour_no": {
+                        "type": "integer"
+                    },
+                    "end_hour_no": {
+                        "type": "integer"
+                    },
+                    "subjects": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TimetableSlotSubject"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "day",
+                    "start_hour_no",
+                    "end_hour_no",
+                    "subjects"
+                ],
+                "title": "TimetableSlot"
+            },
+            "TimetableSlotSubject": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "subject_id": {
+                        "type": "string"
+                    },
+                    "subject_name": {
+                        "type": "string"
+                    },
+                    "course_coordinator_id": {
+                        "type": "string"
+                    },
+                    "course_coordinator_name": {
+                        "type": "string"
+                    },
+                    "batch": {
+                        "type": "string"
+                    },
+                    "room_no": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "subject_id",
+                    "subject_name",
+                    "course_coordinator_id",
+                    "course_coordinator_name",
+                    "batch",
+                    "room_no"
+                ],
+                "title": "TimetableSlotSubject"
+            },
+            "TimetableUpsertSlotResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/TimetableSlot"
+                    }
+                },
+                "required": [
+                    "message",
+                    "data"
+                ],
+                "title": "TimetableUpsertSlotResponse"
+            },
             "User": {
                 "type": "object",
                 "properties": {
@@ -5683,25 +5562,13 @@
                         "type": "string"
                     },
                     "email_verified_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "created_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "institutions": {
                         "type": "array",

@@ -7,7 +7,7 @@
 import type { FacultyStoreBodyRole } from './facultyStoreBodyRole';
 
 export type FacultyStoreBody = {
-  user_id: string;
+  user_id: number;
   role: FacultyStoreBodyRole;
   /** @nullable */
   program_ids?: string[] | null;

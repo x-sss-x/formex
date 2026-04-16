@@ -26,10 +26,12 @@ import { $api } from "../../mutator";
 import type {
   AuthenticationExceptionResponse,
   ModelNotFoundExceptionResponse,
+  TimetablePersonal200,
+  TimetablePersonal403,
   TimetableShow200,
   TimetableShowParams,
-  TimetableUpsertSlot200,
   TimetableUpsertSlotBody,
+  TimetableUpsertSlotResponse,
   ValidationExceptionResponse,
 } from "../models";
 
@@ -71,7 +73,7 @@ export type timetableShowResponse =
   | timetableShowResponseError;
 
 export const getTimetableShowUrl = (
-  program: string,
+  program: number,
   params: TimetableShowParams,
 ) => {
   const normalizedParams = new URLSearchParams();
@@ -90,7 +92,7 @@ export const getTimetableShowUrl = (
 };
 
 export const timetableShow = async (
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: RequestInit,
 ): Promise<timetableShowResponse> => {
@@ -101,7 +103,7 @@ export const timetableShow = async (
 };
 
 export const getTimetableShowQueryKey = (
-  program: string,
+  program: number,
   params?: TimetableShowParams,
 ) => {
   return [
@@ -117,7 +119,7 @@ export const getTimetableShowQueryOptions = <
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -162,7 +164,7 @@ export function useTimetableShow<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options: {
     query: Partial<
@@ -189,7 +191,7 @@ export function useTimetableShow<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -216,7 +218,7 @@ export function useTimetableShow<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -236,7 +238,7 @@ export function useTimetableShow<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -265,7 +267,7 @@ export const getTimetableShowSuspenseQueryOptions = <
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -309,7 +311,7 @@ export function useTimetableShowSuspense<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options: {
     query: Partial<
@@ -332,7 +334,7 @@ export function useTimetableShowSuspense<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -355,7 +357,7 @@ export function useTimetableShowSuspense<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -379,7 +381,7 @@ export function useTimetableShowSuspense<
     | ModelNotFoundExceptionResponse
     | ValidationExceptionResponse,
 >(
-  program: string,
+  program: number,
   params: TimetableShowParams,
   options?: {
     query?: Partial<
@@ -412,7 +414,7 @@ export function useTimetableShowSuspense<
 }
 
 export type timetableUpsertSlotResponse200 = {
-  data: TimetableUpsertSlot200;
+  data: TimetableUpsertSlotResponse;
   status: 200;
 };
 
@@ -447,12 +449,12 @@ export type timetableUpsertSlotResponse =
   | timetableUpsertSlotResponseSuccess
   | timetableUpsertSlotResponseError;
 
-export const getTimetableUpsertSlotUrl = (program: string) => {
+export const getTimetableUpsertSlotUrl = (program: number) => {
   return `/programs/${program}/timetable`;
 };
 
 export const timetableUpsertSlot = async (
-  program: string,
+  program: number,
   timetableUpsertSlotBody: TimetableUpsertSlotBody,
   options?: RequestInit,
 ): Promise<timetableUpsertSlotResponse> => {
@@ -474,14 +476,14 @@ export const getTimetableUpsertSlotMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof timetableUpsertSlot>>,
     TError,
-    { program: string; data: TimetableUpsertSlotBody },
+    { program: number; data: TimetableUpsertSlotBody },
     TContext
   >;
   request?: SecondParameter<typeof $api>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof timetableUpsertSlot>>,
   TError,
-  { program: string; data: TimetableUpsertSlotBody },
+  { program: number; data: TimetableUpsertSlotBody },
   TContext
 > => {
   const mutationKey = ["timetableUpsertSlot"];
@@ -495,7 +497,7 @@ export const getTimetableUpsertSlotMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof timetableUpsertSlot>>,
-    { program: string; data: TimetableUpsertSlotBody }
+    { program: number; data: TimetableUpsertSlotBody }
   > = (props) => {
     const { program, data } = props ?? {};
 
@@ -525,7 +527,7 @@ export const useTimetableUpsertSlot = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof timetableUpsertSlot>>,
       TError,
-      { program: string; data: TimetableUpsertSlotBody },
+      { program: number; data: TimetableUpsertSlotBody },
       TContext
     >;
     request?: SecondParameter<typeof $api>;
@@ -534,7 +536,7 @@ export const useTimetableUpsertSlot = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof timetableUpsertSlot>>,
   TError,
-  { program: string; data: TimetableUpsertSlotBody },
+  { program: number; data: TimetableUpsertSlotBody },
   TContext
 > => {
   return useMutation(
@@ -542,3 +544,302 @@ export const useTimetableUpsertSlot = <
     queryClient,
   );
 };
+export type timetablePersonalResponse200 = {
+  data: TimetablePersonal200;
+  status: 200;
+};
+
+export type timetablePersonalResponse401 = {
+  data: AuthenticationExceptionResponse;
+  status: 401;
+};
+
+export type timetablePersonalResponse403 = {
+  data: TimetablePersonal403;
+  status: 403;
+};
+
+export type timetablePersonalResponseSuccess = timetablePersonalResponse200 & {
+  headers: Headers;
+};
+export type timetablePersonalResponseError = (
+  | timetablePersonalResponse401
+  | timetablePersonalResponse403
+) & {
+  headers: Headers;
+};
+
+export type timetablePersonalResponse =
+  | timetablePersonalResponseSuccess
+  | timetablePersonalResponseError;
+
+export const getTimetablePersonalUrl = () => {
+  return `/timetable/personal`;
+};
+
+export const timetablePersonal = async (
+  options?: RequestInit,
+): Promise<timetablePersonalResponse> => {
+  return $api<timetablePersonalResponse>(getTimetablePersonalUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getTimetablePersonalQueryKey = () => {
+  return [`/timetable/personal`] as const;
+};
+
+export const getTimetablePersonalQueryOptions = <
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof timetablePersonal>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof $api>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getTimetablePersonalQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof timetablePersonal>>
+  > = ({ signal }) => timetablePersonal({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof timetablePersonal>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type TimetablePersonalQueryResult = NonNullable<
+  Awaited<ReturnType<typeof timetablePersonal>>
+>;
+export type TimetablePersonalQueryError =
+  | AuthenticationExceptionResponse
+  | TimetablePersonal403;
+
+export function useTimetablePersonal<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof timetablePersonal>>,
+          TError,
+          Awaited<ReturnType<typeof timetablePersonal>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useTimetablePersonal<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof timetablePersonal>>,
+          TError,
+          Awaited<ReturnType<typeof timetablePersonal>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useTimetablePersonal<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useTimetablePersonal<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getTimetablePersonalQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getTimetablePersonalSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<
+      Awaited<ReturnType<typeof timetablePersonal>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof $api>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getTimetablePersonalQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof timetablePersonal>>
+  > = ({ signal }) => timetablePersonal({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof timetablePersonal>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type TimetablePersonalSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof timetablePersonal>>
+>;
+export type TimetablePersonalSuspenseQueryError =
+  | AuthenticationExceptionResponse
+  | TimetablePersonal403;
+
+export function useTimetablePersonalSuspense<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useTimetablePersonalSuspense<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useTimetablePersonalSuspense<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useTimetablePersonalSuspense<
+  TData = Awaited<ReturnType<typeof timetablePersonal>>,
+  TError = AuthenticationExceptionResponse | TimetablePersonal403,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof timetablePersonal>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getTimetablePersonalSuspenseQueryOptions(options);
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}

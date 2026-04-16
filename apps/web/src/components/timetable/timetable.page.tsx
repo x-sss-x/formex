@@ -1,16 +1,11 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import Container from "@/components/container";
 import Header from "@/components/header";
 import { SpinnerPage } from "@/components/spinner-page";
-import {
-  getProgramTimetable,
-  saveProgramTimetableSlot,
-} from "@/components/timetable/api";
 import { TimetableTable } from "@/components/timetable/TimetableTable";
 import {
   Breadcrumb,
@@ -22,6 +17,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useSubjectListbysemester } from "@/lib/api/generated/subject/subject";
 import { useProgramsShow } from "@/lib/api/hooks/useProgramsShow";
+import {
+  useProgramTimetable,
+  useSaveProgramTimetableSlot,
+} from "@/lib/api/hooks/useTimetable";
 import { DAYS, useTimetableStore } from "./useTimetableStore";
 
 function clampSemester(value: string | null): number {
@@ -49,8 +48,17 @@ function isAssignedStaffItem(value: unknown): value is AssignedStaffItem {
   );
 }
 
+function toAssignedStaff(value: unknown): AssignedStaffItem[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((staff) => (isAssignedStaffItem(staff) ? [staff] : []));
+}
+
 export function TimetablePage() {
   const { programId } = useParams<{ programId: string }>();
+  const numericProgramId = Number(programId);
   const searchParams = useSearchParams();
   const semester = clampSemester(searchParams.get("semester"));
   const { data: program } = useProgramsShow(programId);
@@ -59,8 +67,8 @@ export function TimetablePage() {
   );
   const hydrateSlots = useTimetableStore((state) => state.hydrateSlots);
 
-  const subjectsQuery = useSubjectListbysemester(programId ?? "", semester, {
-    query: { enabled: !!programId },
+  const subjectsQuery = useSubjectListbysemester(numericProgramId, semester, {
+    query: { enabled: Number.isFinite(numericProgramId) && Boolean(programId) },
   });
 
   const subjectOptions = useMemo(() => {
@@ -71,18 +79,10 @@ export function TimetablePage() {
     return subjectsQuery.data.data.data.map((subject) => ({
       id: subject.id,
       name: subject.name,
-      coordinators: (subject.assigned_staff ?? []).flatMap((staff) => {
-        if (!isAssignedStaffItem(staff)) {
-          return [];
-        }
-
-        return [
-          {
-            id: staff.id,
-            name: staff.name,
-          },
-        ];
-      }),
+      coordinators: toAssignedStaff(subject.assigned_staff).map((staff) => ({
+        id: staff.id,
+        name: staff.name,
+      })),
     }));
   }, [subjectsQuery.data]);
 
@@ -90,11 +90,7 @@ export function TimetablePage() {
     setSubjectOptions(subjectOptions);
   }, [setSubjectOptions, subjectOptions]);
 
-  const timetableQuery = useQuery({
-    queryKey: ["program-timetable", programId, semester],
-    queryFn: () => getProgramTimetable(programId ?? "", semester),
-    enabled: !!programId,
-  });
+  const timetableQuery = useProgramTimetable(programId ?? "", semester);
 
   useEffect(() => {
     if (!timetableQuery.data) {
@@ -120,36 +116,7 @@ export function TimetablePage() {
     hydrateSlots(slots);
   }, [hydrateSlots, timetableQuery.data]);
 
-  const saveSlotMutation = useMutation({
-    mutationFn: async (slot: {
-      day: (typeof DAYS)[number];
-      startHour: number;
-      endHour: number;
-      subjects: Array<{
-        subjectId: string;
-        coordinatorId: string;
-        roomNumber: string;
-        batchNumber: string;
-      }>;
-    }) => {
-      if (!programId) {
-        throw new Error("Program is required.");
-      }
-
-      await saveProgramTimetableSlot(programId, {
-        semester,
-        day: slot.day,
-        start_hour_no: slot.startHour,
-        end_hour_no: slot.endHour,
-        subjects: slot.subjects.map((entry) => ({
-          subject_id: entry.subjectId,
-          course_coordinator_id: entry.coordinatorId,
-          batch: entry.batchNumber,
-          room_no: entry.roomNumber,
-        })),
-      });
-    },
-  });
+  const saveSlotMutation = useSaveProgramTimetableSlot(programId ?? "", semester);
 
   const isLoading = subjectsQuery.isLoading || timetableQuery.isLoading;
   const hasError = subjectsQuery.isError || timetableQuery.isError;

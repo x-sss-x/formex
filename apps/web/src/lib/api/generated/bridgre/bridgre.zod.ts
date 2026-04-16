@@ -10,11 +10,6 @@ import * as zod from 'zod';
 /**
  * @summary Display a listing of the resource
  */
-export const bridgesIndexResponseDataItemSubjectAssignedStaffTwoMin = 0;
-export const bridgesIndexResponseDataItemSubjectAssignedStaffTwoMax = 0;
-
-
-
 export const BridgesIndexResponse = zod.object({
   "data": zod.array(zod.object({
   "id": zod.string(),
@@ -29,44 +24,40 @@ export const BridgesIndexResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.number(),
+  "students_present": zod.string(),
   "relevance": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "academic_year": zod.string(),
+  "semester": zod.string(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
   "subject": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(bridgesIndexResponseDataItemSubjectAssignedStaffTwoMin).max(bridgesIndexResponseDataItemSubjectAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }).optional()
 }))
 })
@@ -75,13 +66,8 @@ export const BridgesIndexResponse = zod.object({
  * @summary Display the specified resource
  */
 export const BridgesShowParams = zod.object({
-  "bridge": zod.string().describe('The bridge ID')
+  "bridge": zod.number().describe('The bridge ID')
 })
-
-export const bridgesShowResponseDataSubjectAssignedStaffTwoMin = 0;
-export const bridgesShowResponseDataSubjectAssignedStaffTwoMax = 0;
-
-
 
 export const BridgesShowResponse = zod.object({
   "data": zod.object({
@@ -97,44 +83,40 @@ export const BridgesShowResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.number(),
+  "students_present": zod.string(),
   "relevance": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "academic_year": zod.string(),
+  "semester": zod.string(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
   "subject": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(bridgesShowResponseDataSubjectAssignedStaffTwoMin).max(bridgesShowResponseDataSubjectAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }).optional()
 })
 })
@@ -143,7 +125,7 @@ export const BridgesShowResponse = zod.object({
  * @summary Update the specified resource in storage
  */
 export const BridgesUpdateParams = zod.object({
-  "bridge": zod.string().describe('The bridge ID')
+  "bridge": zod.number().describe('The bridge ID')
 })
 
 export const BridgesUpdateBody = zod.object({
@@ -157,13 +139,8 @@ export const BridgesUpdateBody = zod.object({
   "students_present": zod.number(),
   "relevance": zod.string(),
   "academic_year": zod.number(),
-  "course_coordinator_id": zod.string()
+  "course_coordinator_id": zod.number()
 })
-
-export const bridgesUpdateResponseDataSubjectAssignedStaffTwoMin = 0;
-export const bridgesUpdateResponseDataSubjectAssignedStaffTwoMax = 0;
-
-
 
 export const BridgesUpdateResponse = zod.object({
   "data": zod.object({
@@ -179,44 +156,40 @@ export const BridgesUpdateResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.number(),
+  "students_present": zod.string(),
   "relevance": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "academic_year": zod.string(),
+  "semester": zod.string(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
   "subject": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(bridgesUpdateResponseDataSubjectAssignedStaffTwoMin).max(bridgesUpdateResponseDataSubjectAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }).optional()
 })
 })
@@ -225,13 +198,8 @@ export const BridgesUpdateResponse = zod.object({
  * @summary Remove the specified resource from storage
  */
 export const BridgesDestroyParams = zod.object({
-  "bridge": zod.string().describe('The bridge ID')
+  "bridge": zod.number().describe('The bridge ID')
 })
-
-export const bridgesDestroyResponseDataSubjectAssignedStaffTwoMin = 0;
-export const bridgesDestroyResponseDataSubjectAssignedStaffTwoMax = 0;
-
-
 
 export const BridgesDestroyResponse = zod.object({
   "data": zod.object({
@@ -247,56 +215,47 @@ export const BridgesDestroyResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.number(),
+  "students_present": zod.string(),
   "relevance": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "academic_year": zod.string(),
+  "semester": zod.string(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
   "subject": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(bridgesDestroyResponseDataSubjectAssignedStaffTwoMin).max(bridgesDestroyResponseDataSubjectAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }).optional()
 })
 })
 
 export const BridgreListByProgramParams = zod.object({
-  "program": zod.string().describe('The program ID')
+  "program": zod.number().describe('The program ID')
 })
-
-export const bridgreListByProgramResponseDataItemSubjectAssignedStaffTwoMin = 0;
-export const bridgreListByProgramResponseDataItemSubjectAssignedStaffTwoMax = 0;
-
-
 
 export const BridgreListByProgramResponse = zod.object({
   "data": zod.array(zod.object({
@@ -312,56 +271,47 @@ export const BridgreListByProgramResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.number(),
+  "students_present": zod.string(),
   "relevance": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "academic_year": zod.string(),
+  "semester": zod.string(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
   "subject": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(bridgreListByProgramResponseDataItemSubjectAssignedStaffTwoMin).max(bridgreListByProgramResponseDataItemSubjectAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }).optional()
 }))
 })
 
 export const BridgreListBySubjectParams = zod.object({
-  "subject": zod.string().describe('The subject ID')
+  "subject": zod.number().describe('The subject ID')
 })
-
-export const bridgreListBySubjectResponseDataItemSubjectAssignedStaffTwoMin = 0;
-export const bridgreListBySubjectResponseDataItemSubjectAssignedStaffTwoMax = 0;
-
-
 
 export const BridgreListBySubjectResponse = zod.object({
   "data": zod.array(zod.object({
@@ -377,44 +327,40 @@ export const BridgreListBySubjectResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.number(),
+  "students_present": zod.string(),
   "relevance": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "academic_year": zod.string(),
+  "semester": zod.string(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
   "subject": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(bridgreListBySubjectResponseDataItemSubjectAssignedStaffTwoMin).max(bridgreListBySubjectResponseDataItemSubjectAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }).optional()
 }))
 })
@@ -423,7 +369,7 @@ export const BridgreListBySubjectResponse = zod.object({
  * @summary Store a newly created resource in storage
  */
 export const BridgreStoreParams = zod.object({
-  "subject": zod.string().describe('The subject ID')
+  "subject": zod.number().describe('The subject ID')
 })
 
 export const BridgreStoreBody = zod.object({
@@ -436,13 +382,8 @@ export const BridgreStoreBody = zod.object({
   "designation": zod.string(),
   "students_present": zod.number(),
   "relevance": zod.string(),
-  "course_coordinator_id": zod.string()
+  "course_coordinator_id": zod.number()
 })
-
-export const bridgreStoreResponseDataSubjectAssignedStaffTwoMin = 0;
-export const bridgreStoreResponseDataSubjectAssignedStaffTwoMax = 0;
-
-
 
 export const BridgreStoreResponse = zod.object({
   "data": zod.object({
@@ -458,44 +399,40 @@ export const BridgreStoreResponse = zod.object({
   "resource_person_name": zod.string(),
   "company_name": zod.string(),
   "designation": zod.string(),
-  "students_present": zod.number(),
+  "students_present": zod.string(),
   "relevance": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "academic_year": zod.string(),
+  "semester": zod.string(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
   "subject": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
   "type": zod.string(),
-  "semester": zod.number(),
+  "semester": zod.string(),
   "scheme": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable(),
+  "created_at": zod.string(),
+  "updated_at": zod.string(),
   "program": zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "short_name": zod.string(),
-  "intake": zod.number(),
+  "intake": zod.string(),
   "institution_id": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
+  "created_at": zod.string(),
+  "updated_at": zod.string()
 }).optional(),
-  "assigned_staff": zod.union([zod.array(zod.object({
-  "id": zod.string(),
-  "name": zod.string(),
-  "role": zod.union([zod.string(),zod.enum(['course_coordinator'])])
-})),zod.array(zod.string()).min(bridgreStoreResponseDataSubjectAssignedStaffTwoMin).max(bridgreStoreResponseDataSubjectAssignedStaffTwoMax)])
+  "assigned_staff": zod.string()
 }).optional()
 })
 })

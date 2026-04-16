@@ -4,11 +4,12 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { TimetableUpsertSlot200DataSubjectsItem } from "./timetableUpsertSlot200DataSubjectsItem";
 
 export type TimetableUpsertSlot200Data = {
   id: string;
   day: string;
   start_hour_no: number;
   end_hour_no: number;
-  subjects: string;
+  subjects: TimetableUpsertSlot200DataSubjectsItem[];
 };

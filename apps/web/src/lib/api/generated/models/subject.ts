@@ -5,19 +5,16 @@
  * OpenAPI spec version: 0.0.1
  */
 import type { Program } from "./program";
-import type { SubjectAssignedStaff } from "./subjectAssignedStaff";
 
 export interface Subject {
   id: string;
   name: string;
   short_name: string;
   type: string;
-  semester: number;
+  semester: string;
   scheme: string;
-  /** @nullable */
-  created_at: string | null;
-  /** @nullable */
-  updated_at: string | null;
+  created_at: string;
+  updated_at: string;
   program?: Program;
-  assigned_staff: SubjectAssignedStaff[] | string[];
+  assigned_staff: string;
 }

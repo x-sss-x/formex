@@ -4,30 +4,8 @@
  * Formex
  * OpenAPI spec version: 0.0.1
  */
+import type { TimetableShow } from "./timetableShow";
 
-export type TimetableShow200 =
-  | {
-      data: {
-        id: string;
-        semester: string;
-        academic_year: string;
-        slots: {
-          id: string;
-          day: string;
-          start_hour_no: number;
-          end_hour_no: number;
-          subjects: string;
-        }[];
-      };
-    }
-  | {
-      data: {
-        semester: number;
-        academic_year: number;
-        /**
-         * @minItems 0
-         * @maxItems 0
-         */
-        slots: string[];
-      };
-    };
+export type TimetableShow200 = {
+  data: TimetableShow;
+};

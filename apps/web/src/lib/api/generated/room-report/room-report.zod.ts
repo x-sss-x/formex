@@ -10,76 +10,36 @@ import * as zod from 'zod';
 /**
  * @summary Display a listing of the resource
  */
+export const roomReportsIndexResponseDataItemMin = 0;
+export const roomReportsIndexResponseDataItemMax = 0;
+
+
+
 export const RoomReportsIndexResponse = zod.object({
-  "data": zod.array(zod.object({
-  "id": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
-  "subject_id": zod.string(),
-  "users_id": zod.string(),
-  "room_number": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "strength": zod.number(),
-  "present": zod.number(),
-  "attendance_register": zod.string(),
-  "student_attendance": zod.string(),
-  "topic_planned": zod.string(),
-  "topic_taught": zod.string(),
-  "pedagogy_used": zod.string(),
-  "aids_used": zod.string(),
-  "teaching_skill": zod.string(),
-  "interaction": zod.string(),
-  "learning_outcome": zod.string(),
-  "valuation": zod.string(),
-  "principal_remarks": zod.string(),
-  "report_date": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
-}))
+  "data": zod.array(zod.array(zod.string()).min(roomReportsIndexResponseDataItemMin).max(roomReportsIndexResponseDataItemMax))
 })
 
 /**
  * @summary Display the specified resource
  */
 export const RoomReportsShowParams = zod.object({
-  "room_report": zod.string().describe('The room report ID')
+  "room_report": zod.number().describe('The room report ID')
 })
 
+export const roomReportsShowResponseDataMin = 0;
+export const roomReportsShowResponseDataMax = 0;
+
+
+
 export const RoomReportsShowResponse = zod.object({
-  "data": zod.object({
-  "id": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
-  "subject_id": zod.string(),
-  "users_id": zod.string(),
-  "room_number": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "strength": zod.number(),
-  "present": zod.number(),
-  "attendance_register": zod.string(),
-  "student_attendance": zod.string(),
-  "topic_planned": zod.string(),
-  "topic_taught": zod.string(),
-  "pedagogy_used": zod.string(),
-  "aids_used": zod.string(),
-  "teaching_skill": zod.string(),
-  "interaction": zod.string(),
-  "learning_outcome": zod.string(),
-  "valuation": zod.string(),
-  "principal_remarks": zod.string(),
-  "report_date": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
-})
+  "data": zod.array(zod.string()).min(roomReportsShowResponseDataMin).max(roomReportsShowResponseDataMax)
 })
 
 /**
  * @summary Update the specified resource in storage
  */
 export const RoomReportsUpdateParams = zod.object({
-  "room_report": zod.string().describe('The room report ID')
+  "room_report": zod.number().describe('The room report ID')
 })
 
 export const roomReportsUpdateBodyRoomNumberMax = 255;
@@ -118,104 +78,44 @@ export const RoomReportsUpdateBody = zod.object({
   "report_date": zod.iso.datetime({}).optional()
 })
 
+export const roomReportsUpdateResponseDataMin = 0;
+export const roomReportsUpdateResponseDataMax = 0;
+
+
+
 export const RoomReportsUpdateResponse = zod.object({
   "message": zod.literal("Room report updated successfully"),
-  "data": zod.object({
-  "id": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
-  "subject_id": zod.string(),
-  "users_id": zod.string(),
-  "room_number": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "strength": zod.number(),
-  "present": zod.number(),
-  "attendance_register": zod.string(),
-  "student_attendance": zod.string(),
-  "topic_planned": zod.string(),
-  "topic_taught": zod.string(),
-  "pedagogy_used": zod.string(),
-  "aids_used": zod.string(),
-  "teaching_skill": zod.string(),
-  "interaction": zod.string(),
-  "learning_outcome": zod.string(),
-  "valuation": zod.string(),
-  "principal_remarks": zod.string(),
-  "report_date": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
-})
+  "data": zod.array(zod.string()).min(roomReportsUpdateResponseDataMin).max(roomReportsUpdateResponseDataMax)
 })
 
 /**
  * @summary Remove the specified resource from storage
  */
 export const RoomReportsDestroyParams = zod.object({
-  "room_report": zod.string().describe('The room report ID')
+  "room_report": zod.number().describe('The room report ID')
 })
+
+export const roomReportsDestroyResponseDataMin = 0;
+export const roomReportsDestroyResponseDataMax = 0;
+
+
 
 export const RoomReportsDestroyResponse = zod.object({
   "message": zod.literal("Room report deleted successfully"),
-  "data": zod.object({
-  "id": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
-  "subject_id": zod.string(),
-  "users_id": zod.string(),
-  "room_number": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "strength": zod.number(),
-  "present": zod.number(),
-  "attendance_register": zod.string(),
-  "student_attendance": zod.string(),
-  "topic_planned": zod.string(),
-  "topic_taught": zod.string(),
-  "pedagogy_used": zod.string(),
-  "aids_used": zod.string(),
-  "teaching_skill": zod.string(),
-  "interaction": zod.string(),
-  "learning_outcome": zod.string(),
-  "valuation": zod.string(),
-  "principal_remarks": zod.string(),
-  "report_date": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
-})
+  "data": zod.array(zod.string()).min(roomReportsDestroyResponseDataMin).max(roomReportsDestroyResponseDataMax)
 })
 
 export const RoomReportListByProgramParams = zod.object({
-  "program": zod.string().describe('The program ID')
+  "program": zod.number().describe('The program ID')
 })
 
+export const roomReportListByProgramResponseDataItemMin = 0;
+export const roomReportListByProgramResponseDataItemMax = 0;
+
+
+
 export const RoomReportListByProgramResponse = zod.object({
-  "data": zod.array(zod.object({
-  "id": zod.string(),
-  "institution_id": zod.string(),
-  "program_id": zod.string(),
-  "subject_id": zod.string(),
-  "users_id": zod.string(),
-  "room_number": zod.string(),
-  "academic_year": zod.number(),
-  "semester": zod.number(),
-  "strength": zod.number(),
-  "present": zod.number(),
-  "attendance_register": zod.string(),
-  "student_attendance": zod.string(),
-  "topic_planned": zod.string(),
-  "topic_taught": zod.string(),
-  "pedagogy_used": zod.string(),
-  "aids_used": zod.string(),
-  "teaching_skill": zod.string(),
-  "interaction": zod.string(),
-  "learning_outcome": zod.string(),
-  "valuation": zod.string(),
-  "principal_remarks": zod.string(),
-  "report_date": zod.string(),
-  "created_at": zod.iso.datetime({}).nullable(),
-  "updated_at": zod.iso.datetime({}).nullable()
-}))
+  "data": zod.array(zod.array(zod.string()).min(roomReportListByProgramResponseDataItemMin).max(roomReportListByProgramResponseDataItemMax))
 })
 
 /**

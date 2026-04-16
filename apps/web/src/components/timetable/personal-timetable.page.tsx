@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Container from "@/components/container";
 import Header from "@/components/header";
@@ -21,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getPersonalTimetable } from "./api";
+import { usePersonalTimetable } from "@/lib/api/hooks/useTimetable";
 
 const HOURS = [1, 2, 3, 4, 5, 6, 7];
 
@@ -30,10 +29,7 @@ function dayLabel(day: string): string {
 }
 
 export function PersonalTimetablePage() {
-  const personalTimetableQuery = useQuery({
-    queryKey: ["personal-timetable"],
-    queryFn: getPersonalTimetable,
-  });
+  const personalTimetableQuery = usePersonalTimetable();
 
   return (
     <>

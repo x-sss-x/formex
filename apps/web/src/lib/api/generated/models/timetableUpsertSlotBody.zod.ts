@@ -19,7 +19,7 @@ export type TimetableUpsertSlotBody = {
      */
   start_hour_no: number;
   /**
-     * @minimum 2
+     * @minimum 1
      * @maximum 7
      */
   end_hour_no: number;

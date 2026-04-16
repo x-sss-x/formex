@@ -13,12 +13,10 @@ export interface HigherEducation {
   institution_id: string;
   program_id: string;
   college_name: string;
-  rank: number;
-  academic_year: number;
-  /** @nullable */
-  created_at: string | null;
-  /** @nullable */
-  updated_at: string | null;
+  rank: string;
+  academic_year: string;
+  created_at: string;
+  updated_at: string;
   student?: Student;
   program?: Program;
 }

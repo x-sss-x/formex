@@ -23,6 +23,8 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { cn } from "@/lib/utils";
+import { hasAnyRole } from "@/lib/auth/roles";
+import { useSession } from "@/lib/api/hooks/useSession";
 import {
   Select,
   SelectContent,
@@ -36,8 +38,8 @@ type ProgramSidebarProps = {
   programId: string;
 } & React.ComponentProps<typeof Sidebar>;
 
-const navItems = (programId: string) =>
-  [
+const navItems = (programId: string, canViewMasterTimetable: boolean) => {
+  const items = [
     {
       id: "overview",
       label: "Overview",
@@ -71,15 +73,30 @@ const navItems = (programId: string) =>
       match: (pathname: string) =>
         pathname.startsWith(`/p/${programId}/timetable`),
     },
-    {
-      id: "skill-programs",
-      label: "Skill Programs",
-      icon: GridIcon,
-      href: `/p/${programId}/skill-programs`,
+  ];
+
+  if (canViewMasterTimetable) {
+    items.push({
+      id: "master-timetable",
+      label: "Master Timetable",
+      icon: Calendar03Icon,
+      href: `/p/${programId}/master-timetable`,
       match: (pathname: string) =>
-        pathname.startsWith(`/p/${programId}/skill-programs`),
-    },
-  ] as const;
+        pathname.startsWith(`/p/${programId}/master-timetable`),
+    });
+  }
+
+  items.push({
+    id: "skill-programs",
+    label: "Skill Programs",
+    icon: GridIcon,
+    href: `/p/${programId}/skill-programs`,
+    match: (pathname: string) =>
+      pathname.startsWith(`/p/${programId}/skill-programs`),
+  });
+
+  return items;
+};
 
 export function ProgramSidebar({
   programId,
@@ -89,11 +106,16 @@ export function ProgramSidebar({
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const session = useSession();
   const semesterParam = searchParams.get("semester");
   const selectedSemester = Number.isFinite(Number(semesterParam))
     ? Math.min(6, Math.max(1, Number(semesterParam)))
     : 1;
-  const items = navItems(programId);
+  const canViewMasterTimetable = hasAnyRole(session?.current_institution_role, [
+    "principal",
+    "program_coordinator",
+  ]);
+  const items = navItems(programId, canViewMasterTimetable);
   const { data: programShow } = useProgramsShowSuspense(programId);
   const program = programShow?.status == 200 ? programShow.data.data : null;
 

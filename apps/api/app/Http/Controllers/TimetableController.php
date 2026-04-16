@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TimetablePersonalResource;
+use App\Http\Resources\TimetableShowResource;
+use App\Http\Resources\TimetableUpsertSlotResponseResource;
 use App\Models\Program;
 use App\Models\Student;
 use App\Models\Subject;
@@ -12,6 +15,7 @@ use App\Models\User;
 use App\Support\CurrentInstitutionSession;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -55,24 +59,16 @@ class TimetableController
             ])
             ->first();
 
-        if ($timeTable === null) {
-            return response()->json([
-                'data' => [
-                    'semester' => (int) $validated['semester'],
-                    'academic_year' => (int) $institution->academic_year,
-                    'slots' => [],
-                ],
-            ]);
-        }
+        $payload = [
+            'id' => $timeTable?->id,
+            'semester' => (int) $validated['semester'],
+            'academic_year' => (int) $institution->academic_year,
+            'slots' => $timeTable === null
+                ? []
+                : $this->orderSlots($timeTable->time_table_slots->all()),
+        ];
 
-        return response()->json([
-            'data' => [
-                'id' => $timeTable->id,
-                'semester' => $timeTable->semester,
-                'academic_year' => $timeTable->academic_year,
-                'slots' => $this->serializeSlots($timeTable->time_table_slots->all()),
-            ],
-        ]);
+        return TimetableShowResource::make($payload)->response();
     }
 
     public function upsertSlot(Request $request, Program $program): JsonResponse
@@ -186,10 +182,10 @@ class TimetableController
             'subjects.course_coordinator:id,name',
         ]);
 
-        return response()->json([
+        return TimetableUpsertSlotResponseResource::make([
             'message' => 'Timetable slot saved successfully.',
-            'data' => $this->serializeSlot($slot),
-        ]);
+            'data' => $slot,
+        ])->response();
     }
 
     public function personal(Request $request): JsonResponse
@@ -198,45 +194,95 @@ class TimetableController
         $role = CurrentInstitutionSession::requireRole($request);
         $user = $request->user();
 
-        if ($user === null) {
-            abort(401);
-        }
-
         if (! in_array($role, self::ALLOWED_PERSONAL_TIMETABLE_ROLES, true)) {
             abort(403);
         }
 
-        $slotSubjects = TimeTableSlotSubject::query()
-            ->where('course_coordinator_id', $user->id)
-            ->whereHas('slot.time_table.program', function ($query) use ($institution): void {
-                $query->where('institution_id', $institution->id);
+        $slotSubjects = $this->loadPersonalSlotSubjects(
+            userId: (string) $user->id,
+            institutionId: (string) $institution->id,
+            academicYear: (int) $institution->academic_year,
+        );
+        $studentCounts = $this->loadStudentCountsForPersonalTimetable(
+            slotSubjects: $slotSubjects,
+            institutionId: (string) $institution->id,
+            academicYear: (int) $institution->academic_year,
+        );
+        $groupedRows = $this->buildPersonalTimetableRows($slotSubjects, $studentCounts);
+
+        return TimetablePersonalResource::make([
+            'academic_year' => (int) $institution->academic_year,
+            'days' => self::DAYS,
+            'rows' => array_values($groupedRows),
+        ])->response();
+    }
+
+    /**
+     * @return Collection<int, TimeTableSlotSubject>
+     */
+    private function loadPersonalSlotSubjects(
+        string $userId,
+        string $institutionId,
+        int $academicYear,
+    ) {
+        return TimeTableSlotSubject::query()
+            ->where('course_coordinator_id', $userId)
+            ->whereHas('slot.time_table.program', function ($query) use ($institutionId): void {
+                $query->where('institution_id', $institutionId);
             })
-            ->whereHas('slot.time_table', function ($query) use ($institution): void {
-                $query->where('academic_year', $institution->academic_year);
+            ->whereHas('slot.time_table', function ($query) use ($academicYear): void {
+                $query->where('academic_year', $academicYear);
             })
             ->with([
                 'slot.time_table.program:id,name',
                 'subject:id,name',
             ])
             ->get();
+    }
 
+    /**
+     * @param  Collection<int, TimeTableSlotSubject>  $slotSubjects
+     * @return array<string, int>
+     */
+    private function loadStudentCountsForPersonalTimetable(
+        $slotSubjects,
+        string $institutionId,
+        int $academicYear,
+    ): array {
         $programIds = $slotSubjects
             ->map(fn (TimeTableSlotSubject $entry): ?string => $entry->slot?->time_table?->program_id)
             ->filter()
             ->unique()
             ->values();
 
-        $studentCounts = Student::query()
+        return Student::query()
             ->selectRaw('program_id, semester, count(*) as total')
-            ->where('institution_id', $institution->id)
-            ->where('academic_year', $institution->academic_year)
+            ->where('institution_id', $institutionId)
+            ->where('academic_year', $academicYear)
             ->whereIn('program_id', $programIds->all())
             ->groupBy('program_id', 'semester')
             ->get()
             ->mapWithKeys(function ($row): array {
                 return [sprintf('%s|%d', $row->program_id, (int) $row->semester) => (int) $row->total];
-            });
+            })
+            ->all();
+    }
 
+    /**
+     * @param  Collection<int, TimeTableSlotSubject>  $slotSubjects
+     * @param  array<string, int>  $studentCounts
+     * @return array<string, array{
+     *  sl_no:int,
+     *  program_name:string,
+     *  semester:int,
+     *  course_name:string,
+     *  no_of_students:int,
+     *  room_no:string,
+     *  day_slots:array<string, array<int, bool>>
+     * }>
+     */
+    private function buildPersonalTimetableRows($slotSubjects, array $studentCounts): array
+    {
         /** @var array<string, array{
          *  sl_no:int,
          *  program_name:string,
@@ -287,34 +333,14 @@ class TimetableController
             }
         }
 
-        return response()->json([
-            'data' => [
-                'academic_year' => (int) $institution->academic_year,
-                'days' => self::DAYS,
-                'rows' => array_values($groupedRows),
-            ],
-        ]);
+        return $groupedRows;
     }
 
     /**
      * @param  list<TimeTableSlot>  $slots
-     * @return list<array{
-     *     id:string,
-     *     day:string,
-     *     start_hour_no:int,
-     *     end_hour_no:int,
-     *     subjects:list<array{
-     *         id:string,
-     *         subject_id:string,
-     *         subject_name:string,
-     *         course_coordinator_id:string,
-     *         course_coordinator_name:string,
-     *         batch:string,
-     *         room_no:string
-     *     }>
-     * }>
+     * @return list<TimeTableSlot>
      */
-    private function serializeSlots(array $slots): array
+    private function orderSlots(array $slots): array
     {
         $dayOrder = array_flip(self::DAYS);
 
@@ -322,46 +348,9 @@ class TimetableController
             ->sortBy(fn (TimeTableSlot $slot): string => sprintf(
                 '%02d-%02d',
                 $dayOrder[$slot->day] ?? 99,
-                $slot->start_hour_no,
+                (int) $slot->start_hour_no,
             ))
             ->values()
-            ->map(fn (TimeTableSlot $slot): array => $this->serializeSlot($slot))
             ->all();
-    }
-
-    /**
-     * @return array{
-     *     id:string,
-     *     day:string,
-     *     start_hour_no:int,
-     *     end_hour_no:int,
-     *     subjects:list<array{
-     *         id:string,
-     *         subject_id:string,
-     *         subject_name:string,
-     *         course_coordinator_id:string,
-     *         course_coordinator_name:string,
-     *         batch:string,
-     *         room_no:string
-     *     }>
-     * }
-     */
-    private function serializeSlot(TimeTableSlot $slot): array
-    {
-        return [
-            'id' => $slot->id,
-            'day' => $slot->day,
-            'start_hour_no' => $slot->start_hour_no,
-            'end_hour_no' => $slot->end_hour_no,
-            'subjects' => $slot->subjects->map(fn ($subject): array => [
-                'id' => $subject->id,
-                'subject_id' => $subject->subject_id,
-                'subject_name' => $subject->subject?->name ?? '',
-                'course_coordinator_id' => $subject->course_coordinator_id,
-                'course_coordinator_name' => $subject->course_coordinator?->name ?? '',
-                'batch' => $subject->batch,
-                'room_no' => $subject->room_no,
-            ])->values()->all(),
-        ];
     }
 }

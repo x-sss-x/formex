@@ -13,10 +13,8 @@ export interface Placement {
   industry_address: string;
   role: string;
   ctc: string;
-  /** @nullable */
-  created_at: string | null;
-  /** @nullable */
-  updated_at: string | null;
+  created_at: string;
+  updated_at: string;
   student?: Student;
   program?: Program;
 }
