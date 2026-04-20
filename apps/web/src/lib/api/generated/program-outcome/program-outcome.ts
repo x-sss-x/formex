@@ -25,193 +25,67 @@ import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { $api } from "../../mutator";
 import type {
   AuthenticationExceptionResponse,
-  CoursePlanListByCourse200,
-  CoursePlanStore200,
-  CoursePlanStoreBody,
-  CoursePlansDestroy200,
-  CoursePlansIndex200,
-  CoursePlansShow200,
-  CoursePlansUpdate200,
-  CoursePlansUpdateBody,
   ModelNotFoundExceptionResponse,
+  ProgramOutcomeListByProgram200,
+  ProgramOutcomeStore200,
+  ProgramOutcomeStoreBody,
+  ProgramOutcomesDestroy200,
+  ProgramOutcomesIndex200,
+  ProgramOutcomesShow200,
+  ProgramOutcomesUpdate200,
+  ProgramOutcomesUpdateBody,
   ValidationExceptionResponse,
 } from "../models";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type coursePlansIndexResponse200 = {
-  data: CoursePlansIndex200;
+export type programOutcomesIndexResponse200 = {
+  data: ProgramOutcomesIndex200;
   status: 200;
 };
 
-export type coursePlansIndexResponse401 = {
+export type programOutcomesIndexResponse401 = {
   data: AuthenticationExceptionResponse;
   status: 401;
 };
 
-export type coursePlansIndexResponseSuccess = coursePlansIndexResponse200 & {
-  headers: Headers;
-};
-export type coursePlansIndexResponseError = coursePlansIndexResponse401 & {
-  headers: Headers;
+export type programOutcomesIndexResponseSuccess =
+  programOutcomesIndexResponse200 & {
+    headers: Headers;
+  };
+export type programOutcomesIndexResponseError =
+  programOutcomesIndexResponse401 & {
+    headers: Headers;
+  };
+
+export type programOutcomesIndexResponse =
+  | programOutcomesIndexResponseSuccess
+  | programOutcomesIndexResponseError;
+
+export const getProgramOutcomesIndexUrl = () => {
+  return `/program-outcomes`;
 };
 
-export type coursePlansIndexResponse =
-  | coursePlansIndexResponseSuccess
-  | coursePlansIndexResponseError;
-
-export const getCoursePlansIndexUrl = () => {
-  return `/course-plans`;
-};
-
-export const coursePlansIndex = async (
+export const programOutcomesIndex = async (
   options?: RequestInit,
-): Promise<coursePlansIndexResponse> => {
-  return $api<coursePlansIndexResponse>(getCoursePlansIndexUrl(), {
+): Promise<programOutcomesIndexResponse> => {
+  return $api<programOutcomesIndexResponse>(getProgramOutcomesIndexUrl(), {
     ...options,
     method: "GET",
   });
 };
 
-export const getCoursePlansIndexQueryKey = () => {
-  return [`/course-plans`] as const;
+export const getProgramOutcomesIndexQueryKey = () => {
+  return [`/program-outcomes`] as const;
 };
 
-export const getCoursePlansIndexQueryOptions = <
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
+export const getProgramOutcomesIndexQueryOptions = <
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
   TError = AuthenticationExceptionResponse,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof coursePlansIndex>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof $api>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getCoursePlansIndexQueryKey();
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof coursePlansIndex>>
-  > = ({ signal }) => coursePlansIndex({ signal, ...requestOptions });
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof coursePlansIndex>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type CoursePlansIndexQueryResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlansIndex>>
->;
-export type CoursePlansIndexQueryError = AuthenticationExceptionResponse;
-
-export function useCoursePlansIndex<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof coursePlansIndex>>,
-          TError,
-          Awaited<ReturnType<typeof coursePlansIndex>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCoursePlansIndex<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof coursePlansIndex>>,
-          TError,
-          Awaited<ReturnType<typeof coursePlansIndex>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCoursePlansIndex<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-
-export function useCoursePlansIndex<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCoursePlansIndexQueryOptions(options);
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-export const getCoursePlansIndexSuspenseQueryOptions = <
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(options?: {
-  query?: Partial<
-    UseSuspenseQueryOptions<
-      Awaited<ReturnType<typeof coursePlansIndex>>,
+    UseQueryOptions<
+      Awaited<ReturnType<typeof programOutcomesIndex>>,
       TError,
       TData
     >
@@ -220,219 +94,41 @@ export const getCoursePlansIndexSuspenseQueryOptions = <
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getCoursePlansIndexQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getProgramOutcomesIndexQueryKey();
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof coursePlansIndex>>
-  > = ({ signal }) => coursePlansIndex({ signal, ...requestOptions });
+    Awaited<ReturnType<typeof programOutcomesIndex>>
+  > = ({ signal }) => programOutcomesIndex({ signal, ...requestOptions });
 
-  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
-    Awaited<ReturnType<typeof coursePlansIndex>>,
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof programOutcomesIndex>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type CoursePlansIndexSuspenseQueryResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlansIndex>>
+export type ProgramOutcomesIndexQueryResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomesIndex>>
 >;
-export type CoursePlansIndexSuspenseQueryError =
-  AuthenticationExceptionResponse;
+export type ProgramOutcomesIndexQueryError = AuthenticationExceptionResponse;
 
-export function useCoursePlansIndexSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
+export function useProgramOutcomesIndex<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
   TError = AuthenticationExceptionResponse,
 >(
   options: {
     query: Partial<
-      UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCoursePlansIndexSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(
-  options?: {
-    query?: Partial<
-      UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCoursePlansIndexSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(
-  options?: {
-    query?: Partial<
-      UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-
-export function useCoursePlansIndexSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansIndex>>,
-  TError = AuthenticationExceptionResponse,
->(
-  options?: {
-    query?: Partial<
-      UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansIndex>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCoursePlansIndexSuspenseQueryOptions(options);
-
-  const query = useSuspenseQuery(
-    queryOptions,
-    queryClient,
-  ) as UseSuspenseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-export type coursePlansShowResponse200 = {
-  data: CoursePlansShow200;
-  status: 200;
-};
-
-export type coursePlansShowResponse401 = {
-  data: AuthenticationExceptionResponse;
-  status: 401;
-};
-
-export type coursePlansShowResponse404 = {
-  data: ModelNotFoundExceptionResponse;
-  status: 404;
-};
-
-export type coursePlansShowResponseSuccess = coursePlansShowResponse200 & {
-  headers: Headers;
-};
-export type coursePlansShowResponseError = (
-  | coursePlansShowResponse401
-  | coursePlansShowResponse404
-) & {
-  headers: Headers;
-};
-
-export type coursePlansShowResponse =
-  | coursePlansShowResponseSuccess
-  | coursePlansShowResponseError;
-
-export const getCoursePlansShowUrl = (coursePlan: string) => {
-  return `/course-plans/${coursePlan}`;
-};
-
-export const coursePlansShow = async (
-  coursePlan: string,
-  options?: RequestInit,
-): Promise<coursePlansShowResponse> => {
-  return $api<coursePlansShowResponse>(getCoursePlansShowUrl(coursePlan), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getCoursePlansShowQueryKey = (coursePlan: string) => {
-  return [`/course-plans/${coursePlan}`] as const;
-};
-
-export const getCoursePlansShowQueryOptions = <
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
->(
-  coursePlan: string,
-  options?: {
-    query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey =
-    queryOptions?.queryKey ?? getCoursePlansShowQueryKey(coursePlan);
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof coursePlansShow>>> = ({
-    signal,
-  }) => coursePlansShow(coursePlan, { signal, ...requestOptions });
-
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!coursePlan,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof coursePlansShow>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type CoursePlansShowQueryResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlansShow>>
->;
-export type CoursePlansShowQueryError =
-  | AuthenticationExceptionResponse
-  | ModelNotFoundExceptionResponse;
-
-export function useCoursePlansShow<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
->(
-  coursePlan: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof coursePlansShow>>,
+          Awaited<ReturnType<typeof programOutcomesIndex>>,
           TError,
-          Awaited<ReturnType<typeof coursePlansShow>>
+          Awaited<ReturnType<typeof programOutcomesIndex>>
         >,
         "initialData"
       >;
@@ -442,24 +138,23 @@ export function useCoursePlansShow<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlansShow<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+export function useProgramOutcomesIndex<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
 >(
-  coursePlan: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof coursePlansShow>>,
+          Awaited<ReturnType<typeof programOutcomesIndex>>,
           TError,
-          Awaited<ReturnType<typeof coursePlansShow>>
+          Awaited<ReturnType<typeof programOutcomesIndex>>
         >,
         "initialData"
       >;
@@ -469,15 +164,14 @@ export function useCoursePlansShow<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlansShow<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+export function useProgramOutcomesIndex<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
 >(
-  coursePlan: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
@@ -489,15 +183,14 @@ export function useCoursePlansShow<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 
-export function useCoursePlansShow<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+export function useProgramOutcomesIndex<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
 >(
-  coursePlan: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
@@ -508,7 +201,7 @@ export function useCoursePlansShow<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getCoursePlansShowQueryOptions(coursePlan, options);
+  const queryOptions = getProgramOutcomesIndexQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
@@ -518,54 +211,48 @@ export function useCoursePlansShow<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-export const getCoursePlansShowSuspenseQueryOptions = <
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
->(
-  coursePlan: string,
-  options?: {
-    query?: Partial<
-      UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-) => {
+export const getProgramOutcomesIndexSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<
+      Awaited<ReturnType<typeof programOutcomesIndex>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof $api>;
+}) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getCoursePlansShowQueryKey(coursePlan);
+  const queryKey = queryOptions?.queryKey ?? getProgramOutcomesIndexQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof coursePlansShow>>> = ({
-    signal,
-  }) => coursePlansShow(coursePlan, { signal, ...requestOptions });
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof programOutcomesIndex>>
+  > = ({ signal }) => programOutcomesIndex({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
-    Awaited<ReturnType<typeof coursePlansShow>>,
+    Awaited<ReturnType<typeof programOutcomesIndex>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type CoursePlansShowSuspenseQueryResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlansShow>>
+export type ProgramOutcomesIndexSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomesIndex>>
 >;
-export type CoursePlansShowSuspenseQueryError =
-  | AuthenticationExceptionResponse
-  | ModelNotFoundExceptionResponse;
+export type ProgramOutcomesIndexSuspenseQueryError =
+  AuthenticationExceptionResponse;
 
-export function useCoursePlansShowSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+export function useProgramOutcomesIndexSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
 >(
-  coursePlan: string,
   options: {
     query: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
@@ -576,15 +263,14 @@ export function useCoursePlansShowSuspense<
 ): UseSuspenseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlansShowSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+export function useProgramOutcomesIndexSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
 >(
-  coursePlan: string,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
@@ -595,15 +281,14 @@ export function useCoursePlansShowSuspense<
 ): UseSuspenseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlansShowSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+export function useProgramOutcomesIndexSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
 >(
-  coursePlan: string,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
@@ -615,15 +300,14 @@ export function useCoursePlansShowSuspense<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 
-export function useCoursePlansShowSuspense<
-  TData = Awaited<ReturnType<typeof coursePlansShow>>,
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+export function useProgramOutcomesIndexSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesIndex>>,
+  TError = AuthenticationExceptionResponse,
 >(
-  coursePlan: string,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlansShow>>,
+        Awaited<ReturnType<typeof programOutcomesIndex>>,
         TError,
         TData
       >
@@ -634,10 +318,7 @@ export function useCoursePlansShowSuspense<
 ): UseSuspenseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getCoursePlansShowSuspenseQueryOptions(
-    coursePlan,
-    options,
-  );
+  const queryOptions = getProgramOutcomesIndexSuspenseQueryOptions(options);
 
   const query = useSuspenseQuery(
     queryOptions,
@@ -649,291 +330,46 @@ export function useCoursePlansShowSuspense<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-export type coursePlansUpdateResponse200 = {
-  data: CoursePlansUpdate200;
+export type programOutcomesShowResponse200 = {
+  data: ProgramOutcomesShow200;
   status: 200;
 };
 
-export type coursePlansUpdateResponse401 = {
+export type programOutcomesShowResponse401 = {
   data: AuthenticationExceptionResponse;
   status: 401;
 };
 
-export type coursePlansUpdateResponse404 = {
+export type programOutcomesShowResponse404 = {
   data: ModelNotFoundExceptionResponse;
   status: 404;
 };
 
-export type coursePlansUpdateResponse422 = {
-  data: ValidationExceptionResponse;
-  status: 422;
-};
-
-export type coursePlansUpdateResponseSuccess = coursePlansUpdateResponse200 & {
-  headers: Headers;
-};
-export type coursePlansUpdateResponseError = (
-  | coursePlansUpdateResponse401
-  | coursePlansUpdateResponse404
-  | coursePlansUpdateResponse422
-) & {
-  headers: Headers;
-};
-
-export type coursePlansUpdateResponse =
-  | coursePlansUpdateResponseSuccess
-  | coursePlansUpdateResponseError;
-
-export const getCoursePlansUpdateUrl = (coursePlan: string) => {
-  return `/course-plans/${coursePlan}`;
-};
-
-export const coursePlansUpdate = async (
-  coursePlan: string,
-  coursePlansUpdateBody: CoursePlansUpdateBody,
-  options?: RequestInit,
-): Promise<coursePlansUpdateResponse> => {
-  return $api<coursePlansUpdateResponse>(getCoursePlansUpdateUrl(coursePlan), {
-    ...options,
-    method: "PUT",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(coursePlansUpdateBody),
-  });
-};
-
-export const getCoursePlansUpdateMutationOptions = <
-  TError =
-    | AuthenticationExceptionResponse
-    | ModelNotFoundExceptionResponse
-    | ValidationExceptionResponse,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof coursePlansUpdate>>,
-    TError,
-    { coursePlan: string; data: CoursePlansUpdateBody },
-    TContext
-  >;
-  request?: SecondParameter<typeof $api>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof coursePlansUpdate>>,
-  TError,
-  { coursePlan: string; data: CoursePlansUpdateBody },
-  TContext
-> => {
-  const mutationKey = ["coursePlansUpdate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof coursePlansUpdate>>,
-    { coursePlan: string; data: CoursePlansUpdateBody }
-  > = (props) => {
-    const { coursePlan, data } = props ?? {};
-
-    return coursePlansUpdate(coursePlan, data, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type CoursePlansUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlansUpdate>>
->;
-export type CoursePlansUpdateMutationBody = CoursePlansUpdateBody;
-export type CoursePlansUpdateMutationError =
-  | AuthenticationExceptionResponse
-  | ModelNotFoundExceptionResponse
-  | ValidationExceptionResponse;
-
-export const useCoursePlansUpdate = <
-  TError =
-    | AuthenticationExceptionResponse
-    | ModelNotFoundExceptionResponse
-    | ValidationExceptionResponse,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof coursePlansUpdate>>,
-      TError,
-      { coursePlan: string; data: CoursePlansUpdateBody },
-      TContext
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof coursePlansUpdate>>,
-  TError,
-  { coursePlan: string; data: CoursePlansUpdateBody },
-  TContext
-> => {
-  return useMutation(getCoursePlansUpdateMutationOptions(options), queryClient);
-};
-export type coursePlansDestroyResponse200 = {
-  data: CoursePlansDestroy200;
-  status: 200;
-};
-
-export type coursePlansDestroyResponse401 = {
-  data: AuthenticationExceptionResponse;
-  status: 401;
-};
-
-export type coursePlansDestroyResponse404 = {
-  data: ModelNotFoundExceptionResponse;
-  status: 404;
-};
-
-export type coursePlansDestroyResponseSuccess =
-  coursePlansDestroyResponse200 & {
+export type programOutcomesShowResponseSuccess =
+  programOutcomesShowResponse200 & {
     headers: Headers;
   };
-export type coursePlansDestroyResponseError = (
-  | coursePlansDestroyResponse401
-  | coursePlansDestroyResponse404
+export type programOutcomesShowResponseError = (
+  | programOutcomesShowResponse401
+  | programOutcomesShowResponse404
 ) & {
   headers: Headers;
 };
 
-export type coursePlansDestroyResponse =
-  | coursePlansDestroyResponseSuccess
-  | coursePlansDestroyResponseError;
+export type programOutcomesShowResponse =
+  | programOutcomesShowResponseSuccess
+  | programOutcomesShowResponseError;
 
-export const getCoursePlansDestroyUrl = (coursePlan: string) => {
-  return `/course-plans/${coursePlan}`;
+export const getProgramOutcomesShowUrl = (programOutcome: string) => {
+  return `/program-outcomes/${programOutcome}`;
 };
 
-export const coursePlansDestroy = async (
-  coursePlan: string,
+export const programOutcomesShow = async (
+  programOutcome: string,
   options?: RequestInit,
-): Promise<coursePlansDestroyResponse> => {
-  return $api<coursePlansDestroyResponse>(
-    getCoursePlansDestroyUrl(coursePlan),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
-};
-
-export const getCoursePlansDestroyMutationOptions = <
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof coursePlansDestroy>>,
-    TError,
-    { coursePlan: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof $api>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof coursePlansDestroy>>,
-  TError,
-  { coursePlan: string },
-  TContext
-> => {
-  const mutationKey = ["coursePlansDestroy"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof coursePlansDestroy>>,
-    { coursePlan: string }
-  > = (props) => {
-    const { coursePlan } = props ?? {};
-
-    return coursePlansDestroy(coursePlan, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type CoursePlansDestroyMutationResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlansDestroy>>
->;
-
-export type CoursePlansDestroyMutationError =
-  | AuthenticationExceptionResponse
-  | ModelNotFoundExceptionResponse;
-
-export const useCoursePlansDestroy = <
-  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof coursePlansDestroy>>,
-      TError,
-      { coursePlan: string },
-      TContext
-    >;
-    request?: SecondParameter<typeof $api>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof coursePlansDestroy>>,
-  TError,
-  { coursePlan: string },
-  TContext
-> => {
-  return useMutation(
-    getCoursePlansDestroyMutationOptions(options),
-    queryClient,
-  );
-};
-export type coursePlanListByCourseResponse200 = {
-  data: CoursePlanListByCourse200;
-  status: 200;
-};
-
-export type coursePlanListByCourseResponse401 = {
-  data: AuthenticationExceptionResponse;
-  status: 401;
-};
-
-export type coursePlanListByCourseResponse404 = {
-  data: ModelNotFoundExceptionResponse;
-  status: 404;
-};
-
-export type coursePlanListByCourseResponseSuccess =
-  coursePlanListByCourseResponse200 & {
-    headers: Headers;
-  };
-export type coursePlanListByCourseResponseError = (
-  | coursePlanListByCourseResponse401
-  | coursePlanListByCourseResponse404
-) & {
-  headers: Headers;
-};
-
-export type coursePlanListByCourseResponse =
-  | coursePlanListByCourseResponseSuccess
-  | coursePlanListByCourseResponseError;
-
-export const getCoursePlanListByCourseUrl = (subject: string) => {
-  return `/subjects/${subject}/course-plans`;
-};
-
-export const coursePlanListByCourse = async (
-  subject: string,
-  options?: RequestInit,
-): Promise<coursePlanListByCourseResponse> => {
-  return $api<coursePlanListByCourseResponse>(
-    getCoursePlanListByCourseUrl(subject),
+): Promise<programOutcomesShowResponse> => {
+  return $api<programOutcomesShowResponse>(
+    getProgramOutcomesShowUrl(programOutcome),
     {
       ...options,
       method: "GET",
@@ -941,19 +377,19 @@ export const coursePlanListByCourse = async (
   );
 };
 
-export const getCoursePlanListByCourseQueryKey = (subject: string) => {
-  return [`/subjects/${subject}/course-plans`] as const;
+export const getProgramOutcomesShowQueryKey = (programOutcome: string) => {
+  return [`/program-outcomes/${programOutcome}`] as const;
 };
 
-export const getCoursePlanListByCourseQueryOptions = <
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export const getProgramOutcomesShowQueryOptions = <
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -964,50 +400,50 @@ export const getCoursePlanListByCourseQueryOptions = <
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getCoursePlanListByCourseQueryKey(subject);
+    queryOptions?.queryKey ?? getProgramOutcomesShowQueryKey(programOutcome);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof coursePlanListByCourse>>
+    Awaited<ReturnType<typeof programOutcomesShow>>
   > = ({ signal }) =>
-    coursePlanListByCourse(subject, { signal, ...requestOptions });
+    programOutcomesShow(programOutcome, { signal, ...requestOptions });
 
   return {
     queryKey,
     queryFn,
-    enabled: !!subject,
+    enabled: !!programOutcome,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof coursePlanListByCourse>>,
+    Awaited<ReturnType<typeof programOutcomesShow>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type CoursePlanListByCourseQueryResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlanListByCourse>>
+export type ProgramOutcomesShowQueryResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomesShow>>
 >;
-export type CoursePlanListByCourseQueryError =
+export type ProgramOutcomesShowQueryError =
   | AuthenticationExceptionResponse
   | ModelNotFoundExceptionResponse;
 
-export function useCoursePlanListByCourse<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShow<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options: {
     query: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof coursePlanListByCourse>>,
+          Awaited<ReturnType<typeof programOutcomesShow>>,
           TError,
-          Awaited<ReturnType<typeof coursePlanListByCourse>>
+          Awaited<ReturnType<typeof programOutcomesShow>>
         >,
         "initialData"
       >;
@@ -1017,24 +453,24 @@ export function useCoursePlanListByCourse<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlanListByCourse<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShow<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof coursePlanListByCourse>>,
+          Awaited<ReturnType<typeof programOutcomesShow>>,
           TError,
-          Awaited<ReturnType<typeof coursePlanListByCourse>>
+          Awaited<ReturnType<typeof programOutcomesShow>>
         >,
         "initialData"
       >;
@@ -1044,15 +480,15 @@ export function useCoursePlanListByCourse<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlanListByCourse<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShow<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -1064,15 +500,15 @@ export function useCoursePlanListByCourse<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 
-export function useCoursePlanListByCourse<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShow<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -1083,7 +519,10 @@ export function useCoursePlanListByCourse<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getCoursePlanListByCourseQueryOptions(subject, options);
+  const queryOptions = getProgramOutcomesShowQueryOptions(
+    programOutcome,
+    options,
+  );
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
@@ -1093,15 +532,15 @@ export function useCoursePlanListByCourse<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-export const getCoursePlanListByCourseSuspenseQueryOptions = <
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export const getProgramOutcomesShowSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -1112,36 +551,36 @@ export const getCoursePlanListByCourseSuspenseQueryOptions = <
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getCoursePlanListByCourseQueryKey(subject);
+    queryOptions?.queryKey ?? getProgramOutcomesShowQueryKey(programOutcome);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof coursePlanListByCourse>>
+    Awaited<ReturnType<typeof programOutcomesShow>>
   > = ({ signal }) =>
-    coursePlanListByCourse(subject, { signal, ...requestOptions });
+    programOutcomesShow(programOutcome, { signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
-    Awaited<ReturnType<typeof coursePlanListByCourse>>,
+    Awaited<ReturnType<typeof programOutcomesShow>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type CoursePlanListByCourseSuspenseQueryResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlanListByCourse>>
+export type ProgramOutcomesShowSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomesShow>>
 >;
-export type CoursePlanListByCourseSuspenseQueryError =
+export type ProgramOutcomesShowSuspenseQueryError =
   | AuthenticationExceptionResponse
   | ModelNotFoundExceptionResponse;
 
-export function useCoursePlanListByCourseSuspense<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShowSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options: {
     query: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -1152,15 +591,15 @@ export function useCoursePlanListByCourseSuspense<
 ): UseSuspenseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlanListByCourseSuspense<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShowSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -1171,15 +610,15 @@ export function useCoursePlanListByCourseSuspense<
 ): UseSuspenseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useCoursePlanListByCourseSuspense<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShowSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -1191,15 +630,15 @@ export function useCoursePlanListByCourseSuspense<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 
-export function useCoursePlanListByCourseSuspense<
-  TData = Awaited<ReturnType<typeof coursePlanListByCourse>>,
+export function useProgramOutcomesShowSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomesShow>>,
   TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
 >(
-  subject: string,
+  programOutcome: string,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<
-        Awaited<ReturnType<typeof coursePlanListByCourse>>,
+        Awaited<ReturnType<typeof programOutcomesShow>>,
         TError,
         TData
       >
@@ -1210,8 +649,8 @@ export function useCoursePlanListByCourseSuspense<
 ): UseSuspenseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getCoursePlanListByCourseSuspenseQueryOptions(
-    subject,
+  const queryOptions = getProgramOutcomesShowSuspenseQueryOptions(
+    programOutcome,
     options,
   );
 
@@ -1225,59 +664,63 @@ export function useCoursePlanListByCourseSuspense<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-export type coursePlanStoreResponse200 = {
-  data: CoursePlanStore200;
+export type programOutcomesUpdateResponse200 = {
+  data: ProgramOutcomesUpdate200;
   status: 200;
 };
 
-export type coursePlanStoreResponse401 = {
+export type programOutcomesUpdateResponse401 = {
   data: AuthenticationExceptionResponse;
   status: 401;
 };
 
-export type coursePlanStoreResponse404 = {
+export type programOutcomesUpdateResponse404 = {
   data: ModelNotFoundExceptionResponse;
   status: 404;
 };
 
-export type coursePlanStoreResponse422 = {
+export type programOutcomesUpdateResponse422 = {
   data: ValidationExceptionResponse;
   status: 422;
 };
 
-export type coursePlanStoreResponseSuccess = coursePlanStoreResponse200 & {
-  headers: Headers;
-};
-export type coursePlanStoreResponseError = (
-  | coursePlanStoreResponse401
-  | coursePlanStoreResponse404
-  | coursePlanStoreResponse422
+export type programOutcomesUpdateResponseSuccess =
+  programOutcomesUpdateResponse200 & {
+    headers: Headers;
+  };
+export type programOutcomesUpdateResponseError = (
+  | programOutcomesUpdateResponse401
+  | programOutcomesUpdateResponse404
+  | programOutcomesUpdateResponse422
 ) & {
   headers: Headers;
 };
 
-export type coursePlanStoreResponse =
-  | coursePlanStoreResponseSuccess
-  | coursePlanStoreResponseError;
+export type programOutcomesUpdateResponse =
+  | programOutcomesUpdateResponseSuccess
+  | programOutcomesUpdateResponseError;
 
-export const getCoursePlanStoreUrl = (subject: string) => {
-  return `/subjects/${subject}/course-plans`;
+export const getProgramOutcomesUpdateUrl = (programOutcome: string) => {
+  return `/program-outcomes/${programOutcome}`;
 };
 
-export const coursePlanStore = async (
-  subject: string,
-  coursePlanStoreBody: CoursePlanStoreBody,
+export const programOutcomesUpdate = async (
+  programOutcome: string,
+  programOutcomesUpdateBody: ProgramOutcomesUpdateBody,
   options?: RequestInit,
-): Promise<coursePlanStoreResponse> => {
-  return $api<coursePlanStoreResponse>(getCoursePlanStoreUrl(subject), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(coursePlanStoreBody),
-  });
+): Promise<programOutcomesUpdateResponse> => {
+  return $api<programOutcomesUpdateResponse>(
+    getProgramOutcomesUpdateUrl(programOutcome),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(programOutcomesUpdateBody),
+    },
+  );
 };
 
-export const getCoursePlanStoreMutationOptions = <
+export const getProgramOutcomesUpdateMutationOptions = <
   TError =
     | AuthenticationExceptionResponse
     | ModelNotFoundExceptionResponse
@@ -1285,19 +728,19 @@ export const getCoursePlanStoreMutationOptions = <
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof coursePlanStore>>,
+    Awaited<ReturnType<typeof programOutcomesUpdate>>,
     TError,
-    { subject: string; data: CoursePlanStoreBody },
+    { programOutcome: string; data: ProgramOutcomesUpdateBody },
     TContext
   >;
   request?: SecondParameter<typeof $api>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof coursePlanStore>>,
+  Awaited<ReturnType<typeof programOutcomesUpdate>>,
   TError,
-  { subject: string; data: CoursePlanStoreBody },
+  { programOutcome: string; data: ProgramOutcomesUpdateBody },
   TContext
 > => {
-  const mutationKey = ["coursePlanStore"];
+  const mutationKey = ["programOutcomesUpdate"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
@@ -1307,27 +750,27 @@ export const getCoursePlanStoreMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof coursePlanStore>>,
-    { subject: string; data: CoursePlanStoreBody }
+    Awaited<ReturnType<typeof programOutcomesUpdate>>,
+    { programOutcome: string; data: ProgramOutcomesUpdateBody }
   > = (props) => {
-    const { subject, data } = props ?? {};
+    const { programOutcome, data } = props ?? {};
 
-    return coursePlanStore(subject, data, requestOptions);
+    return programOutcomesUpdate(programOutcome, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type CoursePlanStoreMutationResult = NonNullable<
-  Awaited<ReturnType<typeof coursePlanStore>>
+export type ProgramOutcomesUpdateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomesUpdate>>
 >;
-export type CoursePlanStoreMutationBody = CoursePlanStoreBody;
-export type CoursePlanStoreMutationError =
+export type ProgramOutcomesUpdateMutationBody = ProgramOutcomesUpdateBody;
+export type ProgramOutcomesUpdateMutationError =
   | AuthenticationExceptionResponse
   | ModelNotFoundExceptionResponse
   | ValidationExceptionResponse;
 
-export const useCoursePlanStore = <
+export const useProgramOutcomesUpdate = <
   TError =
     | AuthenticationExceptionResponse
     | ModelNotFoundExceptionResponse
@@ -1336,19 +779,605 @@ export const useCoursePlanStore = <
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof coursePlanStore>>,
+      Awaited<ReturnType<typeof programOutcomesUpdate>>,
       TError,
-      { subject: string; data: CoursePlanStoreBody },
+      { programOutcome: string; data: ProgramOutcomesUpdateBody },
       TContext
     >;
     request?: SecondParameter<typeof $api>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
-  Awaited<ReturnType<typeof coursePlanStore>>,
+  Awaited<ReturnType<typeof programOutcomesUpdate>>,
   TError,
-  { subject: string; data: CoursePlanStoreBody },
+  { programOutcome: string; data: ProgramOutcomesUpdateBody },
   TContext
 > => {
-  return useMutation(getCoursePlanStoreMutationOptions(options), queryClient);
+  return useMutation(
+    getProgramOutcomesUpdateMutationOptions(options),
+    queryClient,
+  );
+};
+export type programOutcomesDestroyResponse200 = {
+  data: ProgramOutcomesDestroy200;
+  status: 200;
+};
+
+export type programOutcomesDestroyResponse401 = {
+  data: AuthenticationExceptionResponse;
+  status: 401;
+};
+
+export type programOutcomesDestroyResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
+export type programOutcomesDestroyResponseSuccess =
+  programOutcomesDestroyResponse200 & {
+    headers: Headers;
+  };
+export type programOutcomesDestroyResponseError = (
+  | programOutcomesDestroyResponse401
+  | programOutcomesDestroyResponse404
+) & {
+  headers: Headers;
+};
+
+export type programOutcomesDestroyResponse =
+  | programOutcomesDestroyResponseSuccess
+  | programOutcomesDestroyResponseError;
+
+export const getProgramOutcomesDestroyUrl = (programOutcome: string) => {
+  return `/program-outcomes/${programOutcome}`;
+};
+
+export const programOutcomesDestroy = async (
+  programOutcome: string,
+  options?: RequestInit,
+): Promise<programOutcomesDestroyResponse> => {
+  return $api<programOutcomesDestroyResponse>(
+    getProgramOutcomesDestroyUrl(programOutcome),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+export const getProgramOutcomesDestroyMutationOptions = <
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof programOutcomesDestroy>>,
+    TError,
+    { programOutcome: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof $api>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof programOutcomesDestroy>>,
+  TError,
+  { programOutcome: string },
+  TContext
+> => {
+  const mutationKey = ["programOutcomesDestroy"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof programOutcomesDestroy>>,
+    { programOutcome: string }
+  > = (props) => {
+    const { programOutcome } = props ?? {};
+
+    return programOutcomesDestroy(programOutcome, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ProgramOutcomesDestroyMutationResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomesDestroy>>
+>;
+
+export type ProgramOutcomesDestroyMutationError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
+
+export const useProgramOutcomesDestroy = <
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof programOutcomesDestroy>>,
+      TError,
+      { programOutcome: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof programOutcomesDestroy>>,
+  TError,
+  { programOutcome: string },
+  TContext
+> => {
+  return useMutation(
+    getProgramOutcomesDestroyMutationOptions(options),
+    queryClient,
+  );
+};
+export type programOutcomeListByProgramResponse200 = {
+  data: ProgramOutcomeListByProgram200;
+  status: 200;
+};
+
+export type programOutcomeListByProgramResponse401 = {
+  data: AuthenticationExceptionResponse;
+  status: 401;
+};
+
+export type programOutcomeListByProgramResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
+export type programOutcomeListByProgramResponseSuccess =
+  programOutcomeListByProgramResponse200 & {
+    headers: Headers;
+  };
+export type programOutcomeListByProgramResponseError = (
+  | programOutcomeListByProgramResponse401
+  | programOutcomeListByProgramResponse404
+) & {
+  headers: Headers;
+};
+
+export type programOutcomeListByProgramResponse =
+  | programOutcomeListByProgramResponseSuccess
+  | programOutcomeListByProgramResponseError;
+
+export const getProgramOutcomeListByProgramUrl = (program: string) => {
+  return `/programs/${program}/program-outcomes`;
+};
+
+export const programOutcomeListByProgram = async (
+  program: string,
+  options?: RequestInit,
+): Promise<programOutcomeListByProgramResponse> => {
+  return $api<programOutcomeListByProgramResponse>(
+    getProgramOutcomeListByProgramUrl(program),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getProgramOutcomeListByProgramQueryKey = (program: string) => {
+  return [`/programs/${program}/program-outcomes`] as const;
+};
+
+export const getProgramOutcomeListByProgramQueryOptions = <
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getProgramOutcomeListByProgramQueryKey(program);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof programOutcomeListByProgram>>
+  > = ({ signal }) =>
+    programOutcomeListByProgram(program, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!program,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ProgramOutcomeListByProgramQueryResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomeListByProgram>>
+>;
+export type ProgramOutcomeListByProgramQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
+
+export function useProgramOutcomeListByProgram<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+          TError,
+          Awaited<ReturnType<typeof programOutcomeListByProgram>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useProgramOutcomeListByProgram<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+          TError,
+          Awaited<ReturnType<typeof programOutcomeListByProgram>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useProgramOutcomeListByProgram<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useProgramOutcomeListByProgram<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getProgramOutcomeListByProgramQueryOptions(
+    program,
+    options,
+  );
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getProgramOutcomeListByProgramSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getProgramOutcomeListByProgramQueryKey(program);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof programOutcomeListByProgram>>
+  > = ({ signal }) =>
+    programOutcomeListByProgram(program, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ProgramOutcomeListByProgramSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomeListByProgram>>
+>;
+export type ProgramOutcomeListByProgramSuspenseQueryError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse;
+
+export function useProgramOutcomeListByProgramSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useProgramOutcomeListByProgramSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useProgramOutcomeListByProgramSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+
+export function useProgramOutcomeListByProgramSuspense<
+  TData = Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+  TError = AuthenticationExceptionResponse | ModelNotFoundExceptionResponse,
+>(
+  program: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof programOutcomeListByProgram>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getProgramOutcomeListByProgramSuspenseQueryOptions(
+    program,
+    options,
+  );
+
+  const query = useSuspenseQuery(
+    queryOptions,
+    queryClient,
+  ) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export type programOutcomeStoreResponse200 = {
+  data: ProgramOutcomeStore200;
+  status: 200;
+};
+
+export type programOutcomeStoreResponse401 = {
+  data: AuthenticationExceptionResponse;
+  status: 401;
+};
+
+export type programOutcomeStoreResponse404 = {
+  data: ModelNotFoundExceptionResponse;
+  status: 404;
+};
+
+export type programOutcomeStoreResponse422 = {
+  data: ValidationExceptionResponse;
+  status: 422;
+};
+
+export type programOutcomeStoreResponseSuccess =
+  programOutcomeStoreResponse200 & {
+    headers: Headers;
+  };
+export type programOutcomeStoreResponseError = (
+  | programOutcomeStoreResponse401
+  | programOutcomeStoreResponse404
+  | programOutcomeStoreResponse422
+) & {
+  headers: Headers;
+};
+
+export type programOutcomeStoreResponse =
+  | programOutcomeStoreResponseSuccess
+  | programOutcomeStoreResponseError;
+
+export const getProgramOutcomeStoreUrl = (program: string) => {
+  return `/programs/${program}/program-outcomes`;
+};
+
+export const programOutcomeStore = async (
+  program: string,
+  programOutcomeStoreBody: ProgramOutcomeStoreBody,
+  options?: RequestInit,
+): Promise<programOutcomeStoreResponse> => {
+  return $api<programOutcomeStoreResponse>(getProgramOutcomeStoreUrl(program), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(programOutcomeStoreBody),
+  });
+};
+
+export const getProgramOutcomeStoreMutationOptions = <
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof programOutcomeStore>>,
+    TError,
+    { program: string; data: ProgramOutcomeStoreBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof $api>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof programOutcomeStore>>,
+  TError,
+  { program: string; data: ProgramOutcomeStoreBody },
+  TContext
+> => {
+  const mutationKey = ["programOutcomeStore"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof programOutcomeStore>>,
+    { program: string; data: ProgramOutcomeStoreBody }
+  > = (props) => {
+    const { program, data } = props ?? {};
+
+    return programOutcomeStore(program, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ProgramOutcomeStoreMutationResult = NonNullable<
+  Awaited<ReturnType<typeof programOutcomeStore>>
+>;
+export type ProgramOutcomeStoreMutationBody = ProgramOutcomeStoreBody;
+export type ProgramOutcomeStoreMutationError =
+  | AuthenticationExceptionResponse
+  | ModelNotFoundExceptionResponse
+  | ValidationExceptionResponse;
+
+export const useProgramOutcomeStore = <
+  TError =
+    | AuthenticationExceptionResponse
+    | ModelNotFoundExceptionResponse
+    | ValidationExceptionResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof programOutcomeStore>>,
+      TError,
+      { program: string; data: ProgramOutcomeStoreBody },
+      TContext
+    >;
+    request?: SecondParameter<typeof $api>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof programOutcomeStore>>,
+  TError,
+  { program: string; data: ProgramOutcomeStoreBody },
+  TContext
+> => {
+  return useMutation(
+    getProgramOutcomeStoreMutationOptions(options),
+    queryClient,
+  );
 };

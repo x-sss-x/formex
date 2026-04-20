@@ -11,6 +11,7 @@ use App\Http\Controllers\InstitutionFacultyController;
 use App\Http\Controllers\InternshipController;
 use App\Http\Controllers\PlacementController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ProgramOutcomeController;
 use App\Http\Controllers\RoomReportController;
 use App\Http\Controllers\SkillProgramController;
 use App\Http\Controllers\StudentController;
@@ -60,6 +61,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::apiResource('programs', ProgramController::class);
+    Route::apiResource('program-outcomes', ProgramOutcomeController::class)->except(['store']);
+    Route::get('/programs/{program}/program-outcomes', [ProgramOutcomeController::class, 'listByProgram']);
+    Route::post('/programs/{program}/program-outcomes', [ProgramOutcomeController::class, 'store']);
 
     Route::apiResource('programs.students', StudentController::class);
     Route::get('/students', [StudentController::class, 'search']);

@@ -14,17 +14,23 @@ export interface CoursePlan {
   program_id: string;
   course_id: string;
   course_coordinator_id: string;
-  semester: string;
-  week_no: string;
-  topic_no: string;
+  semester: number;
+  week_no: number;
+  topic_no: number;
   planned_date: string;
-  completed_date: string;
-  teaching_aids: string;
-  outcome: string;
-  remarks: string;
-  academic_year: string;
-  created_at: string;
-  updated_at: string;
+  /** @nullable */
+  completed_date: string | null;
+  /** @nullable */
+  teaching_aids: string | null;
+  /** @nullable */
+  outcome: string | null;
+  /** @nullable */
+  remarks: string | null;
+  academic_year: number;
+  /** @nullable */
+  created_at: string | null;
+  /** @nullable */
+  updated_at: string | null;
   program?: Program;
   course?: Subject;
   course_coordinator?: User;

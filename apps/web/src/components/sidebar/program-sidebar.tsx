@@ -95,6 +95,15 @@ const navItems = (programId: string, canViewMasterTimetable: boolean) => {
       pathname.startsWith(`/p/${programId}/skill-programs`),
   });
 
+  items.push({
+    id: "program-outcome",
+    label: "Program Outcome",
+    icon: GridIcon,
+    href: `/p/${programId}/program-outcome`,
+    match: (pathname: string) =>
+      pathname.startsWith(`/p/${programId}/program-outcome`),
+  });
+
   return items;
 };
 
