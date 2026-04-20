@@ -64,6 +64,11 @@ class Institution extends Model
         return $this->hasMany(Student::class);
     }
 
+    public function course_plans(): HasMany
+    {
+        return $this->hasMany(CoursePlan::class);
+    }
+
     public function feedback_questions(): HasMany
     {
         return $this->hasMany(FeedbackQuestion::class);

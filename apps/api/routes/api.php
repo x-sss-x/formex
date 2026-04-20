@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BridgreController;
+use App\Http\Controllers\CoursePlanController;
 use App\Http\Controllers\FacultyInvitationController;
 use App\Http\Controllers\HigherEducationController;
 use App\Http\Controllers\InstitutionCalendarUploadController;
@@ -95,6 +96,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/programs/{program}/skill-programs', [SkillProgramController::class, 'listByProgram']);
     Route::get('/programs/{program}/skill-programs/{semester}', [SkillProgramController::class, 'listBySemester']);
     Route::post('/students/{student}/skill-programs', [SkillProgramController::class, 'store']);
+
+    Route::apiResource('course-plans', CoursePlanController::class)->except(['store']);
+    Route::get('/subjects/{subject}/course-plans', [CoursePlanController::class, 'listByCourse']);
+    Route::post('/subjects/{subject}/course-plans', [CoursePlanController::class, 'store']);
 
     // Bridges Paths
     Route::apiResource('bridges', BridgreController::class)->except(['store']);

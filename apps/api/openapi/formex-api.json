@@ -683,6 +683,388 @@
                 }
             }
         },
+        "/course-plans": {
+            "get": {
+                "operationId": "course-plans.index",
+                "tags": [
+                    "CoursePlan"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of `CoursePlan`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CoursePlan"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/course-plans/{coursePlan}": {
+            "get": {
+                "operationId": "course-plans.show",
+                "tags": [
+                    "CoursePlan"
+                ],
+                "parameters": [
+                    {
+                        "name": "coursePlan",
+                        "in": "path",
+                        "required": true,
+                        "description": "The course plan ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`CoursePlan`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CoursePlan"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "put": {
+                "operationId": "course-plans.update",
+                "tags": [
+                    "CoursePlan"
+                ],
+                "parameters": [
+                    {
+                        "name": "coursePlan",
+                        "in": "path",
+                        "required": true,
+                        "description": "The course plan ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "course_coordinator_id": {
+                                        "type": "string"
+                                    },
+                                    "week_no": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "topic_no": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "planned_date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "completed_date": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "teaching_aids": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "outcome": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "remarks": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "academic_year": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "course_coordinator_id",
+                                    "week_no",
+                                    "topic_no",
+                                    "planned_date",
+                                    "academic_year"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`CoursePlan`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CoursePlan"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "course-plans.destroy",
+                "tags": [
+                    "CoursePlan"
+                ],
+                "parameters": [
+                    {
+                        "name": "coursePlan",
+                        "in": "path",
+                        "required": true,
+                        "description": "The course plan ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`CoursePlan`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CoursePlan"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/subjects/{subject}/course-plans": {
+            "get": {
+                "operationId": "coursePlan.listByCourse",
+                "tags": [
+                    "CoursePlan"
+                ],
+                "parameters": [
+                    {
+                        "name": "subject",
+                        "in": "path",
+                        "required": true,
+                        "description": "The subject ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of `CoursePlan`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CoursePlan"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "coursePlan.store",
+                "tags": [
+                    "CoursePlan"
+                ],
+                "parameters": [
+                    {
+                        "name": "subject",
+                        "in": "path",
+                        "required": true,
+                        "description": "The subject ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "course_coordinator_id": {
+                                        "type": "string"
+                                    },
+                                    "week_no": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "topic_no": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    },
+                                    "planned_date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "completed_date": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "teaching_aids": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "outcome": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "remarks": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "course_coordinator_id",
+                                    "week_no",
+                                    "topic_no",
+                                    "planned_date"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`CoursePlan`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CoursePlan"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
         "/faculty-invitations/accept": {
             "post": {
                 "operationId": "facultyInvitation.accept",
@@ -1489,6 +1871,176 @@
                                         "message",
                                         "data"
                                     ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/institution/calendar-uploads": {
+            "get": {
+                "operationId": "institutionCalendarUpload.index",
+                "tags": [
+                    "InstitutionCalendarUpload"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "institutionCalendarUpload.store",
+                "tags": [
+                    "InstitutionCalendarUpload"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "kind": {
+                                        "type": "string"
+                                    },
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "contentMediaType": "application/octet-stream",
+                                        "maxLength": 12288
+                                    }
+                                },
+                                "required": [
+                                    "kind",
+                                    "file"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Calendar file uploaded successfully."
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/institution/calendar-uploads/{kind}": {
+            "delete": {
+                "operationId": "institutionCalendarUpload.destroy",
+                "tags": [
+                    "InstitutionCalendarUpload"
+                ],
+                "parameters": [
+                    {
+                        "name": "kind",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "const": "Calendar file removed successfully."
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/institution/calendar-uploads/{kind}/file": {
+            "get": {
+                "operationId": "institutionCalendarUpload.download",
+                "tags": [
+                    "InstitutionCalendarUpload"
+                ],
+                "parameters": [
+                    {
+                        "name": "kind",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
                                 }
                             }
                         }
@@ -5682,6 +6234,87 @@
                     "updated_at"
                 ],
                 "title": "Bridge"
+            },
+            "CoursePlan": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "institution_id": {
+                        "type": "string"
+                    },
+                    "program_id": {
+                        "type": "string"
+                    },
+                    "course_id": {
+                        "type": "string"
+                    },
+                    "course_coordinator_id": {
+                        "type": "string"
+                    },
+                    "semester": {
+                        "type": "string"
+                    },
+                    "week_no": {
+                        "type": "string"
+                    },
+                    "topic_no": {
+                        "type": "string"
+                    },
+                    "planned_date": {
+                        "type": "string"
+                    },
+                    "completed_date": {
+                        "type": "string"
+                    },
+                    "teaching_aids": {
+                        "type": "string"
+                    },
+                    "outcome": {
+                        "type": "string"
+                    },
+                    "remarks": {
+                        "type": "string"
+                    },
+                    "academic_year": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    },
+                    "program": {
+                        "$ref": "#/components/schemas/Program"
+                    },
+                    "course": {
+                        "$ref": "#/components/schemas/Subject"
+                    },
+                    "course_coordinator": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "required": [
+                    "id",
+                    "institution_id",
+                    "program_id",
+                    "course_id",
+                    "course_coordinator_id",
+                    "semester",
+                    "week_no",
+                    "topic_no",
+                    "planned_date",
+                    "completed_date",
+                    "teaching_aids",
+                    "outcome",
+                    "remarks",
+                    "academic_year",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "CoursePlan"
             },
             "FacultyProgram": {
                 "type": "object",

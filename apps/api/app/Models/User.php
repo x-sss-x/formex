@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(TimeTableSlotSubject::class, 'course_coordinator_id');
     }
+
+    public function course_plans(): HasMany
+    {
+        return $this->hasMany(CoursePlan::class, 'course_coordinator_id');
+    }
 }

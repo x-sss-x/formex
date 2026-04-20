@@ -64,6 +64,11 @@ class Program extends Model
         return $this->hasMany(TimeTable::class);
     }
 
+    public function course_plans(): HasMany
+    {
+        return $this->hasMany(CoursePlan::class);
+    }
+
     public function feedback_links(): HasMany
     {
         return $this->hasMany(FeedbackLink::class, 'course_id');

@@ -62,4 +62,9 @@ class Subject extends Model
     {
         return $this->hasMany(TimeTableSlotSubject::class);
     }
+
+    public function course_plans(): HasMany
+    {
+        return $this->hasMany(CoursePlan::class, 'course_id');
+    }
 }
