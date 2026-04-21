@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import { useSession } from "@/lib/api/hooks/useSession";
+import { useAcademicYearSwitch } from "../providers/academic-year-switch-provider";
 import {
   Select,
   SelectContent,
@@ -8,8 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useSession } from "@/lib/api/hooks/useSession";
-import { useAcademicYearSwitch } from "../providers/academic-year-switch-provider";
 
 function academicYearMenuRange(selected: number | null | undefined): number[] {
   const y = new Date().getFullYear();
@@ -33,7 +32,13 @@ export function AcademicYearSelect() {
   return (
     <Select
       value={String(selectedAcademicYear)}
-      onValueChange={(value) => setAcademicYear(Number(value))}
+      onValueChange={(value) => {
+        const next = Number(value);
+        if (next === selectedAcademicYear) {
+          return;
+        }
+        setAcademicYear(next);
+      }}
     >
       <SelectTrigger size="sm" className="w-full">
         <SelectValue placeholder="Academic Year" />

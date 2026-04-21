@@ -1,18 +1,22 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
-  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useAuthSetAcademicYear } from "@/lib/api/generated/auth/auth";
+import {
+  getAuthUserQueryKey,
+  useAuthSetAcademicYear,
+} from "@/lib/api/generated/auth/auth";
+import { getProgramsIndexQueryKey } from "@/lib/api/generated/program/program";
 import { cn } from "@/lib/utils";
 
 type AcademicYearSwitchContextValue = {
@@ -122,10 +126,13 @@ export function AcademicYearSwitchProvider({
         onMutate: (variables) => {
           setPendingYear(variables.data.academic_year);
         },
-        onSettled: async (_data, error) => {
+        onSettled: async (data, error) => {
           try {
-            if (!error) {
-              await queryClient.invalidateQueries();
+            if (!error && data?.status === 200) {
+              queryClient.setQueryData(getAuthUserQueryKey(), data);
+              await queryClient.invalidateQueries({
+                queryKey: getProgramsIndexQueryKey(),
+              });
               await router.refresh();
             }
           } finally {
