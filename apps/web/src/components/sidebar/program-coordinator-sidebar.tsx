@@ -2,7 +2,6 @@
 
 import {
   Calendar03Icon,
-  GridIcon,
   Home01Icon,
   UserSquareIcon,
 } from "@hugeicons/core-free-icons";
@@ -11,7 +10,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { Suspense } from "react";
-import { getTemplatePagesByType } from "@/components/tempalate-pages";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import {
@@ -28,8 +26,6 @@ import {
 import { AcademicYearSelect } from "./academic-year-select";
 import { AppSidebarFooter } from "./app-sidebar-footer";
 import { PrincipalProgramsSection } from "./principal-programs-section";
-
-const institutionFormats = getTemplatePagesByType("institution");
 
 const items = [
   { id: 1, label: "Home", icon: Home01Icon, href: "/" },
@@ -87,26 +83,6 @@ export function ProgramCoordinatorSidebar({
         </SidebarGroup>
 
         <PrincipalProgramsSection />
-
-        <SidebarGroup>
-          <SidebarGroupLabel>INSTITUTION FORMATS</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {institutionFormats.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton
-                    isActive={pathname === `/formats/${item.slug}`}
-                    asChild
-                  >
-                    <Link href={`/formats/${item.slug}`}>
-                      <HugeiconsIcon icon={GridIcon} /> <span>{item.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
       <Suspense fallback={<div className="h-16 px-2 py-2" />}>
         <AppSidebarFooter />

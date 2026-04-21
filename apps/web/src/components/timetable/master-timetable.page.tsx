@@ -81,7 +81,9 @@ function dayShortLabel(day: string): string {
 }
 
 export function MasterTimetablePage() {
-  const { programId } = useParams<{ programId: string }>();
+  const { programId: rawProgramId } = useParams<{ programId?: string | string[] }>();
+  const programId =
+    typeof rawProgramId === "string" && rawProgramId !== "NaN" ? rawProgramId : "";
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();

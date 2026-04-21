@@ -39,19 +39,35 @@ function getErrorMessage(data: unknown, fallback: string): string {
   return fallback;
 }
 
-export function useProgramTimetable(programId: string, semester: number) {
-  const { data, ...query } = useTimetableShow(Number(programId), { semester }, {
-    query: {
-      enabled: Boolean(programId),
-      select: (response): ProgramTimetableData => {
-        if (response.status !== 200) {
-          throw new Error(getErrorMessage(response.data, "Could not load timetable."));
-        }
+function normalizeProgramId(programId: string): string {
+  const trimmed = programId.trim();
+  if (!trimmed || trimmed === "NaN") {
+    return "";
+  }
 
-        return response.data.data;
+  return trimmed;
+}
+
+export function useProgramTimetable(programId: string, semester: number) {
+  const safeProgramId = normalizeProgramId(programId);
+  const { data, ...query } = useTimetableShow(
+    safeProgramId,
+    { semester },
+    {
+      query: {
+        enabled: Boolean(safeProgramId),
+        select: (response): ProgramTimetableData => {
+          if (response.status !== 200) {
+            throw new Error(
+              getErrorMessage(response.data, "Could not load timetable."),
+            );
+          }
+
+          return response.data.data;
+        },
       },
     },
-  });
+  );
 
   return {
     data: data ?? null,
@@ -64,19 +80,22 @@ export function useProgramMasterTimetable(
   semesters: readonly number[],
   enabled: boolean,
 ) {
+  const safeProgramId = normalizeProgramId(programId);
   return useQueries({
     queries: semesters.map((semester) => ({
-      queryKey: ["program-master-timetable", programId, semester],
+      queryKey: ["program-master-timetable", safeProgramId, semester],
       queryFn: async (): Promise<ProgramTimetableData> => {
-        const response = await timetableShow(Number(programId), { semester });
+        const response = await timetableShow(safeProgramId, { semester });
 
         if (response.status !== 200) {
-          throw new Error(getErrorMessage(response.data, "Could not load timetable."));
+          throw new Error(
+            getErrorMessage(response.data, "Could not load timetable."),
+          );
         }
 
         return response.data.data;
       },
-      enabled: enabled && Boolean(programId),
+      enabled: enabled && Boolean(safeProgramId),
     })),
   });
 }
@@ -85,9 +104,10 @@ export function useSaveProgramTimetableSlot(
   programId: string,
   semester: number,
 ) {
+  const safeProgramId = normalizeProgramId(programId);
   return useMutation({
     mutationFn: async (data: ProgramTimetableSlotInput) => {
-      if (!programId) {
+      if (!safeProgramId) {
         throw new Error("Program is required.");
       }
 
@@ -106,7 +126,7 @@ export function useSaveProgramTimetableSlot(
         })),
       };
 
-      const saveResponse = await timetableUpsertSlot(Number(programId), payload);
+      const saveResponse = await timetableUpsertSlot(safeProgramId, payload);
 
       if (saveResponse.status !== 200) {
         throw new Error(
@@ -139,7 +159,10 @@ export function usePersonalTimetable() {
       select: (response): PersonalTimetableData => {
         if (response.status !== 200) {
           throw new Error(
-            getErrorMessage(response.data, "Could not load personal timetable."),
+            getErrorMessage(
+              response.data,
+              "Could not load personal timetable.",
+            ),
           );
         }
 

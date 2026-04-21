@@ -57,8 +57,10 @@ function toAssignedStaff(value: unknown): AssignedStaffItem[] {
 }
 
 export function TimetablePage() {
-  const { programId } = useParams<{ programId: string }>();
-  const numericProgramId = Number(programId);
+  const { programId } = useParams<{
+    programId: string;
+  }>();
+
   const searchParams = useSearchParams();
   const semester = clampSemester(searchParams.get("semester"));
   const { data: program } = useProgramsShow(programId);
@@ -67,8 +69,8 @@ export function TimetablePage() {
   );
   const hydrateSlots = useTimetableStore((state) => state.hydrateSlots);
 
-  const subjectsQuery = useSubjectListbysemester(numericProgramId, semester, {
-    query: { enabled: Number.isFinite(numericProgramId) && Boolean(programId) },
+  const subjectsQuery = useSubjectListbysemester(programId, semester, {
+    query: { enabled: Boolean(programId) },
   });
 
   const subjectOptions = useMemo(() => {
@@ -90,7 +92,7 @@ export function TimetablePage() {
     setSubjectOptions(subjectOptions);
   }, [setSubjectOptions, subjectOptions]);
 
-  const timetableQuery = useProgramTimetable(programId ?? "", semester);
+  const timetableQuery = useProgramTimetable(programId, semester);
 
   useEffect(() => {
     if (!timetableQuery.data) {
@@ -116,7 +118,7 @@ export function TimetablePage() {
     hydrateSlots(slots);
   }, [hydrateSlots, timetableQuery.data]);
 
-  const saveSlotMutation = useSaveProgramTimetableSlot(programId ?? "", semester);
+  const saveSlotMutation = useSaveProgramTimetableSlot(programId, semester);
 
   const isLoading = subjectsQuery.isLoading || timetableQuery.isLoading;
   const hasError = subjectsQuery.isError || timetableQuery.isError;
