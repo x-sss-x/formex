@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const laravelBackend =
-  process.env.LARAVEL_BACKEND_URL ?? "http://127.0.0.1:8000";
+  process.env.NEXT_PUBLIC_LARAVEL_BACKEND_URL ?? "http://127.0.0.1:8000";
 
 const nextConfig: NextConfig = {
   typescript: {
