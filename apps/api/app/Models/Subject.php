@@ -72,4 +72,9 @@ class Subject extends Model
     {
         return $this->hasMany(CourseOutcome::class, 'course_id');
     }
+
+    public function course_monthly_attendances(): HasMany
+    {
+        return $this->hasMany(CourseMonthlyAttendance::class, 'course_id');
+    }
 }

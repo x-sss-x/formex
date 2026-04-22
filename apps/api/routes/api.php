@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BridgreController;
+use App\Http\Controllers\CourseMonthlyAttendanceController;
 use App\Http\Controllers\CourseOutcomeController;
 use App\Http\Controllers\CoursePlanController;
 use App\Http\Controllers\FacultyInvitationController;
@@ -108,6 +109,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('course-outcomes', CourseOutcomeController::class)->except(['store']);
     Route::get('/subjects/{subject}/course-outcomes', [CourseOutcomeController::class, 'listByCourse']);
     Route::post('/subjects/{subject}/course-outcomes', [CourseOutcomeController::class, 'store']);
+    Route::get('/subjects/{subject}/course-monthly-attendances', [CourseMonthlyAttendanceController::class, 'listByCourse']);
+    Route::post('/subjects/{subject}/course-monthly-attendances', [CourseMonthlyAttendanceController::class, 'store']);
+    Route::apiResource('course-monthly-attendances', CourseMonthlyAttendanceController::class)->only(['show', 'update', 'destroy']);
 
     // Bridges Paths
     Route::apiResource('bridges', BridgreController::class)->except(['store']);

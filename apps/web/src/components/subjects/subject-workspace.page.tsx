@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { parseAsString, throttle, useQueryState } from "nuqs";
 import Container from "@/components/container";
+import { CourseMonthlyAttendanceBySubjectSection } from "@/components/course-monthly-attendance/course-monthly-attendance-by-subject.section";
 import { CourseOutcomesBySubjectSection } from "@/components/course-outcomes/course-outcomes-by-subject.section";
 import Header from "@/components/header";
 import { SpinnerPage } from "@/components/spinner-page";
@@ -34,10 +35,17 @@ export function SubjectWorkspacePage({
   );
 
   const { data: program } = useProgramsShow(programId);
-  const subjectQuery = useSubjectsShow(subjectId, { query: { enabled: !!subjectId } });
-  const subject = subjectQuery.data?.status === 200 ? subjectQuery.data.data.data : null;
+  const subjectQuery = useSubjectsShow(subjectId, {
+    query: { enabled: !!subjectId },
+  });
+  const subject =
+    subjectQuery.data?.status === 200 ? subjectQuery.data.data.data : null;
   const activeSection =
-    section === "student-feedback" ? "student-feedback" : "course-outcomes";
+    section === "student-feedback"
+      ? "student-feedback"
+      : section === "monthly-attendance"
+        ? "monthly-attendance"
+        : "course-outcomes";
 
   return (
     <>
@@ -52,7 +60,9 @@ export function SubjectWorkspacePage({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/p/${programId}`}>{program?.name ?? "Program"}</Link>
+                <Link href={`/p/${programId}`}>
+                  {program?.name ?? "Program"}
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -70,9 +80,15 @@ export function SubjectWorkspacePage({
       </Header>
 
       <Container>
-        <Tabs value={activeSection} onValueChange={(value) => void setSection(value)}>
+        <Tabs
+          value={activeSection}
+          onValueChange={(value) => void setSection(value)}
+        >
           <TabsList variant="line" className="w-full justify-start">
             <TabsTrigger value="course-outcomes">Course Outcomes</TabsTrigger>
+            <TabsTrigger value="monthly-attendance">
+              Monthly Attendance
+            </TabsTrigger>
             <TabsTrigger value="student-feedback">Student Feedback</TabsTrigger>
           </TabsList>
         </Tabs>
@@ -83,6 +99,15 @@ export function SubjectWorkspacePage({
               <SpinnerPage />
             ) : (
               <CourseOutcomesBySubjectSection subjectId={subjectId} />
+            )
+          ) : activeSection === "monthly-attendance" ? (
+            subjectQuery.isLoading ? (
+              <SpinnerPage />
+            ) : (
+              <CourseMonthlyAttendanceBySubjectSection
+                programId={programId}
+                subjectId={subjectId}
+              />
             )
           ) : (
             <SubjectFeedbackLinkReviewPage

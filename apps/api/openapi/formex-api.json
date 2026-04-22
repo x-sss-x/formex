@@ -683,6 +683,268 @@
                 }
             }
         },
+        "/subjects/{subject}/course-monthly-attendances": {
+            "get": {
+                "operationId": "courseMonthlyAttendance.listByCourse",
+                "tags": [
+                    "CourseMonthlyAttendance"
+                ],
+                "parameters": [
+                    {
+                        "name": "subject",
+                        "in": "path",
+                        "required": true,
+                        "description": "The subject ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of `CourseMonthlyAttendance`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CourseMonthlyAttendance"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "courseMonthlyAttendance.store",
+                "tags": [
+                    "CourseMonthlyAttendance"
+                ],
+                "parameters": [
+                    {
+                        "name": "subject",
+                        "in": "path",
+                        "required": true,
+                        "description": "The subject ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "`CourseMonthlyAttendance`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CourseMonthlyAttendance"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error overview.",
+                                            "example": "Attendance for this month and academic year is already recorded for this course."
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/course-monthly-attendances/{courseMonthlyAttendance}": {
+            "get": {
+                "operationId": "course-monthly-attendances.show",
+                "tags": [
+                    "CourseMonthlyAttendance"
+                ],
+                "parameters": [
+                    {
+                        "name": "courseMonthlyAttendance",
+                        "in": "path",
+                        "required": true,
+                        "description": "The course monthly attendance ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`CourseMonthlyAttendance`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CourseMonthlyAttendance"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "put": {
+                "operationId": "course-monthly-attendances.update",
+                "tags": [
+                    "CourseMonthlyAttendance"
+                ],
+                "parameters": [
+                    {
+                        "name": "courseMonthlyAttendance",
+                        "in": "path",
+                        "required": true,
+                        "description": "The course monthly attendance ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`CourseMonthlyAttendance`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CourseMonthlyAttendance"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "An error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error overview.",
+                                            "example": "You cannot change month or academic year; delete and re-create this entry if it was a mistake."
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "course-monthly-attendances.destroy",
+                "tags": [
+                    "CourseMonthlyAttendance"
+                ],
+                "parameters": [
+                    {
+                        "name": "courseMonthlyAttendance",
+                        "in": "path",
+                        "required": true,
+                        "description": "The course monthly attendance ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`CourseMonthlyAttendance`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CourseMonthlyAttendance"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
         "/course-outcomes": {
             "get": {
                 "operationId": "course-outcomes.index",
@@ -6890,6 +7152,132 @@
                     "updated_at"
                 ],
                 "title": "Bridge"
+            },
+            "CourseMonthlyAttendance": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "institution_id": {
+                        "type": "string"
+                    },
+                    "program_id": {
+                        "type": "string"
+                    },
+                    "course_id": {
+                        "type": "string"
+                    },
+                    "month": {
+                        "type": "integer"
+                    },
+                    "academic_year": {
+                        "type": "integer"
+                    },
+                    "total_classes_held": {
+                        "type": "integer"
+                    },
+                    "minimum_attendance_percent": {
+                        "type": "number"
+                    },
+                    "created_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "program": {
+                        "$ref": "#/components/schemas/Program"
+                    },
+                    "course": {
+                        "$ref": "#/components/schemas/Subject"
+                    },
+                    "attendance_students": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CourseMonthlyAttendanceStudent"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "institution_id",
+                    "program_id",
+                    "course_id",
+                    "month",
+                    "academic_year",
+                    "total_classes_held",
+                    "minimum_attendance_percent",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "CourseMonthlyAttendance"
+            },
+            "CourseMonthlyAttendanceStudent": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "course_monthly_attendance_id": {
+                        "type": "string"
+                    },
+                    "student_id": {
+                        "type": "string"
+                    },
+                    "total_classes_attended": {
+                        "type": "integer"
+                    },
+                    "remarks": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "attendance_percent": {
+                        "type": "number"
+                    },
+                    "meets_minimum": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "student": {
+                        "$ref": "#/components/schemas/Student"
+                    }
+                },
+                "required": [
+                    "id",
+                    "course_monthly_attendance_id",
+                    "student_id",
+                    "total_classes_attended",
+                    "remarks",
+                    "attendance_percent",
+                    "meets_minimum",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "CourseMonthlyAttendanceStudent"
             },
             "CourseOutcome": {
                 "type": "object",
