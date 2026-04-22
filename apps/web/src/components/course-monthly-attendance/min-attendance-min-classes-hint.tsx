@@ -18,7 +18,7 @@ export function MinAttendanceMinClassesHint({
 
   return (
     <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm">
-      Minimum attendances to reach this bar:{" "}
+      Minimum classes to reach this bar:{" "}
       <span className="text-foreground font-medium tabular-nums">
         {minClasses}
       </span>{" "}
