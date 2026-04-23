@@ -6,6 +6,7 @@ import {
   CubeIcon,
   GraduationCap,
   Home01Icon,
+  Briefcase03Icon,
   UserSquareIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -59,12 +60,12 @@ const navItems = (programId: string, canViewMasterTimetable: boolean) => {
         pathname.startsWith(`/p/${programId}/s/`),
     },
     {
-      id: "success-index-data",
-      label: "Success Index Data",
+      id: "success-index",
+      label: "Success Index",
       icon: GraduationCap,
-      href: `/p/${programId}/success-index-data`,
+      href: `/p/${programId}/success-index`,
       match: (pathname: string) =>
-        pathname.startsWith(`/p/${programId}/success-index-data`),
+        pathname.startsWith(`/p/${programId}/success-index`),
     },
     {
       id: "students",
@@ -111,6 +112,15 @@ const navItems = (programId: string, canViewMasterTimetable: boolean) => {
     href: `/p/${programId}/program-outcome`,
     match: (pathname: string) =>
       pathname.startsWith(`/p/${programId}/program-outcome`),
+  });
+
+  items.push({
+    id: "placement-index",
+    label: "Placement Index",
+    icon: Briefcase03Icon,
+    href: `/p/${programId}/placement-index`,
+    match: (pathname: string) =>
+      pathname.startsWith(`/p/${programId}/placement-index`),
   });
 
   return items;

@@ -41,6 +41,30 @@ type ProgramSuccessIndexResponse = {
   headers: Headers;
 };
 
+type PlacementIndexRow = {
+  academic_year: number;
+  total_students_count: number;
+  placed_count: number;
+  higher_studies_count: number;
+  entrepreneur_count: number;
+  weighted_total: number;
+  placement_index: number;
+};
+
+type ProgramPlacementIndexResponse = {
+  data: {
+    data: {
+      program_id: string;
+      lyg: PlacementIndexRow;
+      lyg_m1: PlacementIndexRow;
+      lyg_m2: PlacementIndexRow;
+      average_placement_index: number;
+    };
+  };
+  status: number;
+  headers: Headers;
+};
+
 function formatIndex(value: number): string {
   return Number.isFinite(value) ? value.toFixed(2) : "0.00";
 }
@@ -67,6 +91,20 @@ export function ProgramSuccessIndexPage() {
 
   const payload =
     successIndexQ.data?.status === 200 ? successIndexQ.data.data.data : null;
+  const placementIndexQ = useQuery({
+    queryKey: ["program-placement-index", programId, currentAcademicYear],
+    queryFn: async () => {
+      return $api<ProgramPlacementIndexResponse>(
+        `/programs/${programId}/placement-index?academic_year=${currentAcademicYear}`,
+      );
+    },
+    enabled: !!programId,
+  });
+
+  const placementPayload =
+    placementIndexQ.data?.status === 200
+      ? placementIndexQ.data.data.data
+      : null;
 
   const withoutBacklogCount = (key: "lyg" | "lyg_m1" | "lyg_m2") => {
     const row = payload?.[key];
@@ -116,7 +154,23 @@ export function ProgramSuccessIndexPage() {
       rowSiWithBacklogs("lyg_m2")) /
     3;
 
-  if (successIndexQ.isLoading) {
+  const rowPI = (key: "lyg" | "lyg_m1" | "lyg_m2") => {
+    const row = placementPayload?.[key];
+    if (!row || row.total_students_count <= 0) {
+      return 0;
+    }
+    return (
+      (1.25 * row.placed_count +
+        row.higher_studies_count +
+        row.entrepreneur_count) /
+      row.total_students_count
+    );
+  };
+
+  const averagePlacementIndex =
+    (rowPI("lyg") + rowPI("lyg_m1") + rowPI("lyg_m2")) / 3;
+
+  if (successIndexQ.isLoading || placementIndexQ.isLoading) {
     return <SpinnerPage />;
   }
 
@@ -142,102 +196,27 @@ export function ProgramSuccessIndexPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
-              Showing success index for academic year {currentAcademicYear}.
+              Showing indices for academic year {currentAcademicYear}.
             </p>
-            <Button asChild>
-              <Link href={`/p/${programId}/success-index-data`}>
-                Manage Success Index Data
-              </Link>
-            </Button>
           </div>
 
-          <div className="overflow-hidden rounded-md border">
-            <Tabs defaultValue="compact" className="p-4">
-              <TabsList>
-                <TabsTrigger value="compact">Without Backlogs</TabsTrigger>
-                <TabsTrigger value="ins12">With Backlogs</TabsTrigger>
-              </TabsList>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-base font-semibold">Program Success Index</h2>
+              <Button asChild>
+                <Link href={`/p/${programId}/success-index`}>
+                  Manage Success Index Data
+                </Link>
+              </Button>
+            </div>
+            <div className="overflow-hidden rounded-md border">
+              <Tabs defaultValue="compact" className="p-4">
+                <TabsList>
+                  <TabsTrigger value="compact">Without Backlogs</TabsTrigger>
+                  <TabsTrigger value="ins12">With Backlogs</TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="compact" className="mt-4">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-muted/50">
-                      <th className="border p-3 text-left font-semibold">
-                        Item
-                      </th>
-                      <th className="border p-3 text-center font-semibold">
-                        LYG
-                      </th>
-                      <th className="border p-3 text-center font-semibold">
-                        LYG m1
-                      </th>
-                      <th className="border p-3 text-center font-semibold">
-                        LYG m2
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border p-3">
-                        Total number of students admitted to the program
-                        including lateral entry students
-                      </td>
-                      <td className="border p-3 text-center">
-                        {payload?.lyg.admitted_count ?? 0}
-                      </td>
-                      <td className="border p-3 text-center">
-                        {payload?.lyg_m1.admitted_count ?? 0}
-                      </td>
-                      <td className="border p-3 text-center">
-                        {payload?.lyg_m2.admitted_count ?? 0}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border p-3">
-                        Number of students who have passed without backlogs in
-                        the stipulated period of 3 years
-                      </td>
-                      <td className="border p-3 text-center">
-                        {withoutBacklogCount("lyg")}
-                      </td>
-                      <td className="border p-3 text-center">
-                        {withoutBacklogCount("lyg_m1")}
-                      </td>
-                      <td className="border p-3 text-center">
-                        {withoutBacklogCount("lyg_m2")}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border p-3 font-semibold">
-                        Success index (SI)
-                      </td>
-                      <td className="border p-3 text-center">
-                        {formatIndex(rowSi("lyg"))}
-                      </td>
-                      <td className="border p-3 text-center">
-                        {formatIndex(rowSi("lyg_m1"))}
-                      </td>
-                      <td className="border p-3 text-center">
-                        {formatIndex(rowSi("lyg_m2"))}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border p-3 font-semibold">
-                        Average Success index (SI)
-                      </td>
-                      <td
-                        className="border p-3 text-center font-semibold"
-                        colSpan={3}
-                      >
-                        {formatIndex(averageSuccessIndex)}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </TabsContent>
-
-              <TabsContent value="ins12" className="mt-4">
-                <div className="space-y-4 text-sm">
+                <TabsContent value="compact" className="mt-4">
                   <table className="w-full border-collapse text-sm">
                     <thead>
                       <tr className="bg-muted/50">
@@ -248,10 +227,10 @@ export function ProgramSuccessIndexPage() {
                           LYG
                         </th>
                         <th className="border p-3 text-center font-semibold">
-                          LYGm1
+                          LYG m1
                         </th>
                         <th className="border p-3 text-center font-semibold">
-                          LYGm2
+                          LYG m2
                         </th>
                       </tr>
                     </thead>
@@ -273,17 +252,17 @@ export function ProgramSuccessIndexPage() {
                       </tr>
                       <tr>
                         <td className="border p-3">
-                          Number of students who have passed with backlogs in
+                          Number of students who have passed without backlogs in
                           the stipulated period of 3 years
                         </td>
                         <td className="border p-3 text-center">
-                          {withBacklogCount("lyg")}
+                          {withoutBacklogCount("lyg")}
                         </td>
                         <td className="border p-3 text-center">
-                          {withBacklogCount("lyg_m1")}
+                          {withoutBacklogCount("lyg_m1")}
                         </td>
                         <td className="border p-3 text-center">
-                          {withBacklogCount("lyg_m2")}
+                          {withoutBacklogCount("lyg_m2")}
                         </td>
                       </tr>
                       <tr>
@@ -291,13 +270,13 @@ export function ProgramSuccessIndexPage() {
                           Success index (SI)
                         </td>
                         <td className="border p-3 text-center">
-                          {formatIndex(rowSiWithBacklogs("lyg"))}
+                          {formatIndex(rowSi("lyg"))}
                         </td>
                         <td className="border p-3 text-center">
-                          {formatIndex(rowSiWithBacklogs("lyg_m1"))}
+                          {formatIndex(rowSi("lyg_m1"))}
                         </td>
                         <td className="border p-3 text-center">
-                          {formatIndex(rowSiWithBacklogs("lyg_m2"))}
+                          {formatIndex(rowSi("lyg_m2"))}
                         </td>
                       </tr>
                       <tr>
@@ -308,25 +287,226 @@ export function ProgramSuccessIndexPage() {
                           className="border p-3 text-center font-semibold"
                           colSpan={3}
                         >
-                          {formatIndex(averageSuccessIndexWithBacklogs)}
+                          {formatIndex(averageSuccessIndex)}
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </TabsContent>
-            </Tabs>
+                </TabsContent>
+
+                <TabsContent value="ins12" className="mt-4">
+                  <div className="space-y-4 text-sm">
+                    <table className="w-full border-collapse text-sm">
+                      <thead>
+                        <tr className="bg-muted/50">
+                          <th className="border p-3 text-left font-semibold">
+                            Item
+                          </th>
+                          <th className="border p-3 text-center font-semibold">
+                            LYG
+                          </th>
+                          <th className="border p-3 text-center font-semibold">
+                            LYGm1
+                          </th>
+                          <th className="border p-3 text-center font-semibold">
+                            LYGm2
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="border p-3">
+                            Total number of students admitted to the program
+                            including lateral entry students
+                          </td>
+                          <td className="border p-3 text-center">
+                            {payload?.lyg.admitted_count ?? 0}
+                          </td>
+                          <td className="border p-3 text-center">
+                            {payload?.lyg_m1.admitted_count ?? 0}
+                          </td>
+                          <td className="border p-3 text-center">
+                            {payload?.lyg_m2.admitted_count ?? 0}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border p-3">
+                            Number of students who have passed with backlogs in
+                            the stipulated period of 3 years
+                          </td>
+                          <td className="border p-3 text-center">
+                            {withBacklogCount("lyg")}
+                          </td>
+                          <td className="border p-3 text-center">
+                            {withBacklogCount("lyg_m1")}
+                          </td>
+                          <td className="border p-3 text-center">
+                            {withBacklogCount("lyg_m2")}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border p-3 font-semibold">
+                            Success index (SI)
+                          </td>
+                          <td className="border p-3 text-center">
+                            {formatIndex(rowSiWithBacklogs("lyg"))}
+                          </td>
+                          <td className="border p-3 text-center">
+                            {formatIndex(rowSiWithBacklogs("lyg_m1"))}
+                          </td>
+                          <td className="border p-3 text-center">
+                            {formatIndex(rowSiWithBacklogs("lyg_m2"))}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border p-3 font-semibold">
+                            Average Success index (SI)
+                          </td>
+                          <td
+                            className="border p-3 text-center font-semibold"
+                            colSpan={3}
+                          >
+                            {formatIndex(averageSuccessIndexWithBacklogs)}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
 
-          <div className="space-y-2 text-sm">
-            <p>
-              SI = (Number of students who have passed from the program without
-              backlog) / (Number of students admitted in the first year of that
-              batch plus actually admitted in 2nd year via lateral entry)
-            </p>
-            <p>LYG - Latest year graduation batch</p>
-            <p>LYG m1 - Latest year graduation batch minus 1</p>
-            <p>LYG m2 - Latest year graduation batch minus 2</p>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-base font-semibold">Placement Index</h2>
+              <Button asChild>
+                <Link href={`/p/${programId}/placement-index-data`}>
+                  Manage Placement Index Data
+                </Link>
+              </Button>
+            </div>
+            <div className="overflow-hidden rounded-md border">
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="bg-muted/50">
+                    <th className="border p-3 text-left font-semibold">Item</th>
+                    <th className="border p-3 text-center font-semibold">
+                      LYG
+                    </th>
+                    <th className="border p-3 text-center font-semibold">
+                      LYGm1
+                    </th>
+                    <th className="border p-3 text-center font-semibold">
+                      LYGm2
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border p-3">
+                      Total No. of Final Year Students (N)
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg.total_students_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m1.total_students_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m2.total_students_count ?? 0}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border p-3">
+                      No. of students placed in companies or Government Sector
+                      (X)
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg.placed_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m1.placed_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m2.placed_count ?? 0}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border p-3">
+                      No. of students admitted to higher studies (Y)
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg.higher_studies_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m1.higher_studies_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m2.higher_studies_count ?? 0}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border p-3">
+                      No. of students turned entrepreneur in the respective
+                      field of engineering/technology (Z)
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg.entrepreneur_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m1.entrepreneur_count ?? 0}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {placementPayload?.lyg_m2.entrepreneur_count ?? 0}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border p-3 text-center font-semibold">
+                      1.25X + Y + Z
+                    </td>
+                    <td className="border p-3 text-center">
+                      {formatIndex(placementPayload?.lyg.weighted_total ?? 0)}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {formatIndex(
+                        placementPayload?.lyg_m1.weighted_total ?? 0,
+                      )}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {formatIndex(
+                        placementPayload?.lyg_m2.weighted_total ?? 0,
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border p-3 font-semibold">
+                      Placement Index (P) : (1.25X + Y + Z) / N
+                    </td>
+                    <td className="border p-3 text-center">
+                      {formatIndex(rowPI("lyg"))}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {formatIndex(rowPI("lyg_m1"))}
+                    </td>
+                    <td className="border p-3 text-center">
+                      {formatIndex(rowPI("lyg_m2"))}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border p-3 font-semibold">
+                      Average placement = (P1 + P2 + P3) / 3
+                    </td>
+                    <td
+                      className="border p-3 text-center font-semibold"
+                      colSpan={3}
+                    >
+                      {formatIndex(averagePlacementIndex)}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </Container>
