@@ -104,7 +104,10 @@ export function SubjectWorkspacePage({
             subjectQuery.isLoading ? (
               <SpinnerPage />
             ) : (
-              <CourseOutcomesBySubjectSection subjectId={subjectId} />
+              <CourseOutcomesBySubjectSection
+                programId={programId}
+                subjectId={subjectId}
+              />
             )
           ) : activeSection === "monthly-attendance" ? (
             subjectQuery.isLoading ? (

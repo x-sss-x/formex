@@ -38,7 +38,9 @@ export function ProgramOutcomesByProgramPage() {
   const { programId } = useParams<{ programId: string }>();
   const [search, setSearch] = useQueryState(
     "q",
-    parseAsString.withDefault("").withOptions({ limitUrlUpdates: throttle(300) }),
+    parseAsString
+      .withDefault("")
+      .withOptions({ limitUrlUpdates: throttle(300) }),
   );
   const [selectedType, setSelectedType] = useQueryState(
     "type",
@@ -51,13 +53,13 @@ export function ProgramOutcomesByProgramPage() {
   const outcomesQuery = useProgramOutcomeListByProgram(programId, {
     query: { enabled: !!programId },
   });
-  const rows = outcomesQuery.data?.status === 200 ? outcomesQuery.data.data.data : [];
+  const rows =
+    outcomesQuery.data?.status === 200 ? outcomesQuery.data.data.data : [];
   const activeType = PROGRAM_OUTCOME_TYPES.includes(
     selectedType as (typeof PROGRAM_OUTCOME_TYPES)[number],
   )
     ? (selectedType as (typeof PROGRAM_OUTCOME_TYPES)[number])
     : "program_outcome";
-
   const visibleRows = useMemo(() => {
     const typeFilteredRows = rows.filter((entry) => entry.type === activeType);
     const q = search.trim().toLowerCase();
@@ -65,7 +67,11 @@ export function ProgramOutcomesByProgramPage() {
       return typeFilteredRows;
     }
     return typeFilteredRows.filter((entry) => {
-      return [entry.name ?? "", entry.description ?? "", entry.syllabus_scheme ?? ""]
+      return [
+        entry.name ?? "",
+        entry.description ?? "",
+        entry.syllabus_scheme ?? "",
+      ]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -87,7 +93,9 @@ export function ProgramOutcomesByProgramPage() {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/p/${programId}`}>{program?.name ?? "Program"}</Link>
+                <Link href={`/p/${programId}`}>
+                  {program?.name ?? "Program"}
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -120,7 +128,10 @@ export function ProgramOutcomesByProgramPage() {
           onValueChange={(value) => void setSelectedType(value)}
           className="mt-3"
         >
-          <TabsList variant="line" className="w-full justify-start overflow-x-auto">
+          <TabsList
+            variant="line"
+            className="w-full justify-start overflow-x-auto"
+          >
             {PROGRAM_OUTCOME_TYPES.map((type) => (
               <TabsTrigger key={type} value={type}>
                 {PROGRAM_OUTCOME_TYPE_LABELS[type]}

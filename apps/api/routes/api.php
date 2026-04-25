@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BridgreController;
+use App\Http\Controllers\CoPoPsoStrengthController;
 use App\Http\Controllers\CourseMonthlyAttendanceController;
 use App\Http\Controllers\CourseOutcomeController;
 use App\Http\Controllers\CoursePlanController;
@@ -75,6 +76,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('program-outcomes', ProgramOutcomeController::class)->except(['store']);
     Route::get('/programs/{program}/program-outcomes', [ProgramOutcomeController::class, 'listByProgram']);
     Route::post('/programs/{program}/program-outcomes', [ProgramOutcomeController::class, 'store']);
+    Route::get('/programs/{program}/co-po-pso-strengths', [CoPoPsoStrengthController::class, 'listByProgramAndSemester']);
+    Route::put('/programs/{program}/co-po-pso-strengths', [CoPoPsoStrengthController::class, 'upsert']);
 
     Route::apiResource('programs.students', StudentController::class);
     Route::get('/students', [StudentController::class, 'search']);
