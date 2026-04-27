@@ -72,6 +72,7 @@ test('test marks matrix and upsert respect caps', function () {
     $test = Test::query()->create([
         'institution_id' => $institution->id,
         'program_id' => $program->id,
+        'subject_id' => $subject->id,
         'semester' => 3,
         'name' => 'Test 1',
         'cie_number' => 1,
@@ -86,6 +87,7 @@ test('test marks matrix and upsert respect caps', function () {
     Test::query()->create([
         'institution_id' => $institution->id,
         'program_id' => $program->id,
+        'subject_id' => $subject->id,
         'semester' => 3,
         'name' => 'Test 2',
         'cie_number' => 2,
@@ -187,6 +189,7 @@ test('test marks matrix lists all current-year program students even if student 
     $test = Test::query()->create([
         'institution_id' => $institution->id,
         'program_id' => $program->id,
+        'subject_id' => $subject->id,
         'semester' => 3,
         'name' => 'CIE1',
         'cie_number' => 1,

@@ -15,6 +15,7 @@ class TestResource extends JsonResource
             'id' => $this->id,
             'institution_id' => $this->institution_id,
             'program_id' => $this->program_id,
+            'subject_id' => $this->subject_id,
             'semester' => $this->semester,
             'name' => $this->name,
             'cie_number' => $this->cie_number,

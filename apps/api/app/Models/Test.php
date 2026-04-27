@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'institution_id',
     'program_id',
+    'subject_id',
     'semester',
     'name',
     'cie_number',
@@ -44,6 +45,11 @@ class Test extends Model
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class);
+    }
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
     }
 
     public function courseOutcomeMarks(): HasMany

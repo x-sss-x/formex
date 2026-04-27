@@ -45,6 +45,7 @@ class TestController
         $semester = (int) $validated['semester'];
 
         $tests = $program->tests()
+            ->whereNull('subject_id')
             ->where('semester', $semester)
             ->with(['program', 'courseOutcomeMarks.courseOutcome'])
             ->withSum('courseOutcomeMarks', 'assigned_marks')
@@ -89,12 +90,8 @@ class TestController
         $subject = $institution->subjects()->whereKey($subject->id)->firstOrFail();
 
         $tests = Test::query()
-            ->where('program_id', $subject->program_id)
-            ->where('semester', (int) $subject->semester)
+            ->where('subject_id', $subject->id)
             ->where('academic_year', $institution->academic_year)
-            ->whereHas('courseOutcomeMarks.courseOutcome', function ($query) use ($subject): void {
-                $query->where('course_id', $subject->id);
-            })
             ->with(['program', 'courseOutcomeMarks.courseOutcome'])
             ->withSum('courseOutcomeMarks', 'assigned_marks')
             ->latest()
@@ -141,6 +138,7 @@ class TestController
             $test = $program->tests()->create([
                 'institution_id' => $institution->id,
                 'program_id' => $program->id,
+                'subject_id' => null,
                 'semester' => (int) $validated['semester'],
                 'name' => $validated['name'],
                 'cie_number' => (int) $validated['cie_number'],
@@ -173,12 +171,13 @@ class TestController
         $validated = $this->validatePayload($request);
         $rows = $validated['course_outcome_marks'];
         $semester = (int) $subject->semester;
-        $this->validateCourseOutcomeRows($program, $semester, $rows);
+        $this->validateCourseOutcomeRows($program, $semester, $rows, $subject);
 
-        $test = DB::transaction(function () use ($validated, $institution, $program, $rows, $semester): Test {
+        $test = DB::transaction(function () use ($validated, $institution, $program, $rows, $semester, $subject): Test {
             $test = $program->tests()->create([
                 'institution_id' => $institution->id,
                 'program_id' => $program->id,
+                'subject_id' => $subject->id,
                 'semester' => $semester,
                 'name' => $validated['name'],
                 'cie_number' => (int) $validated['cie_number'],
@@ -218,10 +217,17 @@ class TestController
         $validated = $this->validatePayload($request);
         $rows = $validated['course_outcome_marks'];
         $semester = (int) $validated['semester'];
-        $this->validateCourseOutcomeRows($program, $semester, $rows);
+        $subject = null;
+        if ($test->subject_id !== null) {
+            /** @var Subject $subject */
+            $subject = $institution->subjects()->whereKey($test->subject_id)->firstOrFail();
+        }
+
+        $this->validateCourseOutcomeRows($program, $semester, $rows, $subject);
 
         DB::transaction(function () use ($test, $validated, $institution, $rows): void {
             $test->update([
+                'subject_id' => $test->subject_id,
                 'semester' => (int) $validated['semester'],
                 'name' => $validated['name'],
                 'cie_number' => (int) $validated['cie_number'],
@@ -267,16 +273,25 @@ class TestController
         ]);
     }
 
-    private function validateCourseOutcomeRows(Program $program, int $semester, array $rows): void
+    private function validateCourseOutcomeRows(Program $program, int $semester, array $rows, ?Subject $subject = null): void
     {
         $courseOutcomeIds = collect($rows)->pluck('course_outcome_id')->unique()->values();
-        $allowedCourseOutcomeIds = CourseOutcome::query()
+        $allowedCourseOutcomeQuery = CourseOutcome::query()
             ->where('program_id', $program->id)
             ->whereIn('id', $courseOutcomeIds)
-            ->whereHas('course', fn ($query) => $query->where('semester', $semester))
-            ->pluck('id');
+            ->whereHas('course', fn ($query) => $query->where('semester', $semester));
+
+        if ($subject !== null) {
+            $allowedCourseOutcomeQuery->where('course_id', $subject->id);
+        }
+
+        $allowedCourseOutcomeIds = $allowedCourseOutcomeQuery->pluck('id');
 
         if ($allowedCourseOutcomeIds->count() !== $courseOutcomeIds->count()) {
+            if ($subject !== null) {
+                abort(422, 'One or more course outcomes do not belong to the selected subject.');
+            }
+
             abort(422, 'One or more course outcomes do not belong to the selected program semester.');
         }
     }

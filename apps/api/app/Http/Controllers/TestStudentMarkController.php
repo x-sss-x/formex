@@ -42,6 +42,7 @@ class TestStudentMarkController
 
         $tests = Test::query()
             ->where('program_id', $program->id)
+            ->where('subject_id', $subject->id)
             ->where('semester', $semester)
             ->where('academic_year', $institution->academic_year)
             ->with(['courseOutcomeMarks'])
@@ -71,11 +72,10 @@ class TestStudentMarkController
             $cieColumns = [];
             $totalAllotted = 0.0;
             for ($cn = 1; $cn <= 6; $cn++) {
-                $test = $tests->first(function (Test $t) use ($co, $cn) {
+                $test = $tests->first(function (Test $t) use ($cn) {
                     return (int) $t->cie_number === $cn;
                 });
 
-                /** @var TestCourseOutcome|null $pivot */
                 $pivot = $test
                     ? $test->courseOutcomeMarks->firstWhere('course_outcome_id', $co->id)
                     : null;
@@ -182,6 +182,7 @@ class TestStudentMarkController
         $testIds = collect($rows)->pluck('test_id')->unique()->values();
         $tests = Test::query()
             ->where('program_id', $program->id)
+            ->where('subject_id', $upsertSubject->id)
             ->whereIn('id', $testIds)
             ->where('semester', $semester)
             ->where('academic_year', $institution->academic_year)

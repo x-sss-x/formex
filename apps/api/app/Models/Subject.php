@@ -83,4 +83,9 @@ class Subject extends Model
     {
         return $this->hasMany(ResultAnalysis::class, 'course_id');
     }
+
+    public function tests(): HasMany
+    {
+        return $this->hasMany(Test::class);
+    }
 }

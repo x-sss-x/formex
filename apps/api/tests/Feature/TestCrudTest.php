@@ -134,3 +134,91 @@ test('tests CRUD works per semester with total assigned marks', function () {
 
     expect(AcademicTest::query()->whereKey($testId)->exists())->toBeFalse();
 });
+
+test('subject tests are scoped to the selected subject', function () {
+    $user = User::factory()->create([
+        'email' => 'tests-subject-scope@example.com',
+        'password' => 'password123',
+    ]);
+    $institution = Institution::factory()->create();
+    $user->institutions()->attach($institution->id, ['role' => 'principal']);
+
+    $program = Program::factory()->create([
+        'institution_id' => $institution->id,
+    ]);
+    $subjectA = Subject::query()->create([
+        'name' => 'Operating Systems',
+        'short_name' => 'OS',
+        'code' => 'CS301',
+        'type' => 'theory',
+        'semester' => 3,
+        'scheme' => 'C25',
+        'institution_id' => $institution->id,
+        'program_id' => $program->id,
+    ]);
+    $subjectB = Subject::query()->create([
+        'name' => 'Computer Networks',
+        'short_name' => 'CN',
+        'code' => 'CS302',
+        'type' => 'theory',
+        'semester' => 3,
+        'scheme' => 'C25',
+        'institution_id' => $institution->id,
+        'program_id' => $program->id,
+    ]);
+    $coA = CourseOutcome::query()->create([
+        'institution_id' => $institution->id,
+        'program_id' => $program->id,
+        'course_id' => $subjectA->id,
+        'type' => 'course_outcome',
+        'name' => 'CO1',
+        'description' => 'Explain process scheduling.',
+        'syllabus_scheme' => 'C25',
+        'academic_year' => (int) date('Y'),
+    ]);
+    $coB = CourseOutcome::query()->create([
+        'institution_id' => $institution->id,
+        'program_id' => $program->id,
+        'course_id' => $subjectB->id,
+        'type' => 'course_outcome',
+        'name' => 'CO1',
+        'description' => 'Understand network layers.',
+        'syllabus_scheme' => 'C25',
+        'academic_year' => (int) date('Y'),
+    ]);
+
+    $this->withCredentials();
+    $this->postJson('/api/login', [
+        'email' => 'tests-subject-scope@example.com',
+        'password' => 'password123',
+    ], testsSpaHeaders())->assertSuccessful();
+    Auth::forgetGuards();
+    $this->withCredentials();
+
+    $this->postJson("/api/subjects/{$subjectA->id}/tests", [
+        'semester' => 3,
+        'name' => 'OS CIE 1',
+        'cie_number' => 1,
+        'maximum_marks' => 50,
+        'minimum_passing_marks' => 20,
+        'course_outcome_marks' => [
+            ['course_outcome_id' => $coA->id, 'assigned_marks' => 25],
+        ],
+    ], testsSpaHeaders())->assertCreated();
+
+    $this->postJson("/api/subjects/{$subjectB->id}/tests", [
+        'semester' => 3,
+        'name' => 'CN CIE 1',
+        'cie_number' => 1,
+        'maximum_marks' => 50,
+        'minimum_passing_marks' => 20,
+        'course_outcome_marks' => [
+            ['course_outcome_id' => $coB->id, 'assigned_marks' => 25],
+        ],
+    ], testsSpaHeaders())->assertCreated();
+
+    $this->getJson("/api/subjects/{$subjectA->id}/tests", testsSpaHeaders())
+        ->assertSuccessful()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.name', 'OS CIE 1');
+});
