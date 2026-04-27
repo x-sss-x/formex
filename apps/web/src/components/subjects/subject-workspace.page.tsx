@@ -8,6 +8,7 @@ import { CourseOutcomesBySubjectSection } from "@/components/course-outcomes/cou
 import Header from "@/components/header";
 import { ResultAnalysisBySubjectSection } from "@/components/result-analysis/result-analysis-by-subject.section";
 import { SpinnerPage } from "@/components/spinner-page";
+import { TestMarksBySubjectSection } from "@/components/tests/test-marks-by-subject.section";
 import { SubjectFeedbackLinkReviewPage } from "@/components/subjects/subject-feedback-link-review.page";
 import {
   Breadcrumb,
@@ -48,7 +49,9 @@ export function SubjectWorkspacePage({
         ? "monthly-attendance"
         : section === "result-analysis"
           ? "result-analysis"
-          : "course-outcomes";
+          : section === "test-marks"
+            ? "test-marks"
+            : "course-outcomes";
 
   return (
     <>
@@ -95,6 +98,7 @@ export function SubjectWorkspacePage({
             Monthly Attendance
           </TabsTrigger>
           <TabsTrigger value="result-analysis">Result Analysis</TabsTrigger>
+          <TabsTrigger value="test-marks">Test marks</TabsTrigger>
           <TabsTrigger value="student-feedback">Student Feedback</TabsTrigger>
         </TabsList>
       </Tabs>
@@ -123,6 +127,15 @@ export function SubjectWorkspacePage({
               <SpinnerPage />
             ) : (
               <ResultAnalysisBySubjectSection
+                programId={programId}
+                subjectId={subjectId}
+              />
+            )
+          ) : activeSection === "test-marks" ? (
+            subjectQuery.isLoading ? (
+              <SpinnerPage />
+            ) : (
+              <TestMarksBySubjectSection
                 programId={programId}
                 subjectId={subjectId}
               />

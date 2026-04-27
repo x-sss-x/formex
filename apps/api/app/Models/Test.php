@@ -50,4 +50,9 @@ class Test extends Model
     {
         return $this->hasMany(TestCourseOutcome::class);
     }
+
+    public function studentMarks(): HasMany
+    {
+        return $this->hasMany(TestStudentMark::class);
+    }
 }

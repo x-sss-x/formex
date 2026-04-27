@@ -24,6 +24,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFeedbackController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\TestStudentMarkController;
 use App\Http\Controllers\TimetableController;
 use Illuminate\Support\Facades\Route;
 
@@ -132,6 +133,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/programs/{program}/tests', [TestController::class, 'listByProgram']);
     Route::post('/programs/{program}/tests', [TestController::class, 'store']);
     Route::get('/programs/{program}/tests/course-outcomes', [TestController::class, 'listCourseOutcomesByProgramAndSemester']);
+    Route::get('/programs/{program}/test-marks-matrix', [TestStudentMarkController::class, 'matrix']);
+    Route::put('/programs/{program}/test-marks', [TestStudentMarkController::class, 'upsert']);
 
     // Bridges Paths
     Route::apiResource('bridges', BridgreController::class)->except(['store']);

@@ -82,4 +82,9 @@ class Student extends Model
     {
         return $this->hasMany(ResultAnalysis::class, 'student_id');
     }
+
+    public function test_marks(): HasMany
+    {
+        return $this->hasMany(TestStudentMark::class, 'student_id');
+    }
 }
