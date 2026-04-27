@@ -86,7 +86,8 @@ export function CourseOutcomesBySubjectSection({
     query: { enabled: !!subjectId },
   });
   const rows = useMemo(
-    () => (outcomesQuery.data?.status === 200 ? outcomesQuery.data.data.data : []),
+    () =>
+      outcomesQuery.data?.status === 200 ? outcomesQuery.data.data.data : [],
     [outcomesQuery.data],
   );
   const programOutcomesQuery = useProgramOutcomeListByProgram(programId, {
@@ -95,11 +96,23 @@ export function CourseOutcomesBySubjectSection({
   const mappingOutcomes = useMemo(
     () =>
       programOutcomesQuery.data?.status === 200
-        ? programOutcomesQuery.data.data.data.filter(
-            (outcome) =>
-              outcome.type === "program_outcome" ||
-              outcome.type === "program_specific_outcome",
-          )
+        ? programOutcomesQuery.data.data.data
+            .filter(
+              (outcome) =>
+                outcome.type === "program_outcome" ||
+                outcome.type === "program_specific_outcome",
+            )
+            .sort((a, b) => {
+              const aRank = a.type === "program_outcome" ? 0 : 1;
+              const bRank = b.type === "program_outcome" ? 0 : 1;
+              if (aRank !== bRank) {
+                return aRank - bRank;
+              }
+              return (a.name ?? "").localeCompare(b.name ?? "", undefined, {
+                numeric: true,
+                sensitivity: "base",
+              });
+            })
         : [],
     [programOutcomesQuery.data],
   );
@@ -148,7 +161,9 @@ export function CourseOutcomesBySubjectSection({
         );
       }
     }
-    setMatrixSelections((prev) => (areSelectionsEqual(prev, next) ? prev : next));
+    setMatrixSelections((prev) =>
+      areSelectionsEqual(prev, next) ? prev : next,
+    );
     setHasUnsavedChanges(false);
   }, [courseOutcomeIds, strengthsQuery.data]);
 
@@ -299,7 +314,7 @@ export function CourseOutcomesBySubjectSection({
                     <td className="border p-2 font-medium">{co.name}</td>
                     {mappingOutcomes.map((outcome) => {
                       const value =
-                        matrixSelections[`${co.id}:${outcome.id}`] ?? "";
+                        matrixSelections[`${co.id}:${outcome.id}`] ?? "0";
                       return (
                         <td key={outcome.id} className="border p-2 text-center">
                           <Select
@@ -309,9 +324,10 @@ export function CourseOutcomesBySubjectSection({
                             }
                           >
                             <SelectTrigger className="mx-auto h-8 w-20 rounded-md">
-                              <SelectValue placeholder="-" />
+                              <SelectValue placeholder="0" />
                             </SelectTrigger>
                             <SelectContent>
+                              <SelectItem value="0">0</SelectItem>
                               <SelectItem value="1">1</SelectItem>
                               <SelectItem value="2">2</SelectItem>
                               <SelectItem value="3">3</SelectItem>
