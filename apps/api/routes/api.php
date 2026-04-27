@@ -133,6 +133,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/programs/{program}/tests', [TestController::class, 'listByProgram']);
     Route::post('/programs/{program}/tests', [TestController::class, 'store']);
     Route::get('/programs/{program}/tests/course-outcomes', [TestController::class, 'listCourseOutcomesByProgramAndSemester']);
+    Route::get('/subjects/{subject}/tests', [TestController::class, 'listBySubject']);
+    Route::post('/subjects/{subject}/tests', [TestController::class, 'storeBySubject']);
+    Route::get('/subjects/{subject}/tests/course-outcomes', [TestController::class, 'listCourseOutcomesBySubject']);
     Route::get('/programs/{program}/test-marks-matrix', [TestStudentMarkController::class, 'matrix']);
     Route::put('/programs/{program}/test-marks', [TestStudentMarkController::class, 'upsert']);
 

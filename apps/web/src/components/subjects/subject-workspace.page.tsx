@@ -9,6 +9,7 @@ import Header from "@/components/header";
 import { ResultAnalysisBySubjectSection } from "@/components/result-analysis/result-analysis-by-subject.section";
 import { SpinnerPage } from "@/components/spinner-page";
 import { TestMarksBySubjectSection } from "@/components/tests/test-marks-by-subject.section";
+import { TestsBySubjectSection } from "@/components/tests/tests-by-subject.section";
 import { SubjectFeedbackLinkReviewPage } from "@/components/subjects/subject-feedback-link-review.page";
 import {
   Breadcrumb,
@@ -49,6 +50,8 @@ export function SubjectWorkspacePage({
         ? "monthly-attendance"
         : section === "result-analysis"
           ? "result-analysis"
+          : section === "tests"
+            ? "tests"
           : section === "test-marks"
             ? "test-marks"
             : "course-outcomes";
@@ -98,6 +101,7 @@ export function SubjectWorkspacePage({
             Monthly Attendance
           </TabsTrigger>
           <TabsTrigger value="result-analysis">Result Analysis</TabsTrigger>
+          <TabsTrigger value="tests">Tests</TabsTrigger>
           <TabsTrigger value="test-marks">Test marks</TabsTrigger>
           <TabsTrigger value="student-feedback">Student Feedback</TabsTrigger>
         </TabsList>
@@ -139,6 +143,12 @@ export function SubjectWorkspacePage({
                 programId={programId}
                 subjectId={subjectId}
               />
+            )
+          ) : activeSection === "tests" ? (
+            subjectQuery.isLoading ? (
+              <SpinnerPage />
+            ) : (
+              <TestsBySubjectSection subjectId={subjectId} />
             )
           ) : (
             <SubjectFeedbackLinkReviewPage

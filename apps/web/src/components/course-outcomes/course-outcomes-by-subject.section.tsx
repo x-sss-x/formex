@@ -87,7 +87,14 @@ export function CourseOutcomesBySubjectSection({
   });
   const rows = useMemo(
     () =>
-      outcomesQuery.data?.status === 200 ? outcomesQuery.data.data.data : [],
+      outcomesQuery.data?.status === 200
+        ? [...outcomesQuery.data.data.data].sort((a, b) =>
+            (a.name ?? "").localeCompare(b.name ?? "", undefined, {
+              numeric: true,
+              sensitivity: "base",
+            }),
+          )
+        : [],
     [outcomesQuery.data],
   );
   const programOutcomesQuery = useProgramOutcomeListByProgram(programId, {

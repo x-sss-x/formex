@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TestResource;
 use App\Models\CourseOutcome;
 use App\Models\Program;
+use App\Models\Subject;
 use App\Models\Test;
 use App\Support\CurrentInstitutionSession;
 use Illuminate\Http\Request;
@@ -81,6 +82,50 @@ class TestController
         ]);
     }
 
+    public function listBySubject(Request $request, Subject $subject)
+    {
+        $institution = CurrentInstitutionSession::requireInstitution($request);
+        /** @var Subject $subject */
+        $subject = $institution->subjects()->whereKey($subject->id)->firstOrFail();
+
+        $tests = Test::query()
+            ->where('program_id', $subject->program_id)
+            ->where('semester', (int) $subject->semester)
+            ->where('academic_year', $institution->academic_year)
+            ->whereHas('courseOutcomeMarks.courseOutcome', function ($query) use ($subject): void {
+                $query->where('course_id', $subject->id);
+            })
+            ->with(['program', 'courseOutcomeMarks.courseOutcome'])
+            ->withSum('courseOutcomeMarks', 'assigned_marks')
+            ->latest()
+            ->get();
+
+        return TestResource::collection($tests);
+    }
+
+    public function listCourseOutcomesBySubject(Request $request, Subject $subject)
+    {
+        $institution = CurrentInstitutionSession::requireInstitution($request);
+        /** @var Subject $subject */
+        $subject = $institution->subjects()->whereKey($subject->id)->firstOrFail();
+
+        $rows = CourseOutcome::query()
+            ->where('program_id', $subject->program_id)
+            ->where('course_id', $subject->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'course_id'])
+            ->map(fn (CourseOutcome $outcome) => [
+                'id' => $outcome->id,
+                'name' => $outcome->name,
+                'course_id' => $outcome->course_id,
+            ])
+            ->values();
+
+        return response()->json([
+            'data' => $rows,
+        ]);
+    }
+
     public function store(Request $request, Program $program): TestResource
     {
         $institution = CurrentInstitutionSession::requireInstitution($request);
@@ -97,6 +142,44 @@ class TestController
                 'institution_id' => $institution->id,
                 'program_id' => $program->id,
                 'semester' => (int) $validated['semester'],
+                'name' => $validated['name'],
+                'cie_number' => (int) $validated['cie_number'],
+                'maximum_marks' => (int) $validated['maximum_marks'],
+                'minimum_passing_marks' => (int) $validated['minimum_passing_marks'],
+                'academic_year' => $institution->academic_year,
+            ]);
+
+            foreach ($rows as $row) {
+                $test->courseOutcomeMarks()->create([
+                    'course_outcome_id' => $row['course_outcome_id'],
+                    'assigned_marks' => (int) $row['assigned_marks'],
+                ]);
+            }
+
+            return $test;
+        });
+
+        return TestResource::make($this->loadForResponse($test));
+    }
+
+    public function storeBySubject(Request $request, Subject $subject): TestResource
+    {
+        $institution = CurrentInstitutionSession::requireInstitution($request);
+        /** @var Subject $subject */
+        $subject = $institution->subjects()->whereKey($subject->id)->firstOrFail();
+        /** @var Program $program */
+        $program = $institution->programs()->whereKey($subject->program_id)->firstOrFail();
+
+        $validated = $this->validatePayload($request);
+        $rows = $validated['course_outcome_marks'];
+        $semester = (int) $subject->semester;
+        $this->validateCourseOutcomeRows($program, $semester, $rows);
+
+        $test = DB::transaction(function () use ($validated, $institution, $program, $rows, $semester): Test {
+            $test = $program->tests()->create([
+                'institution_id' => $institution->id,
+                'program_id' => $program->id,
+                'semester' => $semester,
                 'name' => $validated['name'],
                 'cie_number' => (int) $validated['cie_number'],
                 'maximum_marks' => (int) $validated['maximum_marks'],

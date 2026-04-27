@@ -56,7 +56,7 @@ import {
 import { useProgramsShow } from "@/lib/api/hooks/useProgramsShow";
 import { $api } from "@/lib/api/mutator";
 
-type CourseOutcomeOption = {
+export type CourseOutcomeOption = {
   id: string;
   name: string;
   course_id: string;
@@ -73,7 +73,7 @@ type TestCourseOutcome = {
   };
 };
 
-type AcademicTest = {
+export type AcademicTest = {
   id: string;
   semester: number;
   name: string;
@@ -91,7 +91,7 @@ type ApiCollection<T> = {
   status: number;
 };
 
-type TestPayload = {
+export type TestPayload = {
   semester: number;
   name: string;
   cie_number: number;
@@ -103,7 +103,7 @@ type TestPayload = {
   }>;
 };
 
-function TestFormDialog({
+export function TestFormDialog({
   open,
   onOpenChange,
   semester,

@@ -1,5 +1,10 @@
-import { TestsPage } from "@/components/tests/tests.page";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <TestsPage />;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ programId: string }>;
+}) {
+  const { programId } = await params;
+  redirect(`/p/${programId}/subjects`);
 }
